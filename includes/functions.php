@@ -78,10 +78,11 @@ function displayPosts () {
   showSearch($query);
 }
 
-function displayCategories() {
+function displayCategories($position) {
   global $conn;
 
-  $query = $conn->prepare("SELECT * FROM categories");
+  $stmt = "SELECT * FROM categories $position";
+  $query = $conn->prepare($stmt);
   $query->execute();
 
   showCategory($query);  

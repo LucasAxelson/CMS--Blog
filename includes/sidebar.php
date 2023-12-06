@@ -24,20 +24,13 @@
         <div class="col-lg-6">
             <ul class="list-unstyled">
                 <!-- Display Categories from DB -->
-                <?php displayCategories(); ?>
+                <?php displayCategories("LIMIT 5"); ?>
             </ul>
         </div>
         <!-- /.col-lg-6 -->
         <div class="col-lg-6">
             <ul class="list-unstyled">
-                <li><a href="#">Category Name</a>
-                </li>
-                <li><a href="#">Category Name</a>
-                </li>
-                <li><a href="#">Category Name</a>
-                </li>
-                <li><a href="#">Category Name</a>
-                </li>
+            <?php displayCategories("LIMIT 5 OFFSET 5"); ?>
             </ul>
         </div>
         <!-- /.col-lg-6 -->
@@ -46,9 +39,6 @@
 </div>
 
 <!-- Side Widget Well -->
-<div class="well">
-    <h4>Side Widget Well</h4>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, perspiciatis adipisci accusamus laudantium odit aliquam repellat tempore quos aspernatur vero.</p>
-</div>
+<?php require("includes/widget.php") ?>
 
 </div>
