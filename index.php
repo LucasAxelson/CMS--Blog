@@ -1,5 +1,6 @@
 <?php
     require("includes/server.php");
+    require("includes/functions.php");
     require("includes/header.php");
 ?>
 
