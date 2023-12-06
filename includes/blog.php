@@ -6,7 +6,13 @@
 </h1>
 
 <!-- Blog Posts -->
-    <?php displayPosts() ?>
+    <?php 
+    if(isset($_POST["search_submit"])) {
+        searchExecute();
+    } else {
+        displayPosts();
+    }
+    ?>
 
 <!-- Pager -->
 <ul class="pager">
