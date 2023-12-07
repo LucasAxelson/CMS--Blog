@@ -1,6 +1,6 @@
 <?php 
     require("includes/server.php");
-    require("includes/header.php");
+    require("includes/admin_header.php");
 ?>
 <body>
 
@@ -30,4 +30,4 @@
                         </ol>
                     </div>
 
-<?php require("includes/footer.php"); ?>
+<?php require("includes/admin_footer.php"); ?>
