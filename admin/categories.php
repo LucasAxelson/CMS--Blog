@@ -21,6 +21,7 @@
                     $category = $_POST["cat_title"];
                     createCategory($category);
                 }; ?>
+
                 <div class="col-xs-6">                    
                 <!-- Delete Category when requested -->
                 <?php if(isset($_GET["delete"])) {
@@ -37,6 +38,22 @@
                         </div>
                         <div class="form-group">
                             <input type="submit" class="btn btn-primary" name="submit" value="Add Category">
+                        </div>
+                    </form>
+                    
+                <!-- Edit Category when requested -->
+                <?php if(isset($_POST["edit"])) {
+                    $id = $_GET["edit"];
+                    $title = $_POST["title"];
+                    
+                    editCategory($id, $title);
+                }; ?>
+                    <form action="" method="POST">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="title">
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-primary" name="edit" value="Edit Category">
                         </div>
                     </form>
                 </div>
@@ -58,6 +75,6 @@
             </div>
         </div>
     <!-- /.row -->
-
+    
     
 <?php require("includes/admin_footer.php"); ?>

@@ -14,6 +14,7 @@ function declareCategories () {
         <td>" . $row['cat_id'] . "</td>
         <td>" . $row['cat_title'] . "</td>
         <td><a href='categories.php?delete=" . $row['cat_id'] . "'>Delete</a></td>
+        <td><a href='categories.php?edit=" . $row['cat_id'] . "'>Edit</a></td>
       </tr>
     ";
   }
@@ -26,11 +27,22 @@ function createCategory($category) {
   $query->execute();
 }
 
-function deleteCategory($category) {
+function editCategory($id, $title) {
   global $conn;
 
   try {
-    $query = $conn->prepare("DELETE FROM categories WHERE cat_id = $category");
+    $query = $conn->prepare("UPDATE categories SET cat_title = '$title' WHERE cat_id = $id");
+    $query->execute();
+  } catch (PDOException $e) {
+    echo "". $e->getMessage() ."";
+  }
+}
+
+function deleteCategory($id) {
+  global $conn;
+
+  try {
+    $query = $conn->prepare("DELETE FROM categories WHERE cat_id = $id");
     $query->execute();   
   } catch(PDOException) {
     return false;
