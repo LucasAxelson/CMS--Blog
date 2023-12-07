@@ -1,4 +1,4 @@
-<?php require("includes/server.php"); ?>
+<?php require("../includes/server.php"); ?>
 <?php require("includes/functions.php"); ?>
 <?php require("includes/admin_header.php"); ?>
 

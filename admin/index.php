@@ -1,5 +1,5 @@
 <?php 
-    require("includes/server.php");
+    require("../includes/server.php");
     require("includes/admin_header.php");
 ?>
 <body>
