@@ -1,4 +1,3 @@
-<?php require("../includes/server.php"); ?>
 <?php require("includes/functions.php"); ?>
 <?php require("includes/admin_header.php"); ?>
 
@@ -16,17 +15,22 @@
 <!-- Page Heading -->
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">
-                    Welcome to Admin
-                    <small>Author</small>
-                </h1>
-
-                <!-- Declare new category form & function -->
+                <?php require("includes/admin_head.php"); ?>
+                <!-- Create categpry when requested -->
                 <?php if(isset($_POST["submit"])) {
                     $category = $_POST["cat_title"];
                     createCategory($category);
                 }; ?>
-                <div class="col-xs-6">
+                <div class="col-xs-6">                    
+                <!-- Delete Category when requested -->
+                <?php if(isset($_GET["delete"])) {
+                    $id = $_GET["delete"];
+                    if (deleteCategory($id)) {
+                        deleteCategory($id);
+                    } else {
+                        declareError("Category in use.");
+                    }
+                }; ?>
                     <form action="" method="POST">
                         <div class="form-group">
                             <input type="text" class="form-control" name="cat_title">
@@ -45,6 +49,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                      <!-- Declare all Categories -->
                             <?php declareCategories(); ?>
                         </tbody>
                     </>

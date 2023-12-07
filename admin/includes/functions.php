@@ -13,6 +13,7 @@ function declareCategories () {
       <tr>
         <td>" . $row['cat_id'] . "</td>
         <td>" . $row['cat_title'] . "</td>
+        <td><a href='categories.php?delete=" . $row['cat_id'] . "'>Delete</a></td>
       </tr>
     ";
   }
@@ -25,4 +26,19 @@ function createCategory($category) {
   $query->execute();
 }
 
+function deleteCategory($category) {
+  global $conn;
+
+  try {
+    $query = $conn->prepare("DELETE FROM categories WHERE cat_id = $category");
+    $query->execute();   
+  } catch(PDOException) {
+    return false;
+  }
+  return true;
+}
+
+function declareError($error) {
+  echo "<p>Error: $error</p>";
+}
 ?>

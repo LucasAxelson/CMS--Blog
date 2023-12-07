@@ -1,3 +1,6 @@
+<?php ob_start() ?>
+<?php require("../includes/server.php"); ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
