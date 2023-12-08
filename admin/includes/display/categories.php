@@ -1,21 +1,3 @@
-<?php require("includes/functions.php"); ?>
-<?php require("includes/admin_header.php"); ?>
-
-<body>
-
-    <div id="wrapper">
-
-    <!-- Navigation -->
-    <?php require("includes/nav/navigation.php") ?>
-     
-      <div id="page-wrapper">
-
-        <div class="container-fluid">
-
-<!-- Page Heading -->
-        <div class="row">
-            <div class="col-lg-12">
-                <?php require("includes/admin_head.php"); ?>
                 <!-- Create categpry when requested -->
                 <?php if(isset($_POST["submit"])) {
                     $category = $_POST["cat_title"];
@@ -23,6 +5,7 @@
                 }; ?>
 
                 <div class="col-xs-6">                    
+                
                 <!-- Delete Category when requested -->
                 <?php if(isset($_GET["delete"])) {
                     $id = $_GET["delete"];
@@ -32,14 +15,15 @@
                         declareError("Category in use.");
                     }
                 }; ?>
-                    <form action="" method="POST">
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="cat_title">
-                        </div>
-                        <div class="form-group">
-                            <input type="submit" class="btn btn-primary" name="submit" value="Add Category">
-                        </div>
-                    </form>
+                
+                <form action="" method="POST">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="cat_title">
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-primary" name="submit" value="Add Category">
+                    </div>
+                </form>
                     
                 <!-- Edit Category when requested -->
                 <?php if(isset($_POST["edit"])) {
@@ -48,15 +32,11 @@
                     
                     editCategory($id, $title);
                 }; ?>
-                    <form action="" method="POST">
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="title">
-                        </div>
-                        <div class="form-group">
-                            <input type="submit" class="btn btn-primary" name="edit" value="Edit Category">
-                        </div>
-                    </form>
+       
+                <?php  if(isset($_GET['edit'])) { require("includes/display/edit_user.php"); } ?>
                 </div>
+                
+                <!-- Category table -->
                 <div class="col-xs-6">
                     <table class="table table-bordered table-hover">
                         <thead>
@@ -71,10 +51,3 @@
                         </tbody>
                     </>
                 </div>
-
-            </div>
-        </div>
-    <!-- /.row -->
-    
-    
-<?php require("includes/admin_footer.php"); ?>

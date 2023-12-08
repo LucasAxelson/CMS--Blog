@@ -1,0 +1,49 @@
+<?php
+  if(isset($_POST['create_post'])) {
+    createPost();
+  }
+
+?>
+
+<div class="container">
+
+<form action="index.php?source=add_post" method="POST" enctype="multipart/form-data">
+
+  <div class="form-group">
+    <label class="form-label" for="title">Post Title</label>
+    <input type="text" id="title" name="post_title" class="form-control">
+  </div>
+
+  
+  <div class="form-group">
+    <label class="form-label" for="title">Post Author</label>
+    <input type="text" name="post_author" class="form-control">
+  </div>
+
+  <div class="form-group">
+    <label class="form-label" for="content">Post Content</label>
+    <textarea name="post_content" id="content" class="form-control" rows="3"></textarea>
+  </div>
+
+  <div class="form-group">
+    <label for="image">Post Image</label>
+    <input type="file" id="image" name="post_image">
+  </div>
+  
+  <div class="form-group">
+    <label for="tags">Post Tags</label>
+    <input type="text" name="post_tags" id="tags" class="form-control">
+  </div>
+
+  <div class="form-group">
+    <label class="form-label" for="category">Post Category</label>
+    <select name="post_category_id" id="category">
+      <?php listCategories() ?>
+    </select>
+  </div>
+
+  <input type="submit" value="Create Post" name="create_post" class="btn btn-primary">
+
+</form>
+
+</div>
