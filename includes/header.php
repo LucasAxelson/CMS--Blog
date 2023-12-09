@@ -1,5 +1,7 @@
 <?php ob_start() ?>
 <?php require("server.php"); ?>
+<?php require("includes/functions.php"); ?>
+<?php require("includes/validation_functions.php"); ?>
 
 <!DOCTYPE html>
 <html lang="en">

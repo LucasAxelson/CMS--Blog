@@ -15,25 +15,30 @@ function displayImage() {
 function editPost($id) {
   global $conn;
 
+  
   $category = $_POST['post_category_id'];
-  $title = $_POST['post_title'];
-  $author = $_POST['post_author'];
-  $content = $_POST['post_content'];
-  $tags = $_POST['post_tags'];
   $img_name = $_FILES['post_image']['name'];
   $img_location = $_FILES['post_image']['tmp_name'];
+  
+  if(verifyText($_POST['post_content']) && verifyText($_POST['post_author']) && verifyText($_POST['post_title']) && verifyTags($_POST['post_tags'])) {
+    $title = trim_input($_POST['post_title']);
+    $author = trim_input($_POST['post_author']);
+    $content = trim_input($_POST['post_content']);
+    $tags = trim_input($_POST['post_tags']);    
+  
+    if(!empty($img_name) && !empty($img_location)) {
+      move_uploaded_file($img_location, "../includes/img/$img_name");
+  
+      $stmt = "UPDATE posts 
+      SET post_category_id = '$category', post_title = '$title', post_author = '$author', post_image = '$img_name', post_content = '$content', post_tags = '$tags' 
+      WHERE post_id = $id";
+  
+    } else {
+      $stmt = "UPDATE posts 
+      SET post_category_id = '$category', post_title = '$title', post_author = '$author', post_content = '$content', post_tags = '$tags' 
+      WHERE post_id = $id";
+    }
 
-  if(!empty($img_name) && !empty($img_location)) {
-    move_uploaded_file($img_location, "../includes/img/$img_name");
-
-    $stmt = "UPDATE posts 
-    SET post_category_id = '$category', post_title = '$title', post_author = '$author', post_image = '$img_name', post_content = '$content', post_tags = '$tags' 
-    WHERE post_id = $id";
-
-  } else {
-    $stmt = "UPDATE posts 
-    SET post_category_id = '$category', post_title = '$title', post_author = '$author', post_content = '$content', post_tags = '$tags' 
-    WHERE post_id = $id";
   }
 
   try {
@@ -50,19 +55,30 @@ function createPost() {
   global $conn;
 
   $category = $_POST['post_category_id'];
-  $title = $_POST['post_title'];
-  $author = $_POST['post_author'];
-  $content = $_POST['post_content'];
-  $tags = $_POST['post_tags'];
-
   $img_name = $_FILES['post_image']['name'];
   $img_location = $_FILES['post_image']['tmp_name'];
 
-  move_uploaded_file($img_location, "../includes/img/$img_name");
+  if(verifyText($_POST['post_content']) && verifyText($_POST['post_author']) && verifyText($_POST['post_title']) && verifyTags($_POST['post_tags'])) {
+    $title = trim_input($_POST['post_title']);
+    $author = trim_input($_POST['post_author']);
+    $content = trim_input($_POST['post_content']);
+    $tags = trim_input($_POST['post_tags']);    
+  
+    if(!empty($img_name) && !empty($img_location)) {
+      move_uploaded_file($img_location, "../includes/img/$img_name");
+  
+      $stmt = "INSERT INTO posts (post_category_id, post_title, post_author, post_date, post_image, post_content, post_tags) VALUES ('$category', '$title', '$author', NOW(), '$img_name' , '$content', '$tags')";
+  
+    } else {
+      $stmt = "INSERT INTO posts (post_category_id, post_title, post_author, post_date, post_content, post_tags) VALUES ('$category', '$title', '$author', NOW(), '$content', '$tags')";
+    }
 
-  $query = $conn->prepare("INSERT INTO posts (post_category_id, post_title, post_author, post_date, post_image, post_content, post_tags) VALUES ('$category', '$title', '$author', NOW(), '$img_name' , '$content', '$tags')");
-  $query->execute();
+
+      $query = $conn->prepare($stmt);
+      $query->execute();
+  }
 }
+
 
 function deletePost() {
   global $conn;

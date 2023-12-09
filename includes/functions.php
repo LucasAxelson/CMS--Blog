@@ -1,4 +1,5 @@
 <?php
+
 function displayPost() {
 global $conn;
 $post_id = $_GET["blog_id"];
@@ -44,13 +45,6 @@ function searchPosts() {
   }
 }
 
-function showCategory($query) {
-  while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
-    extract( $row );
-
-    echo "<li><a href=\"#\">" . $row['cat_title'] . "</a></li>";
-}
-}
 
 function showPosts($query) {
   while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
@@ -125,5 +119,12 @@ function displayCategories($position) {
   showCategory($query);  
 }
 
+function showCategory($query) {
+  while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
+    extract( $row );
+
+    echo "<li><a href=\"index.php?category=" . $row['cat_id'] . "\">" . $row['cat_title'] . "</a></li>";
+}
+}
 
 ?>

@@ -1,4 +1,3 @@
-<?php require("includes/functions.php"); ?>
 <?php require("includes/header.php"); ?>
 
 <body>

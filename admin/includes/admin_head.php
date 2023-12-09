@@ -19,9 +19,9 @@
                 </h1>
                 <ol class="breadcrumb">
                     <li>
-                        <i class="fa fa-dashboard"></i>  <a href="index.html">Dashboard</a>
+                        <i class="fa fa-dashboard"></i>  <a href="index.php">Dashboard</a>
                     </li>
                     <li class="active">
-                        <i class="fa fa-file"></i> Blank Page
+                        <i class="fa fa-home"></i> <a href="../index.php">Main Page</a>
                     </li>
                 </ol>
