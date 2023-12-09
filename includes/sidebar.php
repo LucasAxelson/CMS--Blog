@@ -42,3 +42,8 @@
 <?php require("includes/widget.php") ?>
 
 </div>
+
+</div>
+        <!-- /.row -->
+
+        <hr>

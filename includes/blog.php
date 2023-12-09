@@ -1,11 +1,16 @@
-<div class="col-md-8">
+<!-- Page Content -->
+<div class="container">
 
-<h1 class="page-header">
-    Page Heading
-    <small>Secondary Text</small>
-</h1>
+    <div class="row">
 
-<!-- Blog Posts -->
+        <div class="col-md-8">
+
+            <h1 class="page-header">
+                Page Heading
+                <small>Secondary Text</small>
+            </h1>
+
+            <!-- Blog Posts -->
     <?php 
     if(isset($_POST["search_submit"])) {
         searchPosts();

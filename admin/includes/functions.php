@@ -76,7 +76,12 @@ function createComment() {
     $content = trim_input($_POST['comment_content']);
     $email = trim_input($_POST['comment_email']);
   
-    $stmt = "INSERT INTO comments (comment_post_id, comment_email, comment_content, comment_author, comment_status_id, comment_date) VALUES ('$post_id', '$email', '$content', '$author', '2' , NOW())";
+    $stmt = "INSERT INTO comments (comment_post_id, comment_email, comment_content, comment_author, comment_status_id, comment_date) VALUES ('$post_id', '$email', '$content', '$author', '1' , NOW())";
+
+    if(isset($_GET['reply'])) { 
+      $reply_id = $_GET['reply']; 
+      $stmt = "INSERT INTO comments (comment_post_id, comment_reply_id, comment_email, comment_content, comment_author, comment_status_id, comment_date) VALUES ('$post_id', '$reply_id', '$email', '$content', '$author', '1' , NOW())";    
+    }
 
     try {
       $query = $conn->prepare($stmt);

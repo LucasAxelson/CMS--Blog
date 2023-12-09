@@ -1,5 +1,107 @@
 <?php
 
+function createUserComment() {
+  global $conn;
+
+  $post_id = $_GET['blog_id'];
+
+  if(verifyText($_POST['form_content']) && verifyText($_POST['form_author'])) {
+    $author = trim_input($_POST['form_author']);
+    $content = trim_input($_POST['form_content']);
+    $email = trim_input($_POST['form_email']);
+
+    $stmt = "INSERT INTO comments (comment_post_id, comment_email, comment_content, comment_author, comment_status_id, comment_date) VALUES ('$post_id', '$email', '$content', '$author', '1' , NOW())";
+
+    if(isset($_GET['reply'])) { 
+      $reply_id = $_GET['reply']; 
+      $stmt = "INSERT INTO comments (comment_post_id, comment_reply_id, comment_email, comment_content, comment_author, comment_status_id, comment_date) VALUES ('$post_id', '$reply_id', '$email', '$content', '$author', '1' , NOW())";    
+    }
+
+    try {
+      $query = $conn->prepare($stmt);
+      $query->execute();
+      header("Location:blog_post.php?blog_id=" . $post_id . "");  
+    } catch(PDOException $e) {
+      echo "". $e->getMessage();
+    }
+  }
+}
+
+function displayComments() {
+  global $conn;
+  $post_id = $_GET["blog_id"];
+
+  try {
+    $query = $conn->prepare("SELECT * FROM comments WHERE comment_post_id = $post_id AND comment_status_id = 4 AND comment_reply_id IS NULL");
+    $query->execute();
+  } catch (PDOException $e) {
+    echo $e->getMessage();
+  }
+
+  while( $row = $query->fetch(PDO::FETCH_ASSOC) ) {
+
+   $items = explode(" ", $row['comment_date']);
+   $itemsDate = explode("-", $items[0]);
+   $date = "$itemsDate[2]/$itemsDate[1]/$itemsDate[0]"; 
+
+   $openComment = 
+   "<div class=\"media\">
+      <a class=\"pull-left\" href=\"#\">
+        <img class=\"media-object\" src=\"http://placehold.it/64x64\" alt=\"\">
+      </a>
+      <div class=\"media-body\">
+        <h4 class=\"media-heading\">" . $row['comment_author'] . "
+          <small>" . $date . " at " . setTime($items) . "</small>
+        </h4> 
+        <p>". $row['comment_content'] . "</p>
+        <p><a class=\"pull-left\" style=\"padding: 2px; font-size: 15px;\" href=\"blog_post.php?blog_id=" . $post_id . "&reply=" . $row['comment_id'] . "\">Reply</a></p>
+        <br>
+      ";
+    
+      $nestedComment = displayNestedComment($row['comment_id']);
+      $closeComment = "</div></div>"; 
+
+      
+
+    echo $openComment, $nestedComment, $closeComment;
+  }
+}
+
+function displayNestedComment($target_id) {
+  global $conn;
+  $post_id = $_GET["blog_id"];
+
+  try {
+    $query = $conn->prepare("SELECT * FROM comments WHERE comment_post_id = $post_id AND comment_status_id = 4 AND comment_reply_id = $target_id");
+    $query->execute();
+  } catch (PDOException $e) {
+    echo $e->getMessage();
+  }
+
+  while( $row = $query->fetch(PDO::FETCH_ASSOC) ) {
+
+   $items = explode(" ", $row['comment_date']);
+   $itemsDate = explode("-", $items[0]);
+   $date = "$itemsDate[2]/$itemsDate[1]/$itemsDate[0]"; 
+
+   $nestedComment = 
+   "<div class=\"media\">
+      <a class=\"pull-left\" href=\"#\">
+        <img class=\"media-object\" src=\"http://placehold.it/64x64\" alt=\"\">
+      </a>
+      <div class=\"media-body\">
+        <h4 class=\"media-heading\">" . $row['comment_author'] . "
+          <small>" . $date . " at " . setTime($items) . "</small>
+        </h4> 
+        <p>". $row['comment_content'] . "</p>
+        <p><a class=\"pull-left\" style=\"padding: 2px; font-size: 15px;\" href=\"blog_post.php?blog_id=" . $post_id . "&reply=" . $row['comment_id'] . "\">Reply</a></p>
+      </div>
+    </div>";
+
+      return $nestedComment;
+  }
+}
+
 function displayPost() {
 global $conn;
 $post_id = $_GET["blog_id"];
@@ -19,7 +121,7 @@ while( $row = $query->fetch(PDO::FETCH_ASSOC) ) {
         by <a href=\"#\">" . $row['post_author'] . "</a>
     </p>  
     <hr>
-   <p><span class=\"glyphicon glyphicon-time\"></span> Posted on " . $date . " at " . substr($items[1], 0, strlen($items[1]) - 3) . "</p>
+   <p><span class=\"glyphicon glyphicon-time\"></span> Posted on " . $date . " at " . setTime($items) . "</p>
     <hr>
     <img class=\"img-responsive\" src=\"includes/img/" . $row['post_image'] . "\" alt=\"\">
    <hr>
@@ -61,7 +163,7 @@ function showPosts($query) {
   <p class=\"lead\">
    by <a href=\"index.php\">" . $row['post_author'] . "</a>
   </p>
-  <p><span class=\"glyphicon glyphicon-time\"></span> Posted on " . $date . " " . substr($items[1], 0, strlen($items[1]) - 3) . "</p>
+  <p><span class=\"glyphicon glyphicon-time\"></span> Posted on " . $date . " " . setTime($items) . "</p>
   <hr>
   <img class=\"img-responsive\" src=\"includes/img/" . $row['post_image'] . "\" alt=\"\">
   <hr>

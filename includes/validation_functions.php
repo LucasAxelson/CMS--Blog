@@ -1,5 +1,10 @@
 <?php 
 
+function setTime($time) {
+ $time = substr($time[1], 0, strlen($time[1]) - 3);
+ return $time;
+}
+
 function trim_input($input) {
   //Remove whitespaces, quote-safing and string escaping of inputted data
   $input = trim($input);

@@ -3,31 +3,14 @@
 <body>
 
     <!-- Navigation -->
-    <?php
-        require("includes/navigation.php");
-    ?>
+    <?php require("includes/navigation.php"); ?>
 
-    <!-- Page Content -->
-    <div class="container">
-
-        <div class="row">
 
             <!-- Blog Entries Column -->
-            <?php
-                require("includes/blog.php")
-            ?>
+            <?php require("includes/blog.php") ?>
 
             <!-- Blog Sidebar Widgets Column -->
-            <?php
-                require("includes/sidebar.php")
-            ?>
+            <?php require("includes/sidebar.php") ?>
             
-        </div>
-        <!-- /.row -->
-
-        <hr>
-
-
-<?php
-    require("includes/footer.php")
-?>
+        <!-- Footer -->
+        <?php require("includes/footer.php") ?>
