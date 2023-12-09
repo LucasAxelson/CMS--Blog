@@ -1,15 +1,165 @@
 <?php 
 
+function approveComment() {
+  global $conn;
+  $comment_id = $_GET['approve'];
+
+  $query = $conn->prepare("UPDATE comments SET comment_status_id = '4' WHERE comment_id = $comment_id");
+  $query->execute();
+}
+
+function rejectComment() {
+  global $conn;
+  $comment_id = $_GET['reject'];
+
+  $query = $conn->prepare("UPDATE comments SET comment_status_id = '3' WHERE comment_id = $comment_id");
+  $query->execute();
+}
+
 function displayImage() {
   global $conn;
 
   $query = $conn->prepare("SELECT post_image FROM posts");
   $query->execute();
-
+  
   $image = $query->fetchColumn();
+  
+  echo "<img width=\"100px\" src=\"../includes/img/$image\" alt=\"\">";  
+}
 
- echo "<img width=\"100px\" src=\"../includes/img/$image\" alt=\"\">";
+function listPosts () {
+  global $conn;
 
+  $query = $conn->prepare("SELECT post_id, post_title FROM posts");
+  $query->execute();
+
+  while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
+    extract( $row );
+
+    echo " 
+    <option value=\"" . $row['post_id'] . "\">" . $row['post_title'] . "</option>
+    ";
+  }
+}
+
+function editComment($comment_id) {
+  global $conn;
+
+  $post_id = $_POST['post_id'];
+
+  if(verifyText($_POST['comment_content']) && verifyText($_POST['comment_author'])) {
+    $author = trim_input($_POST['comment_author']);
+    $content = trim_input($_POST['comment_content']);
+    $email = trim_input($_POST['comment_email']);
+
+    $stmt = "UPDATE comments 
+    SET comment_post_id = '$post_id', comment_email = '$email', comment_content = '$content', comment_author = '$author' 
+    WHERE comment_id = $comment_id";
+  }
+
+  try {
+    $query = $conn->prepare($stmt);
+    $query->execute();
+    header("Location:index.php?source=view_all_comments");  
+  } catch (PDOException $e) {
+    echo "". $e->getMessage() ."";
+  } 
+}
+
+function createComment() {
+  global $conn;
+
+  $post_id = $_POST['post_id'];
+
+  if(verifyText($_POST['comment_content']) && verifyText($_POST['comment_author'])) {
+    $author = trim_input($_POST['comment_author']);
+    $content = trim_input($_POST['comment_content']);
+    $email = trim_input($_POST['comment_email']);
+  
+    $stmt = "INSERT INTO comments (comment_post_id, comment_email, comment_content, comment_author, comment_status_id, comment_date) VALUES ('$post_id', '$email', '$content', '$author', '2' , NOW())";
+
+    try {
+      $query = $conn->prepare($stmt);
+      $query->execute();
+      header("Location:index.php?source=view_all_comments");  
+    } catch(PDOException $e) {
+      echo "". $e->getMessage();
+    }
+  }
+}
+
+// Display comment you're about to edit
+function declareComment() {
+  global $conn;
+
+  $comment_id = $_GET['edit'];
+
+  $query = $conn->prepare("SELECT * FROM comments, status, posts WHERE status.status_id = comments.comment_status_id AND posts.post_id = comments.comment_post_id AND comments.comment_id = $comment_id");
+  $query->execute();
+
+  while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
+    extract( $row );
+
+    $items = explode(" ", $row['comment_date']);
+    $itemsDate = explode("-", $items[0]);
+    $date = "$itemsDate[2]/$itemsDate[1]/$itemsDate[0]"; 
+  
+    echo "          
+     <tr>
+        <td>" . $row['comment_id'] . "</td>
+        <td>" . $row['post_title'] . "</td>
+        <td width=\"400px\">" . $row['comment_content'] . "</td>
+        <td>" . $row['comment_author'] . "</td>
+        <td>" . $row['comment_email'] . "</td>
+        <td>" . $date . "</td>
+        <td>" . $row['status_name'] . "</td>
+        <td> Post </td>
+     </tr>";
+  }
+}
+
+function declareComments() {
+  global $conn;
+
+  $query = $conn->prepare("SELECT * FROM comments, status, posts WHERE status.status_id = comments.comment_status_id AND posts.post_id = comments.comment_post_id");
+  $query->execute();
+
+  while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
+    extract( $row );
+
+    $items = explode(" ", $row['comment_date']);
+    $itemsDate = explode("-", $items[0]);
+    $date = "$itemsDate[2]/$itemsDate[1]/$itemsDate[0]"; 
+  
+    echo "          
+     <tr>
+     <td>" . $row['comment_id'] . "</td>
+     <td>" . $row['post_title'] . "</td>
+     <td width=\"400px\">" . $row['comment_content'] . "</td>
+     <td>" . $row['comment_author'] . "</td>
+     <td>" . $row['comment_email'] . "</td>
+     <td>" . $date . "</td>
+     <td> Post </td>
+     <td>" . $row['status_name'] . "</td>
+     <td><a class=\"btn btn-success\" href='index.php?source=view_all_comments&approve=" . $row['comment_id'] . "'>Approve</a></td>
+     <td><a class=\"btn btn-danger\" href='index.php?source=view_all_comments&reject=" . $row['comment_id'] . "'>Reject</a></td>
+     <td><a class=\"btn btn-danger\" href='index.php?source=view_all_comments&delete=" . $row['comment_id'] . "'>Delete</a></td>
+     <td><a class=\"btn btn-info\" href='index.php?source=edit_comments&edit=" . $row['comment_id'] . "'>Edit</a></td>
+     </tr>";
+  }
+}
+
+function deleteComment() {
+  global $conn;
+  $id = $_GET['delete'];
+
+  try {
+    $query = $conn->prepare("DELETE FROM comments WHERE comment_id = $id");
+    $query->execute();
+    header("Location:index.php?source=view_all_comments");   
+  } catch(PDOException $e) {
+    echo $e->getMessage();
+  }
 }
 
 function editPost($id) {
@@ -96,7 +246,7 @@ function deletePost() {
 function declarePosts() {
   global $conn;
 
-  $query = $conn->prepare("SELECT * FROM posts, categories WHERE categories.cat_id = posts.post_category_id");
+  $query = $conn->prepare("SELECT * FROM posts, status, categories WHERE categories.cat_id = posts.post_category_id AND status.status_id = posts.post_status");
   $query->execute();
 
   while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
@@ -113,7 +263,7 @@ function declarePosts() {
         <td>" . $row['post_author'] . "</td>
         <td>" . $date . "</td>
         <td>" . $row['cat_title'] . "</td>
-        <td>" . $row['post_status'] . "</td>
+        <td>" . $row['status_name'] . "</td>
         <td><img width=\"100px\" src=\"../includes/img/" . $row['post_image'] . "\" alt=\"" . $row['post_image'] . "\"></td>
         <td>" . $row['post_tags'] . "</td>
         <td>" . $row['post_comment_count'] . "</td>
