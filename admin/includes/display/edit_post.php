@@ -36,7 +36,7 @@ if(isset($_POST["edit_post"])) {
   </div>
 
   <div class="form-group">
-    <label class="form-label" for="category">Post Category</label>
+    <label class="" for="category">Post Category</label>
     <select name="post_category_id" id="category">
       <?php listCategories() ?>
     </select>

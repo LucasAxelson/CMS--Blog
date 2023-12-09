@@ -1,5 +1,5 @@
-<?php require("includes/functions.php"); ?>
 <?php require("includes/admin_header.php");?>
+<?php require("includes/functions.php"); ?>
       
         <?php require("includes/admin_head.php"); ?>
 

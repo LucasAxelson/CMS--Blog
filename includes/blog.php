@@ -8,7 +8,9 @@
 <!-- Blog Posts -->
     <?php 
     if(isset($_POST["search_submit"])) {
-        searchExecute();
+        searchPosts();
+    } else if (isset($_GET["category"])) {
+        displayCategoryPosts();
     } else {
         displayPosts();
     }

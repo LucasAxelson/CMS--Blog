@@ -23,14 +23,21 @@ function editPost($id) {
   $img_name = $_FILES['post_image']['name'];
   $img_location = $_FILES['post_image']['tmp_name'];
 
-  move_uploaded_file($img_location, "../includes/img/$img_name");
+  if(!empty($img_name) && !empty($img_location)) {
+    move_uploaded_file($img_location, "../includes/img/$img_name");
+
+    $stmt = "UPDATE posts 
+    SET post_category_id = '$category', post_title = '$title', post_author = '$author', post_image = '$img_name', post_content = '$content', post_tags = '$tags' 
+    WHERE post_id = $id";
+
+  } else {
+    $stmt = "UPDATE posts 
+    SET post_category_id = '$category', post_title = '$title', post_author = '$author', post_content = '$content', post_tags = '$tags' 
+    WHERE post_id = $id";
+  }
 
   try {
-    $query = $conn->prepare(
-      "UPDATE posts 
-      SET post_category_id = '$category', post_title = '$title', post_author = '$author', post_image = '$img_name', post_content = '$content', post_tags = '$tags' 
-      WHERE post_id = $id"
-    );
+    $query = $conn->prepare($stmt);
     $query->execute();
     header("Location:index.php?source=view_all_posts");  
   } catch (PDOException $e) {
@@ -79,15 +86,21 @@ function declarePosts() {
   while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
     extract( $row );
 
+    $items = explode(" ", $row['post_date']);
+    $itemsDate = explode("-", $items[0]);
+    $date = "$itemsDate[2]/$itemsDate[1]/$itemsDate[0]"; 
+  
     echo "          
      <tr>
         <td>" . $row['post_id'] . "</td>
         <td>" . $row['post_title'] . "</td>
         <td>" . $row['post_author'] . "</td>
+        <td>" . $date . "</td>
         <td>" . $row['cat_title'] . "</td>
         <td>" . $row['post_status'] . "</td>
         <td><img width=\"100px\" src=\"../includes/img/" . $row['post_image'] . "\" alt=\"" . $row['post_image'] . "\"></td>
         <td>" . $row['post_tags'] . "</td>
+        <td>" . $row['post_comment_count'] . "</td>
         <td><a href='index.php?source=view_all_posts&delete=" . $row['post_id'] . "'>Delete</a></td>
         <td><a href='index.php?source=edit_post&edit=" . $row['post_id'] . "'>Edit</a></td>
      </tr>";
