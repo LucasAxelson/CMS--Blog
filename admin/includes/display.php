@@ -16,5 +16,8 @@
     case "add_post";
       require("includes/display/add_post.php");
       break;
+    case "edit_post";
+      require("includes/display/edit_post.php");
+      break;
   }
 ?>

@@ -1,5 +1,75 @@
 <?php 
 
+function displayImage() {
+  global $conn;
+
+  $query = $conn->prepare("SELECT post_image FROM posts");
+  $query->execute();
+
+  $image = $query->fetchColumn();
+
+ echo "<img width=\"100px\" src=\"../includes/img/$image\" alt=\"\">";
+
+}
+
+function editPost($id) {
+  global $conn;
+
+  $category = $_POST['post_category_id'];
+  $title = $_POST['post_title'];
+  $author = $_POST['post_author'];
+  $content = $_POST['post_content'];
+  $tags = $_POST['post_tags'];
+  $img_name = $_FILES['post_image']['name'];
+  $img_location = $_FILES['post_image']['tmp_name'];
+
+  move_uploaded_file($img_location, "../includes/img/$img_name");
+
+  try {
+    $query = $conn->prepare(
+      "UPDATE posts 
+      SET post_category_id = '$category', post_title = '$title', post_author = '$author', post_image = '$img_name', post_content = '$content', post_tags = '$tags' 
+      WHERE post_id = $id"
+    );
+    $query->execute();
+    header("Location:index.php?source=view_all_posts");  
+  } catch (PDOException $e) {
+    echo "". $e->getMessage() ."";
+  }
+  
+}
+
+function createPost() {
+  global $conn;
+
+  $category = $_POST['post_category_id'];
+  $title = $_POST['post_title'];
+  $author = $_POST['post_author'];
+  $content = $_POST['post_content'];
+  $tags = $_POST['post_tags'];
+
+  $img_name = $_FILES['post_image']['name'];
+  $img_location = $_FILES['post_image']['tmp_name'];
+
+  move_uploaded_file($img_location, "../includes/img/$img_name");
+
+  $query = $conn->prepare("INSERT INTO posts (post_category_id, post_title, post_author, post_date, post_image, post_content, post_tags) VALUES ('$category', '$title', '$author', NOW(), '$img_name' , '$content', '$tags')");
+  $query->execute();
+}
+
+function deletePost() {
+  global $conn;
+  $id = $_GET['delete'];
+
+  try {
+    $query = $conn->prepare("DELETE FROM posts WHERE post_id = $id");
+    $query->execute();
+    header("Location:index.php?source=view_all_posts");   
+  } catch(PDOException $e) {
+    echo $e->getMessage();
+  }
+}
+
 function declarePosts() {
   global $conn;
 
@@ -18,6 +88,8 @@ function declarePosts() {
         <td>" . $row['post_status'] . "</td>
         <td><img width=\"100px\" src=\"../includes/img/" . $row['post_image'] . "\" alt=\"" . $row['post_image'] . "\"></td>
         <td>" . $row['post_tags'] . "</td>
+        <td><a href='index.php?source=view_all_posts&delete=" . $row['post_id'] . "'>Delete</a></td>
+        <td><a href='index.php?source=edit_post&edit=" . $row['post_id'] . "'>Edit</a></td>
      </tr>";
   }
 }
@@ -55,24 +127,6 @@ function listCategories () {
     <option value=\"" . $row['cat_id'] . "\">" . $row['cat_title'] . "</option>
     ";
   }
-}
-
-function createPost() {
-  global $conn;
-
-  $category = $_POST['post_category_id'];
-  $title = $_POST['post_title'];
-  $author = $_POST['post_author'];
-  $content = $_POST['post_content'];
-  $tags = $_POST['post_tags'];
-
-  $img_name = $_FILES['post_image']['name'];
-  $img_location = $_FILES['post_image']['tmp_name'];
-
-  move_uploaded_file($img_location, "../includes/img/$img_name");
-
-  $query = $conn->prepare("INSERT INTO posts (post_category_id, post_title, post_author, post_date, post_image, post_content, post_tags) VALUES ('$category', '$title', '$author', NOW(), '$img_name' , '$content', '$tags')");
-  $query->execute();
 }
 
 function createCategory($category) {

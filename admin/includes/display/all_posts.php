@@ -1,3 +1,9 @@
+<?php
+  if(isset($_GET['delete'])) {
+    deletePost();
+  }
+?>
+
         <table class="table table-bordered table-hover">
           <thead>
             <tr>

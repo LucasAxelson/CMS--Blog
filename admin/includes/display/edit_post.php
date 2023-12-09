@@ -1,11 +1,12 @@
-<?php
-  if(isset($_POST['create_post'])) {
-    createPost();
-  }
+<?php 
+$id = $_GET['edit'];
 
-?>
+if(isset($_POST["edit_post"])) {
+    editPost($id);
+}
+  ?>
 
-<form action="index.php?source=add_post" method="POST" enctype="multipart/form-data">
+<form action="index.php?source=edit_post&edit=<?php echo $id ?>" method="POST" enctype="multipart/form-data">
 
   <div class="form-group">
     <label class="form-label" for="title">Post Title</label>
@@ -25,6 +26,7 @@
 
   <div class="form-group">
     <label for="image">Post Image</label>
+    <?php displayImage(); ?>
     <input type="file" id="image" name="post_image">
   </div>
   
@@ -40,6 +42,6 @@
     </select>
   </div>
 
-  <input type="submit" value="Create Post" name="create_post" class="btn btn-primary">
+  <input type="submit" value="Edit Post" name="edit_post" class="btn btn-primary">
 
 </form>
