@@ -96,7 +96,7 @@ function displayNestedComment($target_id) {
         <p>". $row['comment_content'] . "</p>
         <p><a class=\"pull-left\" style=\"padding: 2px; font-size: 15px;\" href=\"blog_post.php?blog_id=" . $post_id . "&reply=" . $row['comment_id'] . "\">Reply</a></p>
       </div>
-    </div>";
+    ";
 
       return $nestedComment;
   }

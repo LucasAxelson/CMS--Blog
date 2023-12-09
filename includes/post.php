@@ -26,8 +26,7 @@
                 <!-- </div> -->
 
                 <hr>
-
-                
+  
                 <!-- Posted Comments -->
                 <!-- Comment -->
                 <?php if(isset($_GET['blog_id'])) { displayComments(); } ?>
@@ -69,5 +68,3 @@
                                 
                     </div>
                 </div>
-                
-            </div>
