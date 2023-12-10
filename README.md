@@ -4,6 +4,7 @@ Improve & Personalize CSS <br>
   - Improve user display on blogs; <br>
   - Personalize navigation display; <br>
   - Establish title/logo; <br>
+  - Correct display for smaller screens on admin, <br>
 <br>
 Improve comment count method <br>
  - Current method pulls a lot of processing power;<br>
