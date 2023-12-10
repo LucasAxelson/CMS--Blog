@@ -1,5 +1,15 @@
 <?php 
 
+function countComments($post_id) {
+  global $conn;
+  $num_comments = $conn->prepare("SELECT * FROM comments WHERE comments.comment_post_id = $post_id");
+  $num_comments->execute();
+  $num = $num_comments->rowCount();
+
+  $update_comments = $conn->prepare("UPDATE posts SET post_comment_count = $num WHERE post_id = $post_id");
+  $update_comments->execute();
+}
+
 function approveComment() {
   global $conn;
   $comment_id = $_GET['approve'];
@@ -96,15 +106,15 @@ function createComment() {
 // Display comment you're about to edit
 function declareComment() {
   global $conn;
-
+  
   $comment_id = $_GET['edit'];
-
+  
   $query = $conn->prepare("SELECT * FROM comments, status, posts WHERE status.status_id = comments.comment_status_id AND posts.post_id = comments.comment_post_id AND comments.comment_id = $comment_id");
   $query->execute();
-
+  
   while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
     extract( $row );
-
+    
     $items = explode(" ", $row['comment_date']);
     $itemsDate = explode("-", $items[0]);
     $date = "$itemsDate[2]/$itemsDate[1]/$itemsDate[0]"; 
@@ -256,6 +266,7 @@ function declarePosts() {
 
   while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
     extract( $row );
+    countComments($row['post_id']);
 
     $items = explode(" ", $row['post_date']);
     $itemsDate = explode("-", $items[0]);
