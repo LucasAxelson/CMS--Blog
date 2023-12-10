@@ -32,4 +32,6 @@ Increase validation across CMS.<br>
 <br>
 Implement Classes and Objects where able<br>
 <br>
+Improve features in project <br>
+ - Correct search function to work when inside of posts. Currently search method displays posts. Redirect would be needed to main page.
 
