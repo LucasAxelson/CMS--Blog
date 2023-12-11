@@ -1,8 +1,21 @@
 <?php 
 
+function dateTime($data, $choice) {
+  $items = explode(" ", $data);
+  $itemsDate = explode("-", $items[0]);
+  $created = "$itemsDate[2]/$itemsDate[1]/$itemsDate[0]"; 
+
+  if($choice == "time") {
+    $time = setTime($items);   
+    return $time;
+  } else if ($choice == "date") {
+    return $created;
+  }
+}
+
 function setTime($time) {
- $time = substr($time[1], 0, strlen($time[1]) - 3);
- return $time;
+  $time = substr($time[1], 0, strlen($time[1]) - 3);   
+  return $time;
 }
 
 function trim_input($input) {

@@ -1,5 +1,41 @@
 <?php 
 
+function editUser($id) {
+  global $conn;
+
+  $img_name = $_FILES['user_image']['name'];
+  $img_location = $_FILES['user_image']['tmp_name'];
+
+  if(verifyText($_POST['user_legal_name'])) {
+    $username = trim_input($_POST['user_username']);
+    $legal_name = trim_input($_POST['user_legal_name']);
+    $email = trim_input($_POST['user_email']);
+    $status = trim_input($_POST['user_status']);
+  
+    if(!empty($img_name) && !empty($img_location)) {
+      move_uploaded_file($img_location, "../includes/img/user/$img_name");
+    
+      $stmt = "UPDATE users 
+      SET user_username = '$username', user_legal_name = '$legal_name', user_email = '$email', user_status_id = '$status', user_image = '$img_name', user_modified = NOW() 
+      WHERE user_id = $id";
+    } else {
+      $stmt = "UPDATE users 
+      SET user_username = '$username', user_legal_name = '$legal_name', user_email = '$email', user_status_id = '$status', user_modified = NOW() 
+      WHERE user_id = $id";
+    }
+
+  }
+
+  try {
+    $query = $conn->prepare($stmt);
+    $query->execute();
+    header("Location:index.php?source=view_all_users");  
+  } catch (PDOException $e) {
+    echo "". $e->getMessage() ."";
+  }
+  
+}
+
 function createUser() {
   global $conn;
 
@@ -192,7 +228,7 @@ function editComment($comment_id) {
 
   $post_id = $_POST['post_id'];
 
-  if(verifyText($_POST['comment_content']) && verifyText($_POST['comment_author'])) {
+  if(verifyText($_POST['comment_content'])) {
     $author = trim_input($_POST['comment_author']);
     $content = trim_input($_POST['comment_content']);
     $email = trim_input($_POST['comment_email']);
@@ -216,16 +252,16 @@ function createComment() {
 
   $post_id = $_POST['post_id'];
 
-  if(verifyText($_POST['comment_content']) && verifyText($_POST['comment_author'])) {
+  if(verifyText($_POST['comment_content'])) {
     $author = trim_input($_POST['comment_author']);
     $content = trim_input($_POST['comment_content']);
     $email = trim_input($_POST['comment_email']);
   
-    $stmt = "INSERT INTO comments (comment_post_id, comment_email, comment_content, comment_author, comment_status_id, comment_date) VALUES ('$post_id', '$email', '$content', '$author', '1' , NOW())";
+    $stmt = "INSERT INTO comments (comment_post_id, comment_author_id, comment_email, comment_content, comment_status_id, comment_date) VALUES ('$post_id', '$email', '$content', '1', '$author', NOW())";
 
     if(isset($_GET['reply'])) { 
       $reply_id = $_GET['reply']; 
-      $stmt = "INSERT INTO comments (comment_post_id, comment_reply_id, comment_email, comment_content, comment_author, comment_status_id, comment_date) VALUES ('$post_id', '$reply_id', '$email', '$content', '$author', '1' , NOW())";    
+      $stmt = "INSERT INTO comments (comment_post_id, comment_reply_id, comment_author_id, comment_email, comment_content, comment_status_id, comment_date) VALUES ('$post_id', '$reply_id', '$email', '$content', '1', '$author', NOW())";    
     }
 
     try {
@@ -244,24 +280,20 @@ function seeComment() {
   
   $comment_id = $_GET['edit'];
   
-  $query = $conn->prepare("SELECT * FROM comments, status, posts WHERE status.status_id = comments.comment_status_id AND posts.post_id = comments.comment_post_id AND comments.comment_id = $comment_id");
+  $query = $conn->prepare("SELECT * FROM comments, status, posts, users WHERE status.status_id = comments.comment_status_id AND posts.post_id = comments.comment_post_id AND comments.comment_id = $comment_id AND users.user_id = comments.comment_author_id");
   $query->execute();
   
   while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
     extract( $row );
-    
-    $items = explode(" ", $row['comment_date']);
-    $itemsDate = explode("-", $items[0]);
-    $date = "$itemsDate[2]/$itemsDate[1]/$itemsDate[0]"; 
   
     echo "          
      <tr>
         <td>" . $row['comment_id'] . "</td>
         <td>" . $row['post_title'] . "</td>
         <td width=\"400px\">" . $row['comment_content'] . "</td>
-        <td>" . $row['comment_author'] . "</td>
-        <td>" . $row['comment_email'] . "</td>
-        <td>" . $date . "</td>
+        <td>" . $row['user_username'] . "</td>
+        <td>" . $row['user_email'] . "</td>
+        <td>" . dateTime($row['comment_date'], "date") . "</td>
         <td>" . $row['status_name'] . "</td>
         <td> Post </td>
      </tr>";
@@ -271,25 +303,22 @@ function seeComment() {
 function declareComments() {
   global $conn;
 
-  $query = $conn->prepare("SELECT * FROM comments, status, posts WHERE status.status_id = comments.comment_status_id AND posts.post_id = comments.comment_post_id");
+  $query = $conn->prepare("SELECT * FROM comments, status, posts, users WHERE status.status_id = comments.comment_status_id AND posts.post_id = comments.comment_post_id AND users.user_id = comments.comment_author_id");
   $query->execute();
 
   while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
     extract( $row );
 
-    $items = explode(" ", $row['comment_date']);
-    $itemsDate = explode("-", $items[0]);
-    $date = "$itemsDate[2]/$itemsDate[1]/$itemsDate[0]"; 
   
     echo "          
      <tr>
      <td>" . $row['comment_id'] . "</td>
      <td>" . $row['post_title'] . "</td>
      <td width=\"400px\">" . $row['comment_content'] . "</td>
-     <td>" . $row['comment_author'] . "</td>
-     <td>" . $row['comment_email'] . "</td>
-     <td>" . $date . "</td>
-     <td> Post </td>
+     <td>" . $row['user_username'] . "</td>
+     <td>" . $row['user_email'] . "</td>
+     <td>" . dateTime($row['comment_date'], "date") . "</td>
+     <td>" . $row['comment_reply_id'] . "</td>
      <td>" . $row['status_name'] . "</td>
      <td><a class=\"btn btn-success\" href='index.php?source=view_all_comments&approve=" . $row['comment_id'] . "'>Approve</a></td>
      <td><a class=\"btn btn-danger\" href='index.php?source=view_all_comments&reject=" . $row['comment_id'] . "'>Reject</a></td>
@@ -336,7 +365,7 @@ function editPost($id) {
   $img_name = $_FILES['post_image']['name'];
   $img_location = $_FILES['post_image']['tmp_name'];
   
-  if(verifyText($_POST['post_content']) && verifyText($_POST['post_author']) && verifyText($_POST['post_title']) && verifyTags($_POST['post_tags'])) {
+  if(verifyText($_POST['post_content']) && verifyText($_POST['post_title']) && verifyTags($_POST['post_tags'])) {
     $title = trim_input($_POST['post_title']);
     $author = trim_input($_POST['post_author']);
     $content = trim_input($_POST['post_content']);
@@ -346,12 +375,12 @@ function editPost($id) {
       move_uploaded_file($img_location, "../includes/img/$img_name");
   
       $stmt = "UPDATE posts 
-      SET post_category_id = '$category', post_title = '$title', post_author = '$author', post_image = '$img_name', post_content = '$content', post_tags = '$tags' 
+      SET post_category_id = '$category', post_title = '$title', post_image = '$img_name', post_author_id = '$author', post_content = '$content', post_tags = '$tags' 
       WHERE post_id = $id";
   
     } else {
       $stmt = "UPDATE posts 
-      SET post_category_id = '$category', post_title = '$title', post_author = '$author', post_content = '$content', post_tags = '$tags' 
+      SET post_category_id = '$category', post_title = '$title', post_author_id = '$author', post_author_id = '$author', post_content = '$content', post_tags = '$tags' 
       WHERE post_id = $id";
     }
 
@@ -374,7 +403,7 @@ function createPost() {
   $img_name = $_FILES['post_image']['name'];
   $img_location = $_FILES['post_image']['tmp_name'];
 
-  if(verifyText($_POST['post_content']) && verifyText($_POST['post_author']) && verifyText($_POST['post_title']) && verifyTags($_POST['post_tags'])) {
+  if(verifyText($_POST['post_content']) && verifyText($_POST['post_title']) && verifyTags($_POST['post_tags'])) {
     $title = trim_input($_POST['post_title']);
     $author = trim_input($_POST['post_author']);
     $content = trim_input($_POST['post_content']);
@@ -383,10 +412,10 @@ function createPost() {
     if(!empty($img_name) && !empty($img_location)) {
       move_uploaded_file($img_location, "../includes/img/$img_name");
   
-      $stmt = "INSERT INTO posts (post_category_id, post_title, post_author, post_date, post_image, post_content, post_tags) VALUES ('$category', '$title', '$author', NOW(), '$img_name' , '$content', '$tags')";
+      $stmt = "INSERT INTO posts (post_category_id, post_title, post_date, post_image, post_status_id, post_author_id, post_content, post_tags) VALUES ('$category', '$title', NOW(), '$img_name', 1 , '$author', '$content', '$tags')";
   
     } else {
-      $stmt = "INSERT INTO posts (post_category_id, post_title, post_author, post_date, post_content, post_tags) VALUES ('$category', '$title', '$author', NOW(), '$content', '$tags')";
+      $stmt = "INSERT INTO posts (post_category_id, post_title, post_date, post_status_id, post_author_id, post_content, post_tags) VALUES ('$category', '$title', NOW(), 1 , '$author', '$content', '$tags')";
     }
 
 
@@ -412,23 +441,19 @@ function deletePost() {
 function declarePosts() {
   global $conn;
 
-  $query = $conn->prepare("SELECT * FROM posts, status, categories WHERE categories.cat_id = posts.post_category_id AND status.status_id = posts.post_status_id");
+  $query = $conn->prepare("SELECT * FROM posts, status, categories, users WHERE categories.cat_id = posts.post_category_id AND status.status_id = posts.post_status_id AND users.user_id = posts.post_author_id");
   $query->execute();
 
   while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
     extract( $row );
     countComments($row['post_id']);
-
-    $items = explode(" ", $row['post_date']);
-    $itemsDate = explode("-", $items[0]);
-    $date = "$itemsDate[2]/$itemsDate[1]/$itemsDate[0]"; 
   
     echo "          
      <tr>
         <td>" . $row['post_id'] . "</td>
         <td>" . $row['post_title'] . "</td>
-        <td>" . $row['post_author'] . "</td>
-        <td>" . $date . "</td>
+        <td>" . $row['user_username'] . "</td>
+        <td>" . dateTime($row['post_date'], "date") . "</td>
         <td>" . $row['cat_title'] . "</td>
         <td>" . $row['status_name'] . "</td>
         <td><img width=\"100px\" src=\"../includes/img/" . $row['post_image'] . "\" alt=\"" . $row['post_image'] . "\"></td>

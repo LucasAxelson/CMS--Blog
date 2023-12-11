@@ -2,7 +2,7 @@
  if(isset($_GET['edit'])) {  
    $user_id = $_GET['edit'];
  } else if(isset($_POST['edit_user'])) {  
-    editComment($user_id);
+    editUser($user_id);
  }
 ?>
 
@@ -38,22 +38,22 @@
   
   <div class="form-group">
     <label class="form-label" for="userName">Username</label>
-    <input type="text" name="user_username" id="userName" class="form-control">
+    <input type="text"  value="<?php if(isset($_GET['user_id'])) { echo $user_username; } ?>"  name="user_username" id="userName" class="form-control">
   </div>
   
   <div class="form-group">
     <label class="form-label" for="legalName">Legal Name</label>
-    <input type="text" name="user_legalname" id="legalName" class="form-control">
+    <input type="text" value="<?php if(isset($_GET['user_id'])) { echo $user_legal_name; } ?>"  name="user_legalname" id="legalName" class="form-control">
   </div>
 
   <div class="form-group">
     <label class="form-label" for="email">Email</label>
-    <input type="email" name="user_email" id="email" class="form-control">
+    <input type="email" value="<?php if(isset($_GET['user_id'])) { echo $user_id; } ?>"  name="user_email" id="email" class="form-control">
   </div>
 
   <div class="form-group">
     <label class="form-label" for="status">Status</label>
-    <input type="text" name="user_status" id="status" class="form-control">
+    <input type="text" value="<?php if(isset($_GET['user_id'])) { echo $user_id; } ?>"  name="user_status" id="status" class="form-control">
   </div>
 
   <div class="form-group">

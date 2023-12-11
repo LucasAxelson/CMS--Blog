@@ -20,7 +20,9 @@
   
   <div class="form-group">
     <label class="form-label" for="title">Comment Author</label>
-    <input type="text" name="comment_author" class="form-control">
+    <select name="comment_author" id="authorComment">
+      <?php listUsers(); ?>
+    </select>
   </div>
 
   <div class="form-group">

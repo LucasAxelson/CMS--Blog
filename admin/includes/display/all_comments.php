@@ -19,7 +19,7 @@
               <th>Author</th>
               <th>Email</th>
               <th>Date</th>
-              <th>Responded to</th>
+              <th>Reply ID</th>
               <th>Status</th>
             </tr>
           </thead>

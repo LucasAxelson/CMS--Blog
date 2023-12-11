@@ -8,7 +8,9 @@
                             <div class="row">
                               <label class="col-sm-2 col-form-label" for="authorComment">Author</label>
                               <div class="col-sm-10">
-                                <input type="text" class="form-control" id="authorComment" name="form_author">
+                                <select name="form_author" id="authorComment">
+                                  <?php listUsers(); ?>
+                                </select>
                               </div>
                             </div>
                             
@@ -30,4 +32,5 @@
 
                           </form>
                       </div>
-                      </div>
+                    </div>
+                  </div>
