@@ -19,9 +19,6 @@
     case "edit_post";
       require("includes/display/edit_post.php");
       break;
-    case "view_all_posts";
-      require("includes/display/all_posts.php");
-      break;
     case "view_all_comments";
       require("includes/display/all_comments.php");
       break;
@@ -31,6 +28,16 @@
     case "add_comments";
       require("includes/display/add_comment.php");
       break;
+    case "view_all_users";
+      require("includes/display/all_users.php");
+      break;
+    case "add_user";
+      require("includes/display/add_user.php");
+      break;
+    case "edit_user";
+      require("includes/display/edit_user.php");
+      break;
+
   
 
   }

@@ -1,5 +1,5 @@
 <?php ob_start() ?>
-<?php require("server.php"); ?>
+<?php require("includes/server.php"); ?>
 <?php require("includes/functions.php"); ?>
 <?php require("includes/validation_functions.php"); ?>
 
@@ -15,7 +15,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Blog Home - Start Bootstrap Template</title>
+    <title>Home - Start Bootstrap</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">

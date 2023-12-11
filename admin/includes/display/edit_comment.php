@@ -19,7 +19,7 @@
             </tr>
           </thead>
           <tbody>
-            <?php declareComment() ?>
+            <?php seeComment() ?>
           </tbody>
         </table>
 

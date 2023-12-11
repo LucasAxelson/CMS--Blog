@@ -1,5 +1,140 @@
 <?php 
 
+function createUser() {
+  global $conn;
+
+  $img_name = $_FILES['user_image']['name'];
+  $img_location = $_FILES['user_image']['tmp_name'];
+
+  if(verifyText($_POST['user_legal_name'])) {
+    $username = trim_input($_POST['user_username']);
+    $legal_name = trim_input($_POST['user_legal_name']);
+    $email = trim_input($_POST['user_email']);
+    $status = trim_input($_POST['user_status']);
+  
+    if(!empty($img_name) && !empty($img_location)) {
+      move_uploaded_file($img_location, "../includes/img/user/$img_name");
+  
+      $stmt = "INSERT INTO users (user_username, user_legal_name, user_email, user_status_id, user_image, user_created) VALUES ('$username', '$legal_name', '$email', '$status', '$img_name',  NOW())";
+  
+    } else {
+      $stmt = "INSERT INTO users (user_username, user_legal_name, user_email, user_status_id, user_created) VALUES ('$username', '$legal_name', '$email', '$status', NOW())";
+    }
+
+      $query = $conn->prepare($stmt);
+      $query->execute();
+  }
+}
+
+function deleteUser() {
+  global $conn;
+  $user_id = $_GET['delete'];
+
+  try {
+    $query = $conn->prepare("DELETE FROM users WHERE user_id = $user_id");
+    $query->execute();
+    header("Location:index.php?source=view_all_users");   
+  } catch(PDOException $e) {
+    echo $e->getMessage();
+  }
+}
+
+function declareUsers() {
+  global $conn;
+
+  $query = $conn->prepare("SELECT * FROM users, status WHERE status.status_id = users.user_status_id");
+  $query->execute();
+
+  while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
+    extract( $row );
+
+    $items = explode(" ", $row['user_created']);
+    $itemsDate = explode("-", $items[0]);
+    $created = "$itemsDate[2]/$itemsDate[1]/$itemsDate[0]"; 
+  
+    echo "          
+     <tr>
+        <td>" . $row['user_id'] . "</td>
+        <td>" . $row['user_username'] . "</td>
+        <td>" . $row['user_legal_name'] . "</td>
+        <td>" . $row['user_email'] . "</td>
+        <td>" . $row['status_name'] . "</td>
+        <td>" . $created . "</td>
+        <td><img width=\"100px\" src=\"../includes/img/user/" . $row['user_image'] . "\" alt=\"" . $row['user_image'] . "\"></td>
+        <td><a class=\"btn btn-success\" href='index.php?source=view_all_users&approve=" . $row['user_id'] . "'>Approve</a></td>
+        <td><a class=\"btn btn-danger\" href='index.php?source=view_all_users&reject=" . $row['user_id'] . "'>Reject</a></td>
+        <td><a class=\"btn btn-danger\" href='index.php?source=view_all_users&delete=" . $row['user_id'] . "'>Delete</a></td>
+        <td><a class=\"btn btn-info\" href='index.php?source=edit_user&edit=" . $row['user_id'] . "'>Edit</a></td>
+     </tr>";
+  }
+}
+
+function approveUser() {
+  global $conn;
+  $user_id = $_GET['approve'];
+
+  $query = $conn->prepare("UPDATE users SET user_status_id = '4' WHERE user_id = $user_id");
+  $query->execute();
+}
+
+function rejectUser() {
+  global $conn;
+  $user_id = $_GET['reject'];
+
+  $query = $conn->prepare("UPDATE users SET user_status_id = '3' WHERE user_id = $user_id");
+  $query->execute();
+}
+
+function listUsers () {
+  global $conn;
+
+  $query = $conn->prepare("SELECT user_id, user_username FROM users");
+  $query->execute();
+
+  while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
+    extract( $row );
+
+    echo " 
+    <option value=\"" . $row['user_id'] . "\">" . $row['user_username'] . "</option>
+    ";
+  }
+}
+
+// Display comment you're about to edit
+function seeUser() {
+  global $conn;
+  
+  if(isset($_GET['edit'])) {
+    $user_id = $_GET['edit'];
+  
+
+  $query = $conn->prepare("SELECT * FROM users, status WHERE status.status_id = users.user_status_id AND users.user_id = $user_id");
+  $query->execute();
+  
+
+  while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
+    extract( $row );
+    
+    $items = explode(" ", $row['user_created']);
+    $itemsDate = explode("-", $items[0]);
+    $created = "$itemsDate[2]/$itemsDate[1]/$itemsDate[0]"; 
+  
+    echo "          
+     <tr>
+        <td>" . $row['user_id'] . "</td>
+        <td>" . $row['user_username'] . "</td>
+        <td width=\"400px\">" . $row['user_legal_name'] . "</td>
+        <td>" . $row['user_email'] . "</td>
+        <td>" . $row['status_name'] . "</td>
+        <td><img width=\"100px\" src=\"../includes/img/user/" . $row['user_image'] . "\" alt=\"\"></td>
+        <td>" . $created . "</td>
+        <td>" . $row['user_modified'] . "</td>
+     </tr>";
+  }
+}
+}
+
+
 function countComments($post_id) {
   global $conn;
   $num_comments = $conn->prepare("SELECT * FROM comments WHERE comments.comment_post_id = $post_id");
@@ -104,7 +239,7 @@ function createComment() {
 }
 
 // Display comment you're about to edit
-function declareComment() {
+function seeComment() {
   global $conn;
   
   $comment_id = $_GET['edit'];
@@ -175,6 +310,22 @@ function deleteComment() {
   } catch(PDOException $e) {
     echo $e->getMessage();
   }
+}
+
+function approvePost() {
+  global $conn;
+  $post_id = $_GET['approve'];
+
+  $query = $conn->prepare("UPDATE posts SET post_status_id = '4' WHERE post_id = $post_id");
+  $query->execute();
+}
+
+function rejectPost() {
+  global $conn;
+  $post_id = $_GET['reject'];
+
+  $query = $conn->prepare("UPDATE posts SET post_status_id = '3' WHERE post_id = $post_id");
+  $query->execute();
 }
 
 function editPost($id) {
@@ -261,7 +412,7 @@ function deletePost() {
 function declarePosts() {
   global $conn;
 
-  $query = $conn->prepare("SELECT * FROM posts, status, categories WHERE categories.cat_id = posts.post_category_id AND status.status_id = posts.post_status");
+  $query = $conn->prepare("SELECT * FROM posts, status, categories WHERE categories.cat_id = posts.post_category_id AND status.status_id = posts.post_status_id");
   $query->execute();
 
   while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
@@ -283,8 +434,10 @@ function declarePosts() {
         <td><img width=\"100px\" src=\"../includes/img/" . $row['post_image'] . "\" alt=\"" . $row['post_image'] . "\"></td>
         <td>" . $row['post_tags'] . "</td>
         <td>" . $row['post_comment_count'] . "</td>
-        <td><a href='index.php?source=view_all_posts&delete=" . $row['post_id'] . "'>Delete</a></td>
-        <td><a href='index.php?source=edit_post&edit=" . $row['post_id'] . "'>Edit</a></td>
+        <td><a class=\"btn btn-success\" href='index.php?source=view_all_posts&approve=" . $row['post_id'] . "'>Approve</a></td>
+        <td><a class=\"btn btn-danger\" href='index.php?source=view_all_posts&reject=" . $row['post_id'] . "'>Reject</a></td>
+        <td><a class=\"btn btn-danger\" href='index.php?source=view_all_posts&delete=" . $row['post_id'] . "'>Delete</a></td>
+        <td><a class=\"btn btn-info\" href='index.php?source=edit_post&edit=" . $row['post_id'] . "'>Edit</a></td>
      </tr>";
   }
 }

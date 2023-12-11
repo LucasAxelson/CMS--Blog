@@ -39,7 +39,7 @@
 </div>
 
 <!-- Side Widget Well -->
-<?php require("includes/widget.php") ?>
+<?php require("includes/nav/widget.php") ?>
 
 </div>
 

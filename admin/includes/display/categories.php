@@ -33,7 +33,7 @@
                     editCategory($id, $title);
                 }; ?>
        
-                <?php  if(isset($_GET['edit'])) { require("includes/display/edit_user.php"); } ?>
+                <?php  if(isset($_GET['edit'])) { require("includes/display/edit_category.php"); } ?>
                 </div>
                 
                 <!-- Category table -->

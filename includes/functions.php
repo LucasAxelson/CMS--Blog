@@ -20,7 +20,7 @@ function createUserComment() {
     try {
       $query = $conn->prepare($stmt);
       $query->execute();
-      header("Location:blog_post.php?blog_id=" . $post_id . "");  
+      header("Location:index.php?source=blog_post&blog_id=" . $post_id . "");  
     } catch(PDOException $e) {
       echo "". $e->getMessage();
     }
@@ -54,7 +54,7 @@ function displayComments() {
           <small>" . $date . " at " . setTime($items) . "</small>
         </h4> 
         <p>". $row['comment_content'] . "</p>
-        <p><a class=\"pull-left\" style=\"padding: 2px; font-size: 15px;\" href=\"blog_post.php?blog_id=" . $post_id . "&reply=" . $row['comment_id'] . "\">Reply</a></p>
+        <p><a class=\"pull-left\" style=\"padding: 2px; font-size: 15px;\" href=\"index.php?source=blog_post&blog_id=" . $post_id . "&reply=" . $row['comment_id'] . "\">Reply</a></p>
         <br>
       ";
     
@@ -94,7 +94,7 @@ function displayNestedComment($target_id) {
           <small>" . $date . " at " . setTime($items) . "</small>
         </h4> 
         <p>". $row['comment_content'] . "</p>
-        <p><a class=\"pull-left\" style=\"padding: 2px; font-size: 15px;\" href=\"blog_post.php?blog_id=" . $post_id . "&reply=" . $row['comment_id'] . "\">Reply</a></p>
+        <p><a class=\"pull-left\" style=\"padding: 2px; font-size: 15px;\" href=\"index.php?source=blog_post&blog_id=" . $post_id . "&reply=" . $row['comment_id'] . "\">Reply</a></p>
       </div>
     ";
 
@@ -106,7 +106,7 @@ function displayPost() {
 global $conn;
 $post_id = $_GET["blog_id"];
 
-$query = $conn->prepare("SELECT * FROM posts WHERE post_id = $post_id");
+$query = $conn->prepare("SELECT * FROM posts WHERE post_id = $post_id AND post_status_id = 4");
 $query->execute();
 
 while( $row = $query->fetch(PDO::FETCH_ASSOC) ) {
@@ -135,7 +135,7 @@ function searchPosts() {
 
   $search = $_POST["search"];
 
-  $query = $conn->prepare("SELECT * FROM posts WHERE post_tags LIKE '%$search%' ");
+  $query = $conn->prepare("SELECT * FROM posts WHERE post_tags LIKE '%$search%' AND post_status_id = 4");
   $query->execute();
   
   $count = $query->rowCount();
@@ -158,7 +158,7 @@ function showPosts($query) {
 
     echo "                    
    <h2>
-   <a href=\"blog_post.php?blog_id=" . $row['post_id'] . "\">" . $row['post_title'] . "</a>
+   <a href=\"index.php?source=blog_post&blog_id=" . $row['post_id'] . "\">" . $row['post_title'] . "</a>
   </h2>
   <p class=\"lead\">
    by <a href=\"index.php\">" . $row['post_author'] . "</a>
@@ -168,7 +168,7 @@ function showPosts($query) {
   <img class=\"img-responsive\" src=\"includes/img/" . $row['post_image'] . "\" alt=\"\">
   <hr>
   <p>" . $row['post_content'] . "</p>
-  <a class=\"btn btn-primary\" href=\"blog_post.php?blog_id=" . $row['post_id'] . "\">Read More <span class=\"glyphicon glyphicon-chevron-right\"></span></a>
+  <a class=\"btn btn-primary\" href=\"index.php?source=blog_post&blog_id=" . $row['post_id'] . "\">Read More <span class=\"glyphicon glyphicon-chevron-right\"></span></a>
 
   <hr>
     ";
@@ -186,7 +186,7 @@ function displayNavigation () {
     
     echo "                    
     <li>
-      <a href=\"index.php?category=" . $row['cat_id'] . "\">" . $row['cat_title'] . "</a>
+      <a href=\"index.php?source=main_page&category=" . $row['cat_id'] . "\">" . $row['cat_title'] . "</a>
     </li>
     ";
   }
@@ -196,7 +196,7 @@ function displayCategoryPosts() {
   global $conn;
   $category_id = $_GET["category"];
 
-  $query = $conn->prepare("SELECT * FROM posts WHERE post_category_id = $category_id");
+  $query = $conn->prepare("SELECT * FROM posts WHERE post_category_id = $category_id AND post_status_id = 4");
   $query->execute();
   
   showPosts($query);
@@ -205,7 +205,7 @@ function displayCategoryPosts() {
 function displayPosts () {
   global $conn;
 
-  $query = $conn->prepare("SELECT * FROM posts ORDER BY post_date DESC LIMIT 5");
+  $query = $conn->prepare("SELECT * FROM posts WHERE post_status_id = 4 ORDER BY post_date DESC LIMIT 5");
   $query->execute();
   
   showPosts($query);
@@ -225,7 +225,7 @@ function showCategory($query) {
   while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
     extract( $row );
 
-    echo "<li><a href=\"index.php?category=" . $row['cat_id'] . "\">" . $row['cat_title'] . "</a></li>";
+    echo "<li><a href=\"index.php?source=main_page&category=" . $row['cat_id'] . "\">" . $row['cat_title'] . "</a></li>";
 }
 }
 

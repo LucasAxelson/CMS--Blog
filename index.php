@@ -1,16 +1,16 @@
-<?php require("includes/header.php"); ?>
+<?php require("includes/display/header.php"); ?>
 
 <body>
 
     <!-- Navigation -->
-    <?php require("includes/navigation.php"); ?>
+    <?php require("includes/nav/navigation.php"); ?>
 
 
-            <!-- Blog Entries Column -->
-            <?php require("includes/blog.php") ?>
+            <!-- Main Column -->
+            <?php require("includes/display.php") ?>
 
-            <!-- Blog Sidebar Widgets Column -->
-            <?php require("includes/sidebar.php") ?>
+            <!-- Sidebar Widgets Column -->
+            <?php require("includes/nav/sidebar.php") ?>
             
         <!-- Footer -->
-        <?php require("includes/footer.php") ?>
+        <?php require("includes/display/footer.php") ?>

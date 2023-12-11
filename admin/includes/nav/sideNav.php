@@ -15,7 +15,22 @@
             </ul>
         </li>
         <li>
-            <a href="javascript:;" data-toggle="collapse" data-target="#comments_dropdown"><i class="fa fa-fw fa-navicon"></i> Comments <i class="fa fa-fw fa-caret-down"></i></a>
+            <a href="javascript:;" data-toggle="collapse" data-target="#users_dropdown"><i class="fa fa-fw fa-group"></i> Users <i class="fa fa-fw fa-caret-down"></i></a>
+            <ul id="users_dropdown" class="collapse">
+                <li>
+                    <a href="index.php?source=view_all_users">View All Users</a>
+                </li>
+                <li>
+                    <a href="index.php?source=add_user">Add User</a>
+                </li>
+                <li>
+                    <a href="index.php?source=edit_user">Edit User</a>
+                </li>
+
+            </ul>
+        </li>
+        <li>
+            <a href="javascript:;" data-toggle="collapse" data-target="#comments_dropdown"><i class="fa fa-fw fa-comment-o"></i> Comments <i class="fa fa-fw fa-caret-down"></i></a>
             <ul id="comments_dropdown" class="collapse">
                 <li>
                     <a href="index.php?source=view_all_comments">View All Comments</a>
@@ -31,18 +46,6 @@
                     <li>
                         <a href="tables.html"><i class="fa fa-fw fa-table"></i> Tables</a>
                     </li>
-                    <li>
-                        <a href="javascript:;" data-toggle="collapse" data-target="#users_dropdown"><i class="fa fa-fw fa-group"></i> Users <i class="fa fa-fw fa-caret-down"></i></a>
-                        <ul id="users_dropdown" class="collapse">
-                            <li>
-                                <a href="#">Dropdown Item</a>
-                            </li>
-                            <li>
-                                <a href="#">Dropdown Item</a>
-                            </li>
-                        </ul>
-                    </li>
-
                     <li>
                         <a href="index.php?source=categories"><i class="fa fa-fw fa-tag"></i> Categories</a>
                     </li>
