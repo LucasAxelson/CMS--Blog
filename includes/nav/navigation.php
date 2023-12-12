@@ -13,11 +13,18 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                <li>
-                    <a href="admin/">admin</a>
-                </li>
+                    <li>
+                        <a href="admin/">Admin</a>
+                    </li>
                     <?php displayNavigation() ?>
                 </ul>
+            
+            <ul class="nav navbar-nav navbar-right">
+                <li class="nav-item pull-right">
+                    <a href="index.php?source=login_page"> Log In </a>
+                </li>
+            </ul>
+
             </div>
             <!-- /.navbar-collapse -->
         </div>

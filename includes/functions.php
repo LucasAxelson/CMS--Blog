@@ -1,5 +1,29 @@
 <?php
 
+function createAccount() {
+  global $conn;
+
+  $img_name = $_FILES['account_image']['name'];
+  $img_location = $_FILES['account_image']['tmp_name'];
+
+  if(verifyText($_POST['account_legal_name']) && verifyEmail($_POST['account_email'])) {
+    $username = trim_input($_POST['account_username']);
+    $legal_name = trim_input($_POST['account_legal_name']);
+    $email = trim_input($_POST['account_email']);
+
+    if(!empty($img_name) && !empty($img_location)) {
+      move_uploaded_file($img_location, "../includes/img/user/$img_name");
+      $stmt = userStatement("add", $username, $legal_name, $email, 1, 1, $img_name, "", "yes");
+  
+    } else {
+      $stmt = userStatement("add", $username, $legal_name, $email, 1, 1, $img_name, "", "no");
+    }
+
+      $query = $conn->prepare($stmt);
+      $query->execute();
+  }
+}
+
 function createUserComment() {
   global $conn;
 

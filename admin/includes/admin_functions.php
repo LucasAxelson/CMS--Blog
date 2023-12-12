@@ -11,13 +11,14 @@ function editUser($id) {
     $legal_name = trim_input($_POST['user_legal_name']);
     $email = trim_input($_POST['user_email']);
     $status = trim_input($_POST['user_status']);
+    $access = trim_input($_POST['user_access']);
   
     if(!empty($img_name) && !empty($img_location)) {
       move_uploaded_file($img_location, "../includes/img/user/$img_name");
     
-      $stmt = userStatement("edit", $username, $legal_name, $email, $status, $img_name, $id, "yes");
+      $stmt = userStatement("edit", $username, $legal_name, $email, $status, $access, $img_name, $id, "yes");
     } else {
-      $stmt = userStatement("edit", $username, $legal_name, $email, $status, "IS NULL", $id, "no");
+      $stmt = userStatement("edit", $username, $legal_name, $email, $status, $access, "IS NULL", $id, "no");
     }
 
   }
@@ -43,14 +44,14 @@ function createUser() {
     $legal_name = trim_input($_POST['user_legal_name']);
     $email = trim_input($_POST['user_email']);
     $status = trim_input($_POST['user_status']);
-    $status = trim_input($_POST['user_access']);
+    $access = trim_input($_POST['user_access']);
   
     if(!empty($img_name) && !empty($img_location)) {
       move_uploaded_file($img_location, "../includes/img/user/$img_name");
-      $stmt = userStatement("add", $username, $legal_name, $email, $status, $img_name, "", "yes");
+      $stmt = userStatement("add", $username, $legal_name, $email, $status, $access, $img_name, "", "yes");
   
     } else {
-      $stmt = userStatement("add", $username, $legal_name, $email, $status, $img_name, "", "no");
+      $stmt = userStatement("add", $username, $legal_name, $email, $status, $access, $img_name, "", "no");
     }
 
       $query = $conn->prepare($stmt);

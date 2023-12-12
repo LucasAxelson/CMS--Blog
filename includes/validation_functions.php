@@ -178,25 +178,25 @@ function postStatement($statement, $category, $title, $author, $content, $tags, 
 };
 
 
-function userStatement($statement, $username, $legal_name, $email, $status, $img_name, $id = "", $optional = "yes") {
+function userStatement($statement, $username, $legal_name, $email, $status, $access, $img_name, $id = "", $optional = "yes") {
   if ($statement == "edit") {
 
     if ($optional == "yes") {
       return "UPDATE users
-      SET user_username = '$username', user_legal_name = '$legal_name', user_email = '$email', user_status_id = '$status', user_image = '$img_name', user_modified = NOW() 
+      SET user_username = '$username', user_legal_name = '$legal_name', user_email = '$email', user_status_id = '$status', user_access_id = '$access', user_image = '$img_name', user_modified = NOW() 
       WHERE user_id = $id";
     } else if ($optional == "no") {
       return "UPDATE users
-      SET user_username = '$username', user_legal_name = '$legal_name', user_email = '$email', user_status_id = '$status', user_modified = NOW() 
+      SET user_username = '$username', user_legal_name = '$legal_name', user_email = '$email', user_status_id = '$status', user_access_id = '$access', user_modified = NOW() 
       WHERE user_id = $id";
     }
 
   } else if ($statement == "add") {
     
     if ($optional == "yes") {
-        return "INSERT INTO users (user_username, user_legal_name, user_email, user_status_id, user_image, user_created) VALUES ('$username', '$legal_name', '$email', '$status', '$img_name',  NOW())";
+        return "INSERT INTO users (user_username, user_legal_name, user_email, user_status_id, user_access_id, user_image, user_created) VALUES ('$username', '$legal_name', '$email', '$status', '$access', '$img_name',  NOW())";
       } else if($optional = "no") {
-        return "INSERT INTO users (user_username, user_legal_name, user_email, user_status_id, user_created) VALUES ('$username', '$legal_name', '$email', '$status', NOW())";
+        return "INSERT INTO users (user_username, user_legal_name, user_email, user_status_id, user_access_id, user_created) VALUES ('$username', '$legal_name', '$email', '$status', '$access', NOW())";
       }
 
   }
