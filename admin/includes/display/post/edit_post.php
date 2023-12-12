@@ -17,7 +17,7 @@ if(isset($_POST["edit_post"])) {
   <div class="form-group">
     <label class="form-label" for="title">Post Author</label>
     <select name="post_author" id="authorComment">
-      <?php listUsers(); ?>
+      <?php listItems("users"); ?>
     </select>
   </div>
 
@@ -40,7 +40,7 @@ if(isset($_POST["edit_post"])) {
   <div class="form-group">
     <label class="" for="category">Post Category</label>
     <select name="post_category_id" id="category">
-      <?php listCategories() ?>
+      <?php listItems("categories") ?>
     </select>
   </div>
 

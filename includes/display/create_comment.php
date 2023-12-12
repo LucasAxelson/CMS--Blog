@@ -9,7 +9,7 @@
                               <label class="col-sm-2 col-form-label" for="authorComment">Author</label>
                               <div class="col-sm-10">
                                 <select name="form_author" id="authorComment">
-                                  <?php listUsers(); ?>
+                                  <?php listItems("users"); ?>
                                 </select>
                               </div>
                             </div>
@@ -33,4 +33,3 @@
                           </form>
                       </div>
                     </div>
-                  </div>

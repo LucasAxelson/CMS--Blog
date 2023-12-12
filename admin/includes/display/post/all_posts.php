@@ -1,10 +1,10 @@
 <?php
   if(isset($_GET['delete'])) {
-    deletePost();
+    ApproveRejectOrDelete("post", "delete");
   } else if(isset($_GET['approve'])) {
-     approvePost();
+    ApproveRejectOrDelete("post", "approve");
   } else if(isset($_GET['reject'])) {
-    rejectPost();
+    ApproveRejectOrDelete("post", "reject");
   }
 ?>
 

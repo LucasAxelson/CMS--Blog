@@ -6,7 +6,7 @@ function editUser($id) {
   $img_name = $_FILES['user_image']['name'];
   $img_location = $_FILES['user_image']['tmp_name'];
 
-  if(verifyText($_POST['user_legal_name'])) {
+  if(verifyText($_POST['user_legal_name']) && verifyEmail($_POST['user_email'])) {
     $username = trim_input($_POST['user_username']);
     $legal_name = trim_input($_POST['user_legal_name']);
     $email = trim_input($_POST['user_email']);
@@ -38,11 +38,12 @@ function createUser() {
   $img_name = $_FILES['user_image']['name'];
   $img_location = $_FILES['user_image']['tmp_name'];
 
-  if(verifyText($_POST['user_legal_name'])) {
+  if(verifyText($_POST['user_legal_name']) && verifyEmail($_POST['user_email'])) {
     $username = trim_input($_POST['user_username']);
     $legal_name = trim_input($_POST['user_legal_name']);
     $email = trim_input($_POST['user_email']);
     $status = trim_input($_POST['user_status']);
+    $status = trim_input($_POST['user_access']);
   
     if(!empty($img_name) && !empty($img_location)) {
       move_uploaded_file($img_location, "../includes/img/user/$img_name");
@@ -54,19 +55,6 @@ function createUser() {
 
       $query = $conn->prepare($stmt);
       $query->execute();
-  }
-}
-
-function deleteUser() {
-  global $conn;
-  $user_id = $_GET['delete'];
-
-  try {
-    $query = $conn->prepare("DELETE FROM users WHERE user_id = $user_id");
-    $query->execute();
-    header("Location:index.php?source=view_all_users");   
-  } catch(PDOException $e) {
-    echo $e->getMessage();
   }
 }
 
@@ -93,37 +81,6 @@ function declareUsers() {
         <td><a class=\"btn btn-danger\" href='index.php?source=view_all_users&delete=" . $row['user_id'] . "'>Delete</a></td>
         <td><a class=\"btn btn-info\" href='index.php?source=edit_user&edit=" . $row['user_id'] . "'>Edit</a></td>
      </tr>";
-  }
-}
-
-function approveUser() {
-  global $conn;
-  $user_id = $_GET['approve'];
-
-  $query = $conn->prepare("UPDATE users SET user_status_id = '4' WHERE user_id = $user_id");
-  $query->execute();
-}
-
-function rejectUser() {
-  global $conn;
-  $user_id = $_GET['reject'];
-
-  $query = $conn->prepare("UPDATE users SET user_status_id = '3' WHERE user_id = $user_id");
-  $query->execute();
-}
-
-function listUsers () {
-  global $conn;
-
-  $query = $conn->prepare("SELECT user_id, user_username FROM users");
-  $query->execute();
-
-  while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
-    extract( $row );
-
-    echo " 
-    <option value=\"" . $row['user_id'] . "\">" . $row['user_username'] . "</option>
-    ";
   }
 }
 
@@ -168,22 +125,6 @@ function countComments($post_id) {
   $update_comments->execute();
 }
 
-function approveComment() {
-  global $conn;
-  $comment_id = $_GET['approve'];
-
-  $query = $conn->prepare("UPDATE comments SET comment_status_id = '4' WHERE comment_id = $comment_id");
-  $query->execute();
-}
-
-function rejectComment() {
-  global $conn;
-  $comment_id = $_GET['reject'];
-
-  $query = $conn->prepare("UPDATE comments SET comment_status_id = '3' WHERE comment_id = $comment_id");
-  $query->execute();
-}
-
 function displayImage() {
   global $conn;
 
@@ -195,27 +136,12 @@ function displayImage() {
   echo "<img width=\"100px\" src=\"../includes/img/$image\" alt=\"\">";  
 }
 
-function listPosts () {
-  global $conn;
-
-  $query = $conn->prepare("SELECT post_id, post_title FROM posts");
-  $query->execute();
-
-  while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
-    extract( $row );
-
-    echo " 
-    <option value=\"" . $row['post_id'] . "\">" . $row['post_title'] . "</option>
-    ";
-  }
-}
-
 function editComment($comment_id) {
   global $conn;
 
   $post_id = $_POST['post_id'];
 
-  if(verifyText($_POST['comment_content'])) {
+  if(verifyText($_POST['comment_content']) && verifyEmail($_POST['comment_email'])) {
     $author = trim_input($_POST['comment_author']);
     $content = trim_input($_POST['comment_content']);
     $email = trim_input($_POST['comment_email']);
@@ -236,7 +162,7 @@ function createComment() {
   global $conn;
   $post_id = $_POST['post_id'];
 
-  if(verifyText($_POST['comment_content'])) {
+  if(verifyText($_POST['comment_content']) && verifyEmail($_POST['comment_email'])) {
     $author = trim_input($_POST['comment_author']);
     $content = trim_input($_POST['comment_content']);
     $email = trim_input($_POST['comment_email']);
@@ -262,7 +188,6 @@ function createComment() {
 // Display comment you're about to edit
 function seeComment() {
   global $conn;
-  
   $comment_id = $_GET['edit'];
   
   $query = $conn->prepare
@@ -322,35 +247,6 @@ function declareComments() {
      <td><a class=\"btn btn-info\" href='index.php?source=edit_comments&edit=" . $row['comment_id'] . "'>Edit</a></td>
      </tr>";
   }
-}
-
-function deleteComment() {
-  global $conn;
-  $id = $_GET['delete'];
-
-  try {
-    $query = $conn->prepare("DELETE FROM comments WHERE comment_id = $id");
-    $query->execute();
-    header("Location:index.php?source=view_all_comments");   
-  } catch(PDOException $e) {
-    echo $e->getMessage();
-  }
-}
-
-function approvePost() {
-  global $conn;
-  $post_id = $_GET['approve'];
-
-  $query = $conn->prepare("UPDATE posts SET post_status_id = '4' WHERE post_id = $post_id");
-  $query->execute();
-}
-
-function rejectPost() {
-  global $conn;
-  $post_id = $_GET['reject'];
-
-  $query = $conn->prepare("UPDATE posts SET post_status_id = '3' WHERE post_id = $post_id");
-  $query->execute();
 }
 
 function editPost($id) {
@@ -413,20 +309,6 @@ function createPost() {
   }
 }
 
-
-function deletePost() {
-  global $conn;
-  $id = $_GET['delete'];
-
-  try {
-    $query = $conn->prepare("DELETE FROM posts WHERE post_id = $id");
-    $query->execute();
-    header("Location:index.php?source=view_all_posts");   
-  } catch(PDOException $e) {
-    echo $e->getMessage();
-  }
-}
-
 function declarePosts() {
   global $conn;
 
@@ -474,21 +356,6 @@ function declareCategories () {
         <td><a href='index.php?source=categories&delete=" . $row['cat_id'] . "'>Delete</a></td>
         <td><a href='index.php?source=categories&edit=" . $row['cat_id'] . "'>Edit</a></td>
       </tr>
-    ";
-  }
-}
-
-function listCategories () {
-  global $conn;
-
-  $query = $conn->prepare(selectStatement("categories", ""));
-  $query->execute();
-
-  while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
-    extract( $row );
-
-    echo " 
-    <option value=\"" . $row['cat_id'] . "\">" . $row['cat_title'] . "</option>
     ";
   }
 }

@@ -1,12 +1,12 @@
 <?php
   if(isset($_GET['delete'])) {
-    deleteUser();
+    ApproveRejectOrDelete("user", "delete");
   }
   if(isset($_GET['approve'])) {
-    approveUser();
+    ApproveRejectOrDelete("user", "approve");
   }
   if(isset($_GET['reject'])) {
-    rejectUser();
+    ApproveRejectOrDelete("user", "reject");
   }
 ?>
 

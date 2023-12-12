@@ -1,5 +1,115 @@
 <?php 
 
+function listItems ($item) {
+  global $conn;
+  if ($item == "users") {
+    $stmt = "SELECT user_id, user_username FROM users";
+  }
+  else if ($item == "posts") {
+    $stmt = "SELECT post_id, post_title FROM posts";
+  }
+  else if ($item == "categories") {
+    $stmt = "SELECT * FROM categories";
+  }
+   else if ($item == "status") {
+    $stmt = "SELECT * FROM status";
+  }
+   else if ($item == "access") {
+    $stmt = "SELECT * FROM access";
+  } 
+
+  $query = $conn->prepare($stmt);
+  $query->execute();
+
+  while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
+    extract( $row );
+
+    if ($item == "users") {
+      echo "<option value=\"" . $row['user_id'] . "\">" . $row['user_username'] . "</option>";
+    }
+     else if ($item == "posts") {
+      echo "<option value=\"" . $row['post_id'] . "\">" . $row['post_title'] . "</option>";
+    }
+     else if ($item == "categories") {
+      echo "<option value=\"" . $row['cat_id'] . "\">" . $row['cat_title'] . "</option>";
+    }
+     else if ($item == "status") {
+      echo "<option value=\"" . $row['status_id'] . "\">" . $row['status_name'] . "</option>";
+    }
+     else if ($item == "access") {
+      echo "<option value=\"" . $row['access_id'] . "\">" . $row['access_title'] . "</option>";
+    }
+  }
+}
+
+function ApproveRejectOrDelete($item, $decision) {
+  global $conn;
+
+  if ($decision == "approve") {
+    $id = $_GET['approve'];
+
+    if ($item == "user") {
+      $query = $conn->prepare("UPDATE users SET user_status_id = '4' WHERE user_id = $id");
+      $query->execute();
+    }
+    else if ($item == "post") {
+      $query = $conn->prepare("UPDATE posts SET post_status_id = '4' WHERE post_id = $id");
+      $query->execute();
+    }
+    else if ($item == "comment") {
+      $query = $conn->prepare("UPDATE comments SET comment_status_id = '4' WHERE comment_id = $id");
+      $query->execute();
+    }
+    
+  } else if ($decision == "reject") {
+    $id = $_GET['reject'];
+
+    if ($item == "user") {
+      $query = $conn->prepare("UPDATE users SET user_status_id = '3' WHERE user_id = $id");
+      $query->execute();
+    }
+    else if ($item == "post") {
+      $query = $conn->prepare("UPDATE posts SET post_status_id = '3' WHERE post_id = $id");
+      $query->execute();
+    }
+    else if ($item == "comment") {
+      $query = $conn->prepare("UPDATE comments SET comment_status_id = '3' WHERE comment_id = $id");
+      $query->execute();
+    }
+    
+  } else if ($decision == "delete") {
+    $id = $_GET['delete'];
+
+    if ($item == "user") {
+      try {
+        $query = $conn->prepare("DELETE FROM users WHERE user_id = $id");
+        $query->execute();
+        header("Location:index.php?source=view_all_users");   
+      } catch(PDOException $e) {
+        echo $e->getMessage();
+      }
+    }
+    if ($item == "post") {
+      try {
+        $query = $conn->prepare("DELETE FROM posts WHERE post_id = $id");
+        $query->execute();
+        header("Location:index.php?source=view_all_posts");   
+      } catch(PDOException $e) {
+        echo $e->getMessage();
+      }
+    }
+    if ($item == "comment") {
+      try {
+        $query = $conn->prepare("DELETE FROM comments WHERE comment_id = $id");
+        $query->execute();
+        header("Location:index.php?source=view_all_comments");   
+      } catch(PDOException $e) {
+        echo $e->getMessage();
+      }
+    }
+  }
+}
+
 function selectStatement($tables, $where) {
   if (trim($where) == "") {
     return "SELECT * FROM " . $tables . "";

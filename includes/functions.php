@@ -5,7 +5,7 @@ function createUserComment() {
 
   $post_id = $_GET['blog_id'];
 
-  if(verifyText($_POST['form_content'])) {
+  if(verifyText($_POST['form_content']) && verifyEmail($_POST['form_email'])) {
     $author = trim_input($_POST['form_author']);
     $content = trim_input($_POST['form_content']);
     $email = trim_input($_POST['form_email']);

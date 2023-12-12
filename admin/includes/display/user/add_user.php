@@ -23,8 +23,17 @@
   </div>
 
   <div class="form-group">
-    <label class="form-label" for="status">Status</label>
-    <input type="text" name="user_status" id="status" class="form-control">
+    <label class="form-label" for="authorStatus">Status</label>
+    <select name="post_status" id="authorStatus">
+      <?php listItems("status"); ?>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label" for="authorAccess">Access</label>
+    <select name="post_access" id="authorAccess">
+      <?php listItems("access"); ?>
+    </select>
   </div>
 
   <div class="form-group">
