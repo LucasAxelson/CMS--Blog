@@ -12,13 +12,16 @@ function editUser($id) {
     $email = trim_input($_POST['user_email']);
     $status = trim_input($_POST['user_status']);
     $access = trim_input($_POST['user_access']);
-  
+    
+    $password = trim_input($_POST['user_password']);
+    $password = password_hash($password, PASSWORD_DEFAULT);
+
     if(!empty($img_name) && !empty($img_location)) {
       move_uploaded_file($img_location, "../includes/img/user/$img_name");
     
-      $stmt = userStatement("edit", $username, $legal_name, $email, $status, $access, $img_name, $id, "yes");
+      $stmt = userStatement("edit", $username, $legal_name, $email, $password, $status, $access, $img_name, $id, "yes");
     } else {
-      $stmt = userStatement("edit", $username, $legal_name, $email, $status, $access, "IS NULL", $id, "no");
+      $stmt = userStatement("edit", $username, $legal_name, $email, $password, $status, $access, "IS NULL", $id, "no");
     }
 
   }
@@ -45,13 +48,16 @@ function createUser() {
     $email = trim_input($_POST['user_email']);
     $status = trim_input($_POST['user_status']);
     $access = trim_input($_POST['user_access']);
-  
+    
+    $password = trim_input($_POST['user_password']);
+    $password = password_hash($password, PASSWORD_DEFAULT);
+
     if(!empty($img_name) && !empty($img_location)) {
       move_uploaded_file($img_location, "../includes/img/user/$img_name");
-      $stmt = userStatement("add", $username, $legal_name, $email, $status, $access, $img_name, "", "yes");
+      $stmt = userStatement("add", $username, $legal_name, $email, $password, $status, $access, $img_name, "", "yes");
   
     } else {
-      $stmt = userStatement("add", $username, $legal_name, $email, $status, $access, $img_name, "", "no");
+      $stmt = userStatement("add", $username, $legal_name, $email, $password, $status, $access, $img_name, "", "no");
     }
 
       $query = $conn->prepare($stmt);

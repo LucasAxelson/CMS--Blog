@@ -1,39 +1,34 @@
-<?php if(isset($_POST['create_account'])) {
-    createAccount();
+<?php if(isset($_POST['log_in_submit'])) {
+    // createAccount();
 } ?>
 
 <!-- Page Content -->
 <div class="col-xl">
-<div class="col-lg-8">
+  <div class="col-lg-8">
 
-<div style="margin: 2rem;">
+    <div style="display:flex; flex-direction:column; align-items: center;">
 
-    <form action="index.php?source=login_page" method="POST" enctype="multipart/form-data">
+      <div style="width: 75%;">
+       <h1 style="margin-bottom: 3rem;" class="text-center">Log In</h1>
 
-      <div class="form-group">
-        <label class="form-label" for="accountName">Username</label>
-        <input type="text" name="account_username" id="accountName" class="form-control">
-      </div>
-  
-      <div class="form-group">
-        <label class="form-label" for="accountLegalName">Legal Name</label>
-        <input type="text" name="account_legal_name" id="accountLegalName" class="form-control">
-      </div>
+       <form action="index.php?source=login_page" method="POST" enctype="multipart/form-data">
+ 
+       <div class="form-group">
+          <label class="form-label" for="accountEmail">Email</label>
+          <input type="email" name="account_email" id="accountEmail" class="form-control">
+       </div>
 
-      <div class="form-group">
-        <label class="form-label" for="accountEmail">Email</label>
-        <input type="email" name="account_email" id="accountEmail" class="form-control">
-      </div>
+       <div class="form-group">
+          <label class="form-label" for="accountPassword">Password</label>
+          <input type="password" name="account_password" id="accountPassword" class="form-control">
+        </div>
 
-      <div class="form-group">
-        <label class="form-label" for="accountimage">Profile Picture</label>
-        <input type="file" id="accountimage" name="account_image">
-      </div>
+        <input type="submit" value="Log In" name="log_in_submit" class="btn btn-primary">
 
-      <input type="submit" value="Create Account" name="create_account" class="btn btn-primary">
+      </form>
 
-    </form>
-  
+    <p class="text-center">Don't have a log in?? <a href="index.php?source=create_account">Create an Account!</a></p>
+    </div>
 <!-- End of Page Content -->
   </div>
   </div>

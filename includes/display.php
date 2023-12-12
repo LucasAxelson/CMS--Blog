@@ -16,6 +16,9 @@
     case "login_page";
       require("includes/display/log_in.php");
       break;
+    case "create_account";
+      require("includes/display/create_account.php");
+      break;
    default:
       require("includes/display/main.php"); 
   }
