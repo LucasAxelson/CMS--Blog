@@ -7,35 +7,35 @@
   }
 
   switch($source) {
-    case "view_all_posts";
-      require("includes/display/all_posts.php");
-      break;
     case "categories";
       require("includes/display/categories.php");
       break;
+    case "view_all_posts";
+      require("includes/display/post/all_posts.php");
+      break;
     case "add_post";
-      require("includes/display/add_post.php");
+      require("includes/display/post/add_post.php");
       break;
     case "edit_post";
-      require("includes/display/edit_post.php");
+      require("includes/display/post/edit_post.php");
       break;
     case "view_all_comments";
-      require("includes/display/all_comments.php");
+      require("includes/display/comment/all_comments.php");
       break;
     case "edit_comments";
-      require("includes/display/edit_comment.php");
+      require("includes/display/comment/edit_comment.php");
       break;
     case "add_comments";
-      require("includes/display/add_comment.php");
+      require("includes/display/comment/add_comment.php");
       break;
     case "view_all_users";
-      require("includes/display/all_users.php");
+      require("includes/display/user/all_users.php");
       break;
     case "add_user";
-      require("includes/display/add_user.php");
+      require("includes/display/user/add_user.php");
       break;
     case "edit_user";
-      require("includes/display/edit_user.php");
+      require("includes/display/user/edit_user.php");
       break;
 
   

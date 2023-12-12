@@ -16,7 +16,7 @@ if(isset($_POST["edit_post"])) {
   
   <div class="form-group">
     <label class="form-label" for="title">Post Author</label>
-    <select name="form_author" id="authorComment">
+    <select name="post_author" id="authorComment">
       <?php listUsers(); ?>
     </select>
   </div>

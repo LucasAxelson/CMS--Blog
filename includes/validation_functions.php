@@ -8,16 +8,64 @@ function selectStatement($tables, $where) {
   }
 }
 
-function createPostStatement ($category, $title, $img_name, $author, $content, $tags, $img = "yes") {
-  if ($img == "yes") {
-  return "INSERT INTO posts (post_category_id, post_title, post_date, post_image, post_status_id, post_author_id, post_content, post_tags) VALUES ('$category', '$title', NOW(), '$img_name', 1 , '$author', '$content', '$tags')";
-  } else if ($img == "no") {
-    return "INSERT INTO posts (post_category_id, post_title, post_date, post_status_id, post_author_id, post_content, post_tags) VALUES ('$category', '$title', NOW(), 1 , '$author', '$content', '$tags')";
-  }
-}
+function commentStatement($statement, $post_id, $reply_id, $author, $email, $content, $optional = "no", $comment_id = 0) {
+  if ($statement == "edit") {
 
-// function commentStatement($statement, $username, $legal_name, $email, $status, $img_name, $id = "", $optional = "yes") {};
-// function postStatement($statement, $username, $legal_name, $email, $status, $img_name, $id = "", $optional = "yes") {};
+    if ($optional == "no") {
+      
+      return "UPDATE comments SET comment_post_id = '$post_id', comment_email = '$email', comment_content = '$content', comment_author = '$author' WHERE comment_id = $comment_id";
+
+    } else if ($optional == "yes") {
+      
+      return "UPDATE comments SET comment_post_id = '$post_id', comment_reply_id = '$reply_id', comment_email = '$email', comment_content = '$content', comment_author = '$author' WHERE comment_id = $comment_id";
+
+    }
+
+  } else if ($statement == "add") {
+    
+    if ($optional == "no") {
+
+      return "INSERT INTO comments (comment_post_id, comment_author_id, comment_email, comment_content, comment_status_id, comment_date) VALUES ('$post_id', '$author', '$email', '$content', '1' , NOW())";
+
+    } else if($optional = "yes") {
+      
+      return "INSERT INTO comments (comment_post_id, comment_reply_id, comment_author_id, comment_email, comment_content, comment_status_id, comment_date) VALUES ('$post_id', '$reply_id', '$author', '$email', '$content', '1' , NOW())";
+
+    }
+
+  }
+
+};
+
+function postStatement($statement, $category, $title, $author, $content, $tags, $img_name, $optional = "no", $id = 0) {
+  if ($statement == "add") {
+ 
+    if ($optional == "yes") {
+ 
+      return "INSERT INTO posts (post_category_id, post_title, post_date, post_image, post_status_id, post_author_id, post_content, post_tags) VALUES ('$category', '$title', NOW(), '$img_name', 1 , '$author', '$content', '$tags')";
+      
+    } else if ($optional == "no") {
+ 
+      return "INSERT INTO posts (post_category_id, post_title, post_date, post_status_id, post_author_id, post_content, post_tags) VALUES ('$category', '$title', NOW(), 1 , '$author', '$content', '$tags')";
+    }
+
+  } else if($statement == "edit")
+
+    if ($optional == "yes") {
+ 
+      return "UPDATE posts 
+      SET post_category_id = '$category', post_title = '$title', post_image = '$img_name', post_author_id = '$author', post_content = '$content', post_tags = '$tags' 
+      WHERE post_id = $id";
+ 
+    } else if ($optional == "no") {
+ 
+      return "UPDATE posts 
+      SET post_category_id = '$category', post_title = '$title', post_author_id = '$author', post_content = '$content', post_tags = '$tags' 
+      WHERE post_id = $id";
+
+    }
+
+};
 
 
 function userStatement($statement, $username, $legal_name, $email, $status, $img_name, $id = "", $optional = "yes") {
@@ -50,16 +98,11 @@ function dateTime($data, $choice) {
   $created = "$itemsDate[2]/$itemsDate[1]/$itemsDate[0]"; 
 
   if($choice == "time") {
-    $time = setTime($items);   
+    $time = substr($items[1], 0, strlen($items[1]) - 3);   
     return $time;
   } else if ($choice == "date") {
     return $created;
   }
-}
-
-function setTime($time) {
-  $time = substr($time[1], 0, strlen($time[1]) - 3);   
-  return $time;
 }
 
 function trim_input($input) {

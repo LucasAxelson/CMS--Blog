@@ -9,12 +9,12 @@ function createUserComment() {
     $author = trim_input($_POST['form_author']);
     $content = trim_input($_POST['form_content']);
     $email = trim_input($_POST['form_email']);
-
-    $stmt = "INSERT INTO comments (comment_post_id, comment_author_id, comment_email, comment_content, comment_status_id, comment_date) VALUES ('$post_id', '$author', '$email', '$content', '1' , NOW())";
+    $reply_id = $_GET['reply']; 
 
     if(isset($_GET['reply'])) { 
-      $reply_id = $_GET['reply']; 
-      $stmt =  "INSERT INTO comments (comment_post_id, comment_reply_id, comment_author_id, comment_email, comment_content, comment_status_id, comment_date) VALUES ('$post_id', '$reply_id', '$author', '$email', '$content', '1' , NOW())";    
+      $stmt = commentStatement("add", $post_id, $reply_id, $author, $email, $content, "yes");    
+    } else {
+      $stmt = commentStatement("add", $post_id, $reply_id, $author, $email, $content, "no");    
     }
 
     try {
@@ -203,7 +203,7 @@ function displayPosts () {
 function displayCategories($position) {
   global $conn;
 
-  $stmt = "SELECT * FROM categories $position";
+  $stmt = selectStatement("categories $position", "");
   $query = $conn->prepare($stmt);
   $query->execute();
 

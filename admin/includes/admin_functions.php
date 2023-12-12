@@ -46,7 +46,6 @@ function createUser() {
   
     if(!empty($img_name) && !empty($img_location)) {
       move_uploaded_file($img_location, "../includes/img/user/$img_name");
-      
       $stmt = userStatement("add", $username, $legal_name, $email, $status, $img_name, "", "yes");
   
     } else {
@@ -221,9 +220,7 @@ function editComment($comment_id) {
     $content = trim_input($_POST['comment_content']);
     $email = trim_input($_POST['comment_email']);
 
-    $stmt = "UPDATE comments 
-    SET comment_post_id = '$post_id', comment_email = '$email', comment_content = '$content', comment_author = '$author' 
-    WHERE comment_id = $comment_id";
+    $stmt = commentStatement("edit", $post_id, 0, $author, $email, $content, "no", $comment_id);
   }
 
   try {
@@ -237,30 +234,30 @@ function editComment($comment_id) {
 
 function createComment() {
   global $conn;
-
   $post_id = $_POST['post_id'];
 
   if(verifyText($_POST['comment_content'])) {
     $author = trim_input($_POST['comment_author']);
     $content = trim_input($_POST['comment_content']);
     $email = trim_input($_POST['comment_email']);
-  
-    $stmt = "INSERT INTO comments (comment_post_id, comment_author_id, comment_email, comment_content, comment_status_id, comment_date) VALUES ('$post_id', '$email', '$content', '1', '$author', NOW())";
+    $reply_id = $_GET['reply']; 
 
     if(isset($_GET['reply'])) { 
-      $reply_id = $_GET['reply']; 
-      $stmt = "INSERT INTO comments (comment_post_id, comment_reply_id, comment_author_id, comment_email, comment_content, comment_status_id, comment_date) VALUES ('$post_id', '$reply_id', '$email', '$content', '1', '$author', NOW())";    
-    }
+      $stmt = commentStatement("add", $post_id, $reply_id, $author, $email, $content, 'no', 0);
+    } else {
+      $stmt = commentStatement("add", $post_id, $reply_id, $author, $email, $content, 'yes', 0);
+    } 
+  }
 
-    try {
-      $query = $conn->prepare($stmt);
-      $query->execute();
-      header("Location:index.php?source=view_all_comments");  
-    } catch(PDOException $e) {
-      echo "". $e->getMessage();
-    }
+  try {
+    $query = $conn->prepare($stmt);
+    $query->execute();
+    header("Location:index.php?source=view_all_comments");  
+  } catch(PDOException $e) {
+    echo "". $e->getMessage();
   }
 }
+
 
 // Display comment you're about to edit
 function seeComment() {
@@ -372,15 +369,9 @@ function editPost($id) {
   
     if(!empty($img_name) && !empty($img_location)) {
       move_uploaded_file($img_location, "../includes/img/$img_name");
-  
-      $stmt = "UPDATE posts 
-      SET post_category_id = '$category', post_title = '$title', post_image = '$img_name', post_author_id = '$author', post_content = '$content', post_tags = '$tags' 
-      WHERE post_id = $id";
-  
+      $stmt = postStatement("edit", $category, $title, $author, $content, $tags, $img_name, "yes", $id);
     } else {
-      $stmt = "UPDATE posts 
-      SET post_category_id = '$category', post_title = '$title', post_author_id = '$author', post_author_id = '$author', post_content = '$content', post_tags = '$tags' 
-      WHERE post_id = $id";
+      $stmt = postStatement("edit", $category, $title, $author, $content, $tags, $img_name, "no", $id);
     }
 
   }
@@ -411,10 +402,10 @@ function createPost() {
     if(!empty($img_name) && !empty($img_location)) {
       move_uploaded_file($img_location, "../includes/img/$img_name");
   
-      $stmt = createPostStatement($category, $title, $img_name, $author, $content, $tags, "yes");
+      $stmt = postStatement("add", $category, $title, $author, $content, $tags, $img_name, "yes");
   
     } else {
-      $stmt = createPostStatement($category, $title, "IS NULL", $author, $content, $tags, "no"); 
+      $stmt = postStatement("add", $category, $title, $author, $content, $tags, $img_name, "no");
     }
 
       $query = $conn->prepare($stmt);
