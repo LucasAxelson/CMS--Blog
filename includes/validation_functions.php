@@ -1,5 +1,49 @@
 <?php 
 
+function selectStatement($tables, $where) {
+  if (trim($where) == "") {
+    return "SELECT * FROM " . $tables . "";
+  } else {
+    return "SELECT * FROM " . $tables . " WHERE " . $where;
+  }
+}
+
+function createPostStatement ($category, $title, $img_name, $author, $content, $tags, $img = "yes") {
+  if ($img == "yes") {
+  return "INSERT INTO posts (post_category_id, post_title, post_date, post_image, post_status_id, post_author_id, post_content, post_tags) VALUES ('$category', '$title', NOW(), '$img_name', 1 , '$author', '$content', '$tags')";
+  } else if ($img == "no") {
+    return "INSERT INTO posts (post_category_id, post_title, post_date, post_status_id, post_author_id, post_content, post_tags) VALUES ('$category', '$title', NOW(), 1 , '$author', '$content', '$tags')";
+  }
+}
+
+// function commentStatement($statement, $username, $legal_name, $email, $status, $img_name, $id = "", $optional = "yes") {};
+// function postStatement($statement, $username, $legal_name, $email, $status, $img_name, $id = "", $optional = "yes") {};
+
+
+function userStatement($statement, $username, $legal_name, $email, $status, $img_name, $id = "", $optional = "yes") {
+  if ($statement == "edit") {
+
+    if ($optional == "yes") {
+      return "UPDATE users
+      SET user_username = '$username', user_legal_name = '$legal_name', user_email = '$email', user_status_id = '$status', user_image = '$img_name', user_modified = NOW() 
+      WHERE user_id = $id";
+    } else if ($optional == "no") {
+      return "UPDATE users
+      SET user_username = '$username', user_legal_name = '$legal_name', user_email = '$email', user_status_id = '$status', user_modified = NOW() 
+      WHERE user_id = $id";
+    }
+
+  } else if ($statement == "add") {
+    
+    if ($optional == "yes") {
+        return "INSERT INTO users (user_username, user_legal_name, user_email, user_status_id, user_image, user_created) VALUES ('$username', '$legal_name', '$email', '$status', '$img_name',  NOW())";
+      } else if($optional = "no") {
+        return "INSERT INTO users (user_username, user_legal_name, user_email, user_status_id, user_created) VALUES ('$username', '$legal_name', '$email', '$status', NOW())";
+      }
+
+  }
+}
+
 function dateTime($data, $choice) {
   $items = explode(" ", $data);
   $itemsDate = explode("-", $items[0]);

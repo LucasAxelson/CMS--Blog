@@ -14,7 +14,7 @@ function createUserComment() {
 
     if(isset($_GET['reply'])) { 
       $reply_id = $_GET['reply']; 
-      $stmt = "INSERT INTO comments (comment_post_id, comment_reply_id, comment_author_id, comment_email, comment_content, comment_status_id, comment_date) VALUES ('$post_id', '$reply_id', '$author', '$email', '$content', '1' , NOW())";    
+      $stmt =  "INSERT INTO comments (comment_post_id, comment_reply_id, comment_author_id, comment_email, comment_content, comment_status_id, comment_date) VALUES ('$post_id', '$reply_id', '$author', '$email', '$content', '1' , NOW())";    
     }
 
     try {
@@ -32,7 +32,11 @@ function displayComments() {
   $post_id = $_GET["blog_id"];
 
   try {
-    $query = $conn->prepare("SELECT * FROM comments, users WHERE comment_post_id = $post_id AND comment_status_id = 4 AND comment_reply_id IS NULL AND users.user_id = comments.comment_author_id");
+    $query = $conn->prepare(
+      selectStatement(
+        "comments, users", "comment_post_id = $post_id AND comment_status_id = 4 AND comment_reply_id IS NULL AND users.user_id = comments.comment_author_id"
+      )
+    );
     $query->execute();
   } catch (PDOException $e) {
     echo $e->getMessage();
@@ -67,8 +71,9 @@ function displayNestedComment($target_id) {
   global $conn;
   $post_id = $_GET["blog_id"];
 
+  
   try {
-    $query = $conn->prepare("SELECT * FROM comments, users WHERE comment_post_id = $post_id AND comment_status_id = 4 AND comment_reply_id = $target_id AND users.user_id = comments.comment_author_id");
+    $query = $conn->prepare(selectStatement("comments, users", "comment_post_id = $post_id AND comment_status_id = 4 AND comment_reply_id = $target_id AND users.user_id = comments.comment_author_id"));
     $query->execute();
   } catch (PDOException $e) {
     echo $e->getMessage();
@@ -98,7 +103,7 @@ function displayPost() {
 global $conn;
 $post_id = $_GET["blog_id"];
 
-$query = $conn->prepare("SELECT * FROM posts, users WHERE posts.post_id = $post_id AND posts.post_status_id = 4 AND users.user_id = posts.post_author_id");
+$query = $conn->prepare(selectStatement("posts, users", "posts.post_id = $post_id AND posts.post_status_id = 4 AND users.user_id = posts.post_author_id"));
 $query->execute();
 
 while( $row = $query->fetch(PDO::FETCH_ASSOC) ) {
@@ -123,7 +128,7 @@ function searchPosts() {
 
   $search = $_POST["search"];
 
-  $query = $conn->prepare("SELECT * FROM posts WHERE post_tags LIKE '%$search%' AND post_status_id = 4");
+  $query = $conn->prepare(selectStatement("posts", "post_tags LIKE '%$search%' AND post_status_id = 4"));
   $query->execute();
   
   $count = $query->rowCount();
@@ -162,7 +167,7 @@ function showPosts($query) {
 function displayNavigation () {
   global $conn;
 
-  $query = $conn->prepare("SELECT * FROM categories");
+  $query = $conn->prepare(selectStatement("categories", ""));
   $query->execute();
 
   while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
@@ -180,7 +185,7 @@ function displayCategoryPosts() {
   global $conn;
   $category_id = $_GET["category"];
 
-  $query = $conn->prepare("SELECT * FROM posts WHERE post_category_id = $category_id AND post_status_id = 4");
+  $query = $conn->prepare(selectStatement("posts, users", "post_category_id = $category_id AND post_status_id = 4 AND users.user_id = posts.post_author_id"));
   $query->execute();
   
   showPosts($query);
@@ -189,7 +194,7 @@ function displayCategoryPosts() {
 function displayPosts () {
   global $conn;
 
-  $query = $conn->prepare("SELECT * FROM posts, users WHERE post_status_id = 4 AND users.user_id = posts.post_author_id ORDER BY post_date DESC LIMIT 5");
+  $query = $conn->prepare(selectStatement("posts, users", "posts.post_status_id = 4 AND users.user_id = posts.post_author_id ORDER BY posts.post_date DESC LIMIT 5"));
   $query->execute();
   
   showPosts($query);

@@ -15,13 +15,9 @@ function editUser($id) {
     if(!empty($img_name) && !empty($img_location)) {
       move_uploaded_file($img_location, "../includes/img/user/$img_name");
     
-      $stmt = "UPDATE users 
-      SET user_username = '$username', user_legal_name = '$legal_name', user_email = '$email', user_status_id = '$status', user_image = '$img_name', user_modified = NOW() 
-      WHERE user_id = $id";
+      $stmt = userStatement("edit", $username, $legal_name, $email, $status, $img_name, $id, "yes");
     } else {
-      $stmt = "UPDATE users 
-      SET user_username = '$username', user_legal_name = '$legal_name', user_email = '$email', user_status_id = '$status', user_modified = NOW() 
-      WHERE user_id = $id";
+      $stmt = userStatement("edit", $username, $legal_name, $email, $status, "IS NULL", $id, "no");
     }
 
   }
@@ -50,11 +46,11 @@ function createUser() {
   
     if(!empty($img_name) && !empty($img_location)) {
       move_uploaded_file($img_location, "../includes/img/user/$img_name");
-  
-      $stmt = "INSERT INTO users (user_username, user_legal_name, user_email, user_status_id, user_image, user_created) VALUES ('$username', '$legal_name', '$email', '$status', '$img_name',  NOW())";
+      
+      $stmt = userStatement("add", $username, $legal_name, $email, $status, $img_name, "", "yes");
   
     } else {
-      $stmt = "INSERT INTO users (user_username, user_legal_name, user_email, user_status_id, user_created) VALUES ('$username', '$legal_name', '$email', '$status', NOW())";
+      $stmt = userStatement("add", $username, $legal_name, $email, $status, $img_name, "", "no");
     }
 
       $query = $conn->prepare($stmt);
@@ -78,15 +74,11 @@ function deleteUser() {
 function declareUsers() {
   global $conn;
 
-  $query = $conn->prepare("SELECT * FROM users, status WHERE status.status_id = users.user_status_id");
+  $query = $conn->prepare(selectStatement("users, status", "status.status_id = users.user_status_id"));
   $query->execute();
 
   while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
     extract( $row );
-
-    $items = explode(" ", $row['user_created']);
-    $itemsDate = explode("-", $items[0]);
-    $created = "$itemsDate[2]/$itemsDate[1]/$itemsDate[0]"; 
   
     echo "          
      <tr>
@@ -95,7 +87,7 @@ function declareUsers() {
         <td>" . $row['user_legal_name'] . "</td>
         <td>" . $row['user_email'] . "</td>
         <td>" . $row['status_name'] . "</td>
-        <td>" . $created . "</td>
+        <td>" . dateTime($row['user_created'], "date") . "</td>
         <td><img width=\"100px\" src=\"../includes/img/user/" . $row['user_image'] . "\" alt=\"" . $row['user_image'] . "\"></td>
         <td><a class=\"btn btn-success\" href='index.php?source=view_all_users&approve=" . $row['user_id'] . "'>Approve</a></td>
         <td><a class=\"btn btn-danger\" href='index.php?source=view_all_users&reject=" . $row['user_id'] . "'>Reject</a></td>
@@ -144,16 +136,12 @@ function seeUser() {
     $user_id = $_GET['edit'];
   
 
-  $query = $conn->prepare("SELECT * FROM users, status WHERE status.status_id = users.user_status_id AND users.user_id = $user_id");
+  $query = $conn->prepare(selectStatement("users, status", "status.status_id = users.user_status_id AND users.user_id = $user_id"));
   $query->execute();
   
 
   while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
     extract( $row );
-    
-    $items = explode(" ", $row['user_created']);
-    $itemsDate = explode("-", $items[0]);
-    $created = "$itemsDate[2]/$itemsDate[1]/$itemsDate[0]"; 
   
     echo "          
      <tr>
@@ -163,7 +151,7 @@ function seeUser() {
         <td>" . $row['user_email'] . "</td>
         <td>" . $row['status_name'] . "</td>
         <td><img width=\"100px\" src=\"../includes/img/user/" . $row['user_image'] . "\" alt=\"\"></td>
-        <td>" . $created . "</td>
+        <td>" . dateTime($row['user_created'], "date") . "</td>
         <td>" . $row['user_modified'] . "</td>
      </tr>";
   }
@@ -173,7 +161,7 @@ function seeUser() {
 
 function countComments($post_id) {
   global $conn;
-  $num_comments = $conn->prepare("SELECT * FROM comments WHERE comments.comment_post_id = $post_id");
+  $num_comments = $conn->prepare(selectStatement("comments", "comments.comment_post_id = $post_id"));
   $num_comments->execute();
   $num = $num_comments->rowCount();
 
@@ -280,7 +268,13 @@ function seeComment() {
   
   $comment_id = $_GET['edit'];
   
-  $query = $conn->prepare("SELECT * FROM comments, status, posts, users WHERE status.status_id = comments.comment_status_id AND posts.post_id = comments.comment_post_id AND comments.comment_id = $comment_id AND users.user_id = comments.comment_author_id");
+  $query = $conn->prepare
+  (
+  selectStatement(
+    "comments, status, posts, users", 
+    "status.status_id = comments.comment_status_id AND posts.post_id = comments.comment_post_id AND comments.comment_id = $comment_id AND users.user_id = comments.comment_author_id"
+    )
+);
   $query->execute();
   
   while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
@@ -303,7 +297,12 @@ function seeComment() {
 function declareComments() {
   global $conn;
 
-  $query = $conn->prepare("SELECT * FROM comments, status, posts, users WHERE status.status_id = comments.comment_status_id AND posts.post_id = comments.comment_post_id AND users.user_id = comments.comment_author_id");
+  $query = $conn->prepare(
+    selectStatement(
+      "comments, status, posts, users", 
+      "status.status_id = comments.comment_status_id AND posts.post_id = comments.comment_post_id AND users.user_id = comments.comment_author_id"
+      )
+  );
   $query->execute();
 
   while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
@@ -412,12 +411,11 @@ function createPost() {
     if(!empty($img_name) && !empty($img_location)) {
       move_uploaded_file($img_location, "../includes/img/$img_name");
   
-      $stmt = "INSERT INTO posts (post_category_id, post_title, post_date, post_image, post_status_id, post_author_id, post_content, post_tags) VALUES ('$category', '$title', NOW(), '$img_name', 1 , '$author', '$content', '$tags')";
+      $stmt = createPostStatement($category, $title, $img_name, $author, $content, $tags, "yes");
   
     } else {
-      $stmt = "INSERT INTO posts (post_category_id, post_title, post_date, post_status_id, post_author_id, post_content, post_tags) VALUES ('$category', '$title', NOW(), 1 , '$author', '$content', '$tags')";
+      $stmt = createPostStatement($category, $title, "IS NULL", $author, $content, $tags, "no"); 
     }
-
 
       $query = $conn->prepare($stmt);
       $query->execute();
@@ -441,7 +439,9 @@ function deletePost() {
 function declarePosts() {
   global $conn;
 
-  $query = $conn->prepare("SELECT * FROM posts, status, categories, users WHERE categories.cat_id = posts.post_category_id AND status.status_id = posts.post_status_id AND users.user_id = posts.post_author_id");
+  $stmt = selectStatement("posts, status, categories, users", "categories.cat_id = posts.post_category_id AND status.status_id = posts.post_status_id AND users.user_id = posts.post_author_id");
+
+  $query = $conn->prepare($stmt);
   $query->execute();
 
   while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
@@ -470,7 +470,7 @@ function declarePosts() {
 function declareCategories () {
   global $conn;
 
-  $query = $conn->prepare("SELECT * FROM categories");
+  $query = $conn->prepare(selectStatement("categories", ""));
   $query->execute();
 
   while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
@@ -490,7 +490,7 @@ function declareCategories () {
 function listCategories () {
   global $conn;
 
-  $query = $conn->prepare("SELECT * FROM categories");
+  $query = $conn->prepare(selectStatement("categories", ""));
   $query->execute();
 
   while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
