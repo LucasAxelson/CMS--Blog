@@ -1,4 +1,5 @@
 <?php ob_start() ?>
+<?php session_start() ?>
 <?php require("includes/server.php"); ?>
 <?php require("includes/functions.php"); ?>
 <?php require("admin/includes/admin_functions.php"); ?>

@@ -1,22 +1,24 @@
 <?php 
 
+function logoutUser() {
+  $_SESSION["user_id"] = null;
+  $_SESSION["user_username"] = null;
+  $_SESSION["user_access_id"] = null;
+  header("Location: index.php?source=main_page");
+}
+
+function showAdmin() {                      
+    echo "
+        <li>
+            <a href=\"admin/\">Admin</a>
+        </li>
+        ";
+  
+}
+
 function listItems ($item) {
   global $conn;
-  if ($item == "users") {
-    $stmt = "SELECT user_id, user_username FROM users";
-  }
-  else if ($item == "posts") {
-    $stmt = "SELECT post_id, post_title FROM posts";
-  }
-  else if ($item == "categories") {
-    $stmt = "SELECT * FROM categories";
-  }
-   else if ($item == "status") {
-    $stmt = "SELECT * FROM status";
-  }
-   else if ($item == "access") {
-    $stmt = "SELECT * FROM access";
-  } 
+  $stmt = selectStatement($item, ""); 
 
   $query = $conn->prepare($stmt);
   $query->execute();

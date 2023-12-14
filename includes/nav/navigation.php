@@ -13,17 +13,16 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li>
-                        <a href="admin/">Admin</a>
-                    </li>
                     <?php displayNavigation() ?>
+                    <?php if($_SESSION['user_access_id'] == 3) { showAdmin(); } ?>
                 </ul>
             
-            <ul class="nav navbar-nav navbar-right">
-                <li class="nav-item pull-right">
-                    <a href="index.php?source=login_page"> Log In </a>
-                </li>
-            </ul>
+            <?php if(isset($_SESSION['user_id'])) {
+                require('userNav.php');
+            } else {
+                require('guestNav.php');
+            } ?>
+
 
             </div>
             <!-- /.navbar-collapse -->

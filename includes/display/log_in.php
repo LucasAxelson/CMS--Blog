@@ -1,5 +1,5 @@
-<?php if(isset($_POST['log_in_submit'])) {
-    // createAccount();
+<?php if(isset($_POST["login_submit"])) {
+    loginUser();
 } ?>
 
 <!-- Page Content -->
@@ -13,17 +13,17 @@
 
        <form action="index.php?source=login_page" method="POST" enctype="multipart/form-data">
  
-       <div class="form-group">
-          <label class="form-label" for="accountEmail">Email</label>
-          <input type="email" name="account_email" id="accountEmail" class="form-control">
-       </div>
-
-       <div class="form-group">
-          <label class="form-label" for="accountPassword">Password</label>
-          <input type="password" name="account_password" id="accountPassword" class="form-control">
+        <div class="form-group">
+           <label class="form-label" for="loginEmail">Email</label>
+           <input type="email" name="login_email" id="loginEmail" class="form-control">
         </div>
 
-        <input type="submit" value="Log In" name="log_in_submit" class="btn btn-primary">
+        <div class="form-group">
+           <label class="form-label" for="loginPassword">Password</label>
+           <input type="password" name="login_password" id="loginPassword" class="form-control">
+        </div>
+
+         <input type="submit" value="Log In" name="login_submit" class="btn btn-primary">
 
       </form>
 

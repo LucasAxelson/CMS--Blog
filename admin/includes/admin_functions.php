@@ -1,11 +1,45 @@
 <?php 
 
-function editUser($id) {
+function seeSelectedUser() {
+  $id = $_POST['selected_id'];
+  $stmt = "Location: index.php?source=edit_user&edit=" . $id;
+  
+  return header($stmt);
+}
+
+function loginUser() {
   global $conn;
 
-  $img_name = $_FILES['user_image']['name'];
-  $img_location = $_FILES['user_image']['tmp_name'];
+  if(verifyEmail($_POST['login_email'])) { 
+    try {
+      $email = $_POST["login_email"];
+      $password = $_POST["login_password"];
 
+      $query = $conn->prepare("SELECT * FROM users WHERE user_email =  '$email'");
+      $query->execute();
+
+      while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
+        extract( $row );
+        $db_email = $row["user_email"];
+        $db_password = $row["user_password"];
+
+        if( $email == $db_email && password_verify($password, $db_password) ) {
+          $_SESSION["user_id"] = $row["user_id"];
+          $_SESSION["user_username"] = $row["user_username"];
+          $_SESSION["user_access_id"] = $row["user_access_id"];
+
+          header("Location: index.php?source=main_page");
+        }
+      }
+    } catch (PDOException $e) {
+      echo "Error: ". $e->getMessage() ."";
+     }
+  }
+}
+
+function editUser($id) {
+  global $conn;
+  
   if(verifyText($_POST['user_legal_name']) && verifyEmail($_POST['user_email'])) {
     $username = trim_input($_POST['user_username']);
     $legal_name = trim_input($_POST['user_legal_name']);
@@ -15,13 +49,16 @@ function editUser($id) {
     
     $password = trim_input($_POST['user_password']);
     $password = password_hash($password, PASSWORD_DEFAULT);
+    
+    $img_name = $_FILES['user_image']['name'];
+    $img_location = $_FILES['user_image']['tmp_name'];
 
     if(!empty($img_name) && !empty($img_location)) {
       move_uploaded_file($img_location, "../includes/img/user/$img_name");
     
       $stmt = userStatement("edit", $username, $legal_name, $email, $password, $status, $access, $img_name, $id, "yes");
     } else {
-      $stmt = userStatement("edit", $username, $legal_name, $email, $password, $status, $access, "IS NULL", $id, "no");
+      $stmt = userStatement("edit", $username, $legal_name, $email, $password, $status, $access, "", $id, "no");
     }
 
   }

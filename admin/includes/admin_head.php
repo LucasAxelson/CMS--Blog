@@ -15,7 +15,7 @@
 
 <h1 class="page-header">
                     Welcome to Admin
-                    <small>Author</small>
+                    <small><?php echo $_SESSION['user_username'] ?></small>
                 </h1>
                 <ol class="breadcrumb">
                     <li>

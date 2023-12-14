@@ -3,13 +3,15 @@
 
     <div class="row">
 
-        <div class="col-md-8">
+      <div class="col-md-8">
+        <div>
+            <h2 style="color: grey;">Main Page</h2>
 
-            <h1 class="page-header">
-                Page Heading
-                <small>Secondary Text</small>
-            </h1>
-
+                <?php if(isset($_SESSION['user_id'])) { 
+                        echo "<h1>Welcome " . $_SESSION['user_username'] . "!</h1>"; 
+                } ?>
+        </div>
+<hr>
             <!-- Blog Posts -->
     <?php 
     if(isset($_POST["search_submit"])) {

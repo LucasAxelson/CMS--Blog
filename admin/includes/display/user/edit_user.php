@@ -1,9 +1,20 @@
 <?php
  if(isset($_GET['edit'])) {  
-   $user_id = $_GET['edit'];
- } else if(isset($_POST['edit_user'])) {  
+  $user_id = $_GET['edit'];
+ };
+ 
+if(isset($_GET['edit'])) {  
+  $user_id = $_GET['edit']; 
+  pullUser();
+};
+ 
+ if(isset($_POST['edit_user'])) {  
     editUser($user_id);
- }
+ } 
+ 
+ if(isset($_POST['select_submit'])) { 
+    seeSelectedUser();
+  }; 
 ?>
 
 <table class="table table-bordered table-hover">
@@ -20,11 +31,11 @@
             </tr>
           </thead>
           <tbody>
-            <?php seeUser() ?>
+            <?php if(isset($_GET['edit'])) { seeUser(); } ?>
           </tbody>
         </table>
 
-    <form action="index.php?source=edit_user<?php if(isset($_POST['selected_id'])) { echo "&edit=" . $_POST['selected_id']; } ?>" method="POST">
+    <form action="index.php?source=edit_user<?php if(isset($_POST['select_submit'])) { echo "&edit=" . $_POST['selected_id']; } ?>" method="POST">
     <div>
       <label for="selectUser">Select a User:</label>
       <select style="border-radius: 5px; outline: black solid 1px" name="selected_id" id="selectUser">
@@ -34,40 +45,45 @@
       </div>
     </form>
 
-<form action="index.php?source=edit_user&edit=<?php if(isset($_GET['user_id'])) { echo $user_id; } ?>" method="POST" enctype="multipart/form-data">
+<form action="index.php?source=edit_user<?php if(isset($_GET['edit'])) { echo "&edit=" . $_GET['edit'] . ""; } ?>" method="POST" enctype="multipart/form-data">
   
   <div class="form-group">
     <label class="form-label" for="userName">Username</label>
-    <input type="text"  value="<?php if(isset($_GET['user_id'])) { echo $user_username; } ?>"  name="user_username" id="userName" class="form-control">
+    <input type="text" placeholder="Insert new username"  name="user_username" id="userName" class="form-control">
   </div>
   
   <div class="form-group">
     <label class="form-label" for="legalName">Legal Name</label>
-    <input type="text" value="<?php if(isset($_GET['user_id'])) { echo $user_legal_name; } ?>"  name="user_legalname" id="legalName" class="form-control">
+    <input type="text" placeholder="Insert new name"  name="user_legal_name" id="legalName" class="form-control">
   </div>
 
   <div class="form-group">
     <label class="form-label" for="email">Email</label>
-    <input type="email" value="<?php if(isset($_GET['user_id'])) { echo $user_id; } ?>"  name="user_email" id="email" class="form-control">
+    <input type="email" placeholder="Insert new email"  name="user_email" id="email" class="form-control">
+  </div>
+
+  <div class="form-group">
+    <label class="form-label" for="password">Password</label>
+    <input type="password" placeholder="Insert new password"  name="user_password" id="password" class="form-control">
   </div>
 
   <div class="form-group">
     <label class="form-label" for="authorStatus">Status</label>
-    <select name="post_status" id="authorStatus">
+    <select name="user_status" id="authorStatus">
       <?php listItems("status"); ?>
     </select>
   </div>
 
   <div class="form-group">
     <label class="form-label" for="authorAccess">Access</label>
-    <select name="post_access" id="authorAccess">
+    <select name="user_access" id="authorAccess">
       <?php listItems("access"); ?>
     </select>
   </div>
 
   <div class="form-group">
-    <label class="form-label" for="access">Profile Picture</label>
-    <input type="text" name="user_image" id="access" class="form-control">
+    <label class="form-label" for="userImage">Profile Picture</label>
+    <input type="file" name="user_image" id="userImage">
   </div>
 
   <input type="submit" value="Edit User" name="edit_user" class="btn btn-primary">
