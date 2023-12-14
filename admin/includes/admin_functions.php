@@ -1,40 +1,32 @@
 <?php 
 
+function pullUser( $user_id ) {
+  global $conn;
+
+  $query = $conn->prepare("SELECT * FROM users WHERE user_id = $user_id");
+  $query->execute();
+
+  while ( $row = $query->fetch(PDO::FETCH_ASSOC ) ) { 
+    extract($row);
+
+    $user = array (
+      "id"=> $user_id,
+      "username"=> $row['user_username'],
+      "email"=> $row['user_email'],
+      "legal_name"=> $row['user_legal_name'],
+      "status_id"=> $row["user_status_id"],
+      "access_id"=> $row["user_access_id"],
+    );
+    
+    return $user;
+  }
+}
+
 function seeSelectedUser() {
   $id = $_POST['selected_id'];
   $stmt = "Location: index.php?source=edit_user&edit=" . $id;
   
   return header($stmt);
-}
-
-function loginUser() {
-  global $conn;
-
-  if(verifyEmail($_POST['login_email'])) { 
-    try {
-      $email = $_POST["login_email"];
-      $password = $_POST["login_password"];
-
-      $query = $conn->prepare("SELECT * FROM users WHERE user_email =  '$email'");
-      $query->execute();
-
-      while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
-        extract( $row );
-        $db_email = $row["user_email"];
-        $db_password = $row["user_password"];
-
-        if( $email == $db_email && password_verify($password, $db_password) ) {
-          $_SESSION["user_id"] = $row["user_id"];
-          $_SESSION["user_username"] = $row["user_username"];
-          $_SESSION["user_access_id"] = $row["user_access_id"];
-
-          header("Location: index.php?source=main_page");
-        }
-      }
-    } catch (PDOException $e) {
-      echo "Error: ". $e->getMessage() ."";
-     }
-  }
 }
 
 function editUser($id) {
@@ -169,10 +161,11 @@ function countComments($post_id) {
   $update_comments->execute();
 }
 
-function displayImage() {
+function displayImage($table, $image_column, $where_column) {
   global $conn;
-
-  $query = $conn->prepare("SELECT post_image FROM posts");
+  
+  $id = $_GET['edit'];
+  $query = $conn->prepare("SELECT $image_column FROM $table WHERE $where_column = $id");
   $query->execute();
   
   $image = $query->fetchColumn();

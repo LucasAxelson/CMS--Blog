@@ -1,15 +1,11 @@
 <?php
  if(isset($_GET['edit'])) {  
-  $user_id = $_GET['edit'];
+  $user = pullUser($_GET['edit']);
  };
- 
-if(isset($_GET['edit'])) {  
-  $user_id = $_GET['edit']; 
-  pullUser();
-};
- 
+  
  if(isset($_POST['edit_user'])) {  
-    editUser($user_id);
+  $user_id = $_GET['edit'];
+  editUser($user_id);
  } 
  
  if(isset($_POST['select_submit'])) { 
@@ -39,7 +35,7 @@ if(isset($_GET['edit'])) {
     <div>
       <label for="selectUser">Select a User:</label>
       <select style="border-radius: 5px; outline: black solid 1px" name="selected_id" id="selectUser">
-        <?php listItems("users"); ?>
+        <?php listItems("users", ""); ?>
       </select>
       <button class="btn btn-info" style="font-size: 12px; padding: 1px 3px; outline: grey solid 1px;" name="select_submit" type="submit">Select</button>
       </div>
@@ -49,40 +45,42 @@ if(isset($_GET['edit'])) {
   
   <div class="form-group">
     <label class="form-label" for="userName">Username</label>
-    <input type="text" placeholder="Insert new username"  name="user_username" id="userName" class="form-control">
+    <input type="text" placeholder="Insert new username" value="<?php echo $user['username'] ?>"  name="user_username" id="userName" class="form-control">
   </div>
   
   <div class="form-group">
     <label class="form-label" for="legalName">Legal Name</label>
-    <input type="text" placeholder="Insert new name"  name="user_legal_name" id="legalName" class="form-control">
+    <input type="text" placeholder="Insert new name" value="<?php echo $user['legal_name'] ?>"  name="user_legal_name" id="legalName" class="form-control">
   </div>
 
   <div class="form-group">
     <label class="form-label" for="email">Email</label>
-    <input type="email" placeholder="Insert new email"  name="user_email" id="email" class="form-control">
+    <input type="email" placeholder="Insert new email" value="<?php echo $user['email'] ?>"  name="user_email" id="email" class="form-control">
   </div>
 
   <div class="form-group">
     <label class="form-label" for="password">Password</label>
-    <input type="password" placeholder="Insert new password"  name="user_password" id="password" class="form-control">
+    <input type="password" placeholder="Insert new password" name="user_password" id="password" class="form-control">
   </div>
 
   <div class="form-group">
     <label class="form-label" for="authorStatus">Status</label>
     <select name="user_status" id="authorStatus">
-      <?php listItems("status"); ?>
+      <?php $stmt = "user_id = " . $user['status_id']; 
+            listItems("status", "" ); ?>
     </select>
   </div>
 
   <div class="form-group">
     <label class="form-label" for="authorAccess">Access</label>
     <select name="user_access" id="authorAccess">
-      <?php listItems("access"); ?>
+      <?php listItems("access", ""); ?>
     </select>
   </div>
 
   <div class="form-group">
     <label class="form-label" for="userImage">Profile Picture</label>
+    <?php displayImage("users", "user_image", "user_id"); ?>
     <input type="file" name="user_image" id="userImage">
   </div>
 

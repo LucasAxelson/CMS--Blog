@@ -28,7 +28,7 @@
   <div class="form-group">
     <label class="form-label" for="category">Select a Post:</label>
     <select name="post_id" id="category">
-    <?php listItems("posts"); ?>
+    <?php listItems("posts", ""); ?>
     </select>
   </div>
 
@@ -40,7 +40,7 @@
   <div class="form-group">
     <label class="form-label" for="title">Comment Author</label>
     <select name="comment_author" id="authorComment">
-    <?php listItems("users"); ?>
+    <?php listItems("users", ""); ?>
     </select>
   </div>
 

@@ -19,7 +19,10 @@
     case "create_account";
       require("includes/display/create_account.php");
       break;
-   default:
+      case "profile_page";
+      require("includes/display/profile_user.php");
+      break;
+      default:
       require("includes/display/main.php"); 
   }
 ?>

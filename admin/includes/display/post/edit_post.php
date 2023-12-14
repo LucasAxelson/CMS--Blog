@@ -17,7 +17,7 @@ if(isset($_POST["edit_post"])) {
   <div class="form-group">
     <label class="form-label" for="title">Post Author</label>
     <select name="post_author" id="authorComment">
-      <?php listItems("users"); ?>
+      <?php listItems("users", ""); ?>
     </select>
   </div>
 
@@ -28,7 +28,7 @@ if(isset($_POST["edit_post"])) {
 
   <div class="form-group">
     <label for="image">Post Image</label>
-    <?php displayImage(); ?>
+    <?php displayImage("posts", "post_image", "post_id"); ?>
     <input type="file" id="image" name="post_image">
   </div>
   
@@ -40,7 +40,7 @@ if(isset($_POST["edit_post"])) {
   <div class="form-group">
     <label class="" for="category">Post Category</label>
     <select name="post_category_id" id="category">
-      <?php listItems("categories") ?>
+      <?php listItems("categories", "") ?>
     </select>
   </div>
 

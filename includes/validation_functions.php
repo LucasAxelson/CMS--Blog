@@ -1,4 +1,33 @@
 <?php 
+function loginUser() {
+  global $conn;
+
+  if(verifyEmail($_POST['login_email'])) { 
+    try {
+      $email = $_POST["login_email"];
+      $password = $_POST["login_password"];
+
+      $query = $conn->prepare("SELECT * FROM users WHERE user_email =  '$email'");
+      $query->execute();
+
+      while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
+        extract( $row );
+        $db_email = $row["user_email"];
+        $db_password = $row["user_password"];
+
+        if( $email == $db_email && password_verify($password, $db_password) ) {
+          $_SESSION["user_id"] = $row["user_id"];
+          $_SESSION["user_username"] = $row["user_username"];
+          $_SESSION["user_access_id"] = $row["user_access_id"];
+
+          header("Location: index.php?source=main_page");
+        }
+      }
+    } catch (PDOException $e) {
+      echo "Error: ". $e->getMessage() ."";
+     }
+  }
+} 
 
 function logoutUser() {
   $_SESSION["user_id"] = null;
@@ -16,9 +45,10 @@ function showAdmin() {
   
 }
 
-function listItems ($item) {
+function listItems ($item, $placeholder) {
   global $conn;
-  $stmt = selectStatement($item, ""); 
+  $stmt = selectStatement($item, $placeholder); 
+   
 
   $query = $conn->prepare($stmt);
   $query->execute();

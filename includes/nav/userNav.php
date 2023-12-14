@@ -3,7 +3,7 @@
     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?php echo $_SESSION['user_username'] ?> <b class="caret"></b></a>
     <ul class="dropdown-menu">
         <li>
-            <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
+            <a href="index.php?source=profile_page<?php echo "&page=" . $_SESSION["user_id"] ?>"><i class="fa fa-fw fa-user"></i> Profile</a>
         </li>
         <li>
              <a href="#"><i class="fa fa-fw fa-envelope"></i> Inbox</a>

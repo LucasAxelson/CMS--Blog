@@ -1,5 +1,31 @@
 <?php
 
+function showProfile() {
+  global $conn;
+
+  $page = $_GET["page"];
+  $query = $conn->prepare(selectStatement("users", "user_id = $page"));
+  $query->execute();
+  
+  while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
+    extract( $row );
+
+    echo "
+    <div style=\"display:flex; flex-direction: row;\">
+      <img style=\"border-radius: 50%; height: 150px; width: 150px; margin: 2rem;\" class=\"img-responsive\" src=\"includes/img/user/" . $row['user_image'] . "\" alt=\"\">
+      <h1 style=\"margin: auto; \">" .
+          $row["user_username"] .
+      "</h1>
+    </div>
+  <p style=\"text-align:center;\"><span class=\"glyphicon glyphicon-time\"></span> A Member since " . dateTime($row['user_created'], "date") . "</p>
+  <hr>
+  <p>" . $row['user_about'] . "</p>
+  <hr>
+    ";
+}
+}
+
+
 function createAccount() {
   global $conn;
 
@@ -178,7 +204,7 @@ function showPosts($query) {
    <a href=\"index.php?source=blog_post&blog_id=" . $row['post_id'] . "\">" . $row['post_title'] . "</a>
   </h2>
   <p class=\"lead\">
-   by <a href=\"index.php\">" . $row['user_username'] . "</a>
+   by <a href=\"index.php?source=profile_page&page=" . $row['user_id'] . "\">" . $row['user_username'] . "</a>
   </p>
   <p><span class=\"glyphicon glyphicon-time\"></span> Posted on " . dateTime($row['post_date'], "date") . " " . dateTime($row['post_date'], "time") . "</p>
   <hr>

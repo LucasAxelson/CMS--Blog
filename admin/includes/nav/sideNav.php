@@ -40,14 +40,11 @@
                 </li>
             </ul>
         </li>
-                    <li>
-                        <a href="charts.html"><i class="fa fa-fw fa-bar-chart-o"></i> Charts</a>
-                    </li>
-                    <li>
-                        <a href="tables.html"><i class="fa fa-fw fa-table"></i> Tables</a>
-                    </li>
-                    <li>
-                        <a href="index.php?source=categories"><i class="fa fa-fw fa-tag"></i> Categories</a>
-                    </li>
-                </ul>
-            </div>
+        <li>
+            <a href="index.php?source=categories"><i class="fa fa-fw fa-tag"></i> Categories</a>
+        </li>
+        <li>
+            <a href="tables.html"><i class="fa fa-fw fa-table"></i> Tables</a>
+        </li>
+    </ul>
+</div>

@@ -3,7 +3,6 @@
 } ?>
 
 <!-- Page Content -->
-<div class="col-xl">
   <div class="col-lg-8">
 
     <div style="display:flex; flex-direction:column; align-items: center;">
@@ -26,7 +25,7 @@
          <input type="submit" value="Log In" name="login_submit" class="btn btn-primary">
 
       </form>
-
+    <br>
     <p class="text-center">Don't have a log in?? <a href="index.php?source=create_account">Create an Account!</a></p>
     </div>
 <!-- End of Page Content -->
