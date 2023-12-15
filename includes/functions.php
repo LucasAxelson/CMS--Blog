@@ -12,14 +12,14 @@ function showProfile() {
 
     echo "
     <div style=\"display:flex; flex-direction: row;\">
-      <img style=\"border-radius: 50%; height: 150px; width: 150px; margin: 2rem;\" class=\"img-responsive\" src=\"includes/img/user/" . $row['user_image'] . "\" alt=\"\">
-      <h1 style=\"margin: auto; \">" .
+      <img style=\"border: 2.5px solid black; border-radius: 50%; height: 150px; width: 150px; margin: 2rem;\" class=\"img-responsive\" src=\"includes/img/user/" . $row['user_image'] . "\" alt=\"\">
+      <h1 style=\"margin: auto;\">" .
           $row["user_username"] .
       "</h1>
     </div>
   <p style=\"text-align:center;\"><span class=\"glyphicon glyphicon-time\"></span> A Member since " . dateTime($row['user_created'], "date") . "</p>
   <hr>
-  <p>" . $row['user_about'] . "</p>
+  <p style=\"margin: 1rem; padding: 1rem; border: 1px solid grey; border-radius: 15px; box-shadow: 2px 2px 5px grey inset;\">" . $row['user_about'] . "</p>
   <hr>
     ";
 }

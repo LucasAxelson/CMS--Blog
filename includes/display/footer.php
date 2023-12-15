@@ -2,7 +2,7 @@
         <footer>
             <div class="row">
                 <div class="col-lg-12">
-                    <p style="text-align: center;">Copyright &copy; Your Website 2014</p>
+                    <p style="text-align: center;">Copyright &copy; Clodders 2023</p>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>

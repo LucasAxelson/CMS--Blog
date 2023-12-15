@@ -16,6 +16,9 @@
 
     <title>CMS Admin - Bootstrap Admin</title>
 
+    <!-- Google Charts -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     

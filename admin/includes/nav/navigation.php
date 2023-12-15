@@ -12,11 +12,11 @@
             <!-- Top Menu Items -->
             <ul class="nav navbar-right top-nav">
                 <!-- User Messages -->
-                <?php require("includes/nav/userMessages.php") ?>
+                <?php require("includes/nav/userMessages.php"); ?>
                 <!-- User Notifications -->
-                <?php require("includes/nav/userNotifications.php") ?>
+                <?php require("includes/nav/userNotifications.php"); ?>
                 <!-- User Dropwdown Menu -->
-                <?php require("includes/nav/userNav.php") ?>
+                <?php require("includes/nav/userNav.php"); ?>
             </ul>
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             <?php require("includes/nav/sideNav.php"); ?>

@@ -14,7 +14,8 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <?php displayNavigation() ?>
-                    <?php if($_SESSION['user_access_id'] == 3) { showAdmin(); } ?>
+                    <?php if(isset($_SESSION['user_access_id'])) { 
+                            if($_SESSION['user_access_id'] == 3) { showAdmin(); }} ?>
                 </ul>
             
             <?php if(isset($_SESSION['user_id'])) {

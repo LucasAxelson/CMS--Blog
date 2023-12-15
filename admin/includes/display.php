@@ -37,8 +37,9 @@
     case "edit_user";
       require("includes/display/user/edit_user.php");
       break;
-
-  
+      case "dashboard";
+      require("includes/display/dashboard.php");
+      break;
 
   }
 ?>

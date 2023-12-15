@@ -10,12 +10,12 @@
                         <i class="fa fa-file-text fa-5x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
-                  <div class='huge'>12</div>
+                  <div class='huge'><?php echo countTotal("posts"); ?></div>
                         <div>Posts</div>
                     </div>
                 </div>
             </div>
-            <a href="posts.php">
+            <a href="index.php?source=view_all_posts">
                 <div class="panel-footer">
                     <span class="pull-left">View Details</span>
                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -32,12 +32,12 @@
                         <i class="fa fa-comments fa-5x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
-                     <div class='huge'>23</div>
+                     <div class='huge'><?php echo countTotal("comments"); ?></div>
                       <div>Comments</div>
                     </div>
                 </div>
             </div>
-            <a href="comments.php">
+            <a href="index.php?source=view_all_comments">
                 <div class="panel-footer">
                     <span class="pull-left">View Details</span>
                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -54,12 +54,12 @@
                         <i class="fa fa-user fa-5x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
-                    <div class='huge'>23</div>
+                    <div class='huge'><?php echo countTotal("users"); ?></div>
                         <div> Users</div>
                     </div>
                 </div>
             </div>
-            <a href="users.php">
+            <a href="index.php?source=view_all_users">
                 <div class="panel-footer">
                     <span class="pull-left">View Details</span>
                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -76,12 +76,12 @@
                         <i class="fa fa-list fa-5x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
-                        <div class='huge'>13</div>
+                        <div class='huge'><?php echo countTotal("categories"); ?></div>
                          <div>Categories</div>
                     </div>
                 </div>
             </div>
-            <a href="categories.php">
+            <a href="index.php?source=categories">
                 <div class="panel-footer">
                     <span class="pull-left">View Details</span>
                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>

@@ -1,4 +1,15 @@
 <?php 
+
+function countTotal($item, $where = "") {
+  global $conn;
+
+  $query = $conn->prepare(selectStatement($item, $where));
+  $query->execute();
+  $num = $query->rowCount();
+
+  return $num;
+}
+
 function loginUser() {
   global $conn;
 
@@ -39,7 +50,7 @@ function logoutUser() {
 function showAdmin() {                      
     echo "
         <li>
-            <a href=\"admin/\">Admin</a>
+            <a href=\"admin/index.php?source=dashboard\">Admin</a>
         </li>
         ";
   
