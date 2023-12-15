@@ -7,8 +7,12 @@
     <?php require("includes/nav/navigation.php"); ?>
 
     <?php if(isset($_GET['log_out'])) {
-        logoutUser();
-    } ?>
+            logoutUser();
+          } 
+          if(isset($_POST["suggest_submit"])) {
+            createCategory($_POST['suggest']);
+          }
+?>
 
             <!-- Main Column -->
             <?php require("includes/display.php") ?>

@@ -1,5 +1,24 @@
 <?php 
 
+function tempArray() {
+  $array = array (
+    "id"=> NULL,
+    "title"=> NULL,
+    "email"=> NULL,
+    "author"=> NULL,
+    "username"=> NULL,
+    "legal_name"=> NULL,
+    "image"=> NULL,
+    "content"=> NULL,
+    "tags"=> NULL,
+    "date"=> NULL,
+    "reply_id"=> NULL,
+    "status_id"=> NULL,
+    "access_id"=> NULL,
+  );
+return $array;
+}
+
 function countTotal($item, $where = "") {
   global $conn;
 
@@ -81,6 +100,9 @@ function listItems ($item, $placeholder) {
     }
      else if ($item == "access") {
       echo "<option value=\"" . $row['access_id'] . "\">" . $row['access_title'] . "</option>";
+    }
+    else if ($item == "comments") {
+      echo "<option value=\"" . $row['comment_id'] . "\">" . $row['comment_author'] . "</option>";
     }
   }
 }

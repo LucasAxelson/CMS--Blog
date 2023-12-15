@@ -10,7 +10,10 @@
                     <a href="index.php?source=view_all_posts">View All Posts</a>
                 </li>
                 <li>
-                    <a href="index.php?source=add_post">Add Posts</a>
+                    <a href="index.php?source=add_post">Add Post</a>
+                </li>
+                <li>
+                    <a href="index.php?source=edit_post">Edit Post</a>
                 </li>
             </ul>
         </li>
@@ -26,7 +29,6 @@
                 <li>
                     <a href="index.php?source=edit_user">Edit User</a>
                 </li>
-
             </ul>
         </li>
         <li>
@@ -36,7 +38,10 @@
                     <a href="index.php?source=view_all_comments">View All Comments</a>
                 </li>
                 <li>
-                    <a href="index.php?source=add_comments">Add Comments</a>
+                    <a href="index.php?source=add_comments">Add Comment</a>
+                </li>
+                <li>
+                    <a href="index.php?source=edit_comments">Edit Comment</a>
                 </li>
             </ul>
         </li>

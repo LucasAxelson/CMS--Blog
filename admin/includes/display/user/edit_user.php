@@ -1,6 +1,6 @@
 <?php
  if(isset($_GET['edit'])) {  
-  $user = pullUser($_GET['edit']);
+  $user = pullItem("users, status", "status.status_id = users.user_status_id AND users.user_id = " . $_GET['edit']);
  };
   
  if(isset($_POST['edit_user'])) {  
@@ -9,7 +9,7 @@
  } 
  
  if(isset($_POST['select_submit'])) { 
-    seeSelectedUser();
+    seeSelectedItem("users");
   }; 
 ?>
 
@@ -45,17 +45,17 @@
   
   <div class="form-group">
     <label class="form-label" for="userName">Username</label>
-    <input type="text" placeholder="Insert new username" value="<?php echo $user['username'] ?>"  name="user_username" id="userName" class="form-control">
+    <input type="text" placeholder="Insert new username" value="<?php if(isset($_GET['edit'])) { echo $user['username']; } ?>"  name="user_username" id="userName" class="form-control">
   </div>
   
   <div class="form-group">
     <label class="form-label" for="legalName">Legal Name</label>
-    <input type="text" placeholder="Insert new name" value="<?php echo $user['legal_name'] ?>"  name="user_legal_name" id="legalName" class="form-control">
+    <input type="text" placeholder="Insert new name" value="<?php if(isset($_GET['edit'])) { echo $user['legal_name']; } ?>"  name="user_legal_name" id="legalName" class="form-control">
   </div>
 
   <div class="form-group">
     <label class="form-label" for="email">Email</label>
-    <input type="email" placeholder="Insert new email" value="<?php echo $user['email'] ?>"  name="user_email" id="email" class="form-control">
+    <input type="email" placeholder="Insert new email" value="<?php if(isset($_GET['edit'])) { echo $user['email']; } ?>"  name="user_email" id="email" class="form-control">
   </div>
 
   <div class="form-group">
@@ -66,8 +66,7 @@
   <div class="form-group">
     <label class="form-label" for="authorStatus">Status</label>
     <select name="user_status" id="authorStatus">
-      <?php $stmt = "user_id = " . $user['status_id']; 
-            listItems("status", "" ); ?>
+      <?php listItems("status", "" ); ?>
     </select>
   </div>
 
@@ -80,7 +79,7 @@
 
   <div class="form-group">
     <label class="form-label" for="userImage">Profile Picture</label>
-    <?php displayImage("users", "user_image", "user_id"); ?>
+    <?php if(isset($_GET['edit'])) { displayImage("users", "user_image", "user_id"); } ?>
     <input type="file" name="user_image" id="userImage">
   </div>
 

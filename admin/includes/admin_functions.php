@@ -1,31 +1,43 @@
 <?php 
 
 
-function pullUser( $user_id ) {
+function pullItem($item, $where = "") {
   global $conn;
 
-  $query = $conn->prepare("SELECT * FROM users WHERE user_id = $user_id");
+  $query = $conn->prepare(selectStatement($item, $where));
   $query->execute();
 
   while ( $row = $query->fetch(PDO::FETCH_ASSOC ) ) { 
     extract($row);
 
-    $user = array (
-      "id"=> $user_id,
-      "username"=> $row['user_username'],
-      "email"=> $row['user_email'],
-      "legal_name"=> $row['user_legal_name'],
-      "status_id"=> $row["user_status_id"],
-      "access_id"=> $row["user_access_id"],
-    );
-    
-    return $user;
+    $array = tempArray();
+
+    if(str_contains($item, "users")) {
+      $array["username"] = $row["user_username"];
+      $array["legal_name"] = $row["user_legal_name"];
+      $array["email"] = $row["user_email"];
+      $array["image"] = $row["user_image"];
+
+    } else if (str_contains($item, "comments")) {
+      $array["email"] = $row["comment_email"];
+      $array["content"] = $row["comment_content"];
+
+    } else if (str_contains($item, "posts")) {
+      $array["title"] = $row["post_title"];
+      $array["content"] = $row["post_content"];
+      $array["tags"] = $row["post_tags"];
+    }
+
+    return $array;
   }
 }
 
-function seeSelectedUser() {
+function seeSelectedItem($item) {
   $id = $_POST['selected_id'];
-  $stmt = "Location: index.php?source=edit_user&edit=" . $id;
+  $stmt = "Location: index.php?source";
+  if($item == "posts") { $stmt .= "=edit_post&edit=$id";}
+  if($item == "users") { $stmt .= "=edit_user&edit=$id";}
+  if($item == "comments") { $stmt .= "=edit_comments&edit=$id";}
   
   return header($stmt);
 }
