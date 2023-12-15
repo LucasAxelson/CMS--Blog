@@ -3,7 +3,7 @@ To Do
 Improve & Personalize CSS <br>
   - Improve user display on blogs; <br>
   - Personalize navigation display; <br>
-  - Establish title/logo; <br>
+  - Establish logo; <br>
   - Correct display for smaller screens on admin, <br>
 <br>
 Improve comment count method <br>
@@ -17,8 +17,14 @@ Refactor functions, utilize more higher functions.<br>
   - DRY is well done for front-end aspects such as index.html, nav and sidebar. Most code is used once and rarely needed twice.<br>
   - Back-end is very repeated. Function files show lots of repeated code where "lower-functions" could implement better OOP principles. <br>
     - Statements can be recreated via functions where array is used to state off individual elements to be inserted/update/added in the database. <br>
-    - Query creation could be automated with prepared statements to minimize repetitive code of 3-5 lines per function. <br>
     - Prepended statements would reduce processing power and increase security of application. <br>
+<br>
+Improve features in project <br>
+ - Correct search function to work when inside of posts. Currently search method displays posts. Redirect would be needed to main page. <br>
+ - Profile page could be fuller. It's quite simplistic now but shows core user information. <br>
+ - User create a comment (No more comment for for members) + User create a post. <br>
+ - Visitors can create a post, requires approval from admin. <br>
+ - Redirection to a preview of the need-to-be-approve post where the admin can approve it there. Facilitates judgment of post. <br>
 <br>
 Increase validation across CMS.<br>
   - Inputted information still doesn't receive much validation outside of functional validation (quote escaping, trimming, specialchars); <br>
@@ -27,11 +33,6 @@ Increase validation across CMS.<br>
   - Make sure author-names/usernames are not repeated as to not confuse users or make possible imitation of another. (Make usernames unique) <br>
   - Emails must be validated and verified before user can go live with account as to avoid bot accounts. <br>
   - Implement Captcha into user and comment creation as to avoid Spam. <br> 
-  - Create method to recognize when user has pre-existing account. <br>
-  - Make site display dynamic in accordance with whether user is a visitor/admin/common-user. <br>
 <br>
 Implement Classes and Objects where able<br>
-<br>
-Improve features in project <br>
- - Correct search function to work when inside of posts. Currently search method displays posts. Redirect would be needed to main page.
 
