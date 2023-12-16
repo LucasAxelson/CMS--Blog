@@ -19,7 +19,10 @@ function showProfile() {
     </div>
   <p style=\"text-align:center;\"><span class=\"glyphicon glyphicon-time\"></span> A Member since " . dateTime($row['user_created'], "date") . "</p>
   <hr>
-  <p style=\"margin: 1rem; padding: 1rem; border: 1px solid grey; border-radius: 15px; box-shadow: 2px 2px 5px grey inset;\">" . $row['user_about'] . "</p>
+  <div style=\"margin: 1rem; padding: 1rem 2rem; border: 1px solid grey; border-radius: 15px; box-shadow: 2px 2px 5px grey inset;\">
+  <h4>About me: </h4>
+  <p>" . $row['user_about'] . "</p>
+  </div>
   <hr>
     ";
 }
@@ -182,7 +185,7 @@ function searchPosts() {
 
   $search = $_POST["search"];
 
-  $query = $conn->prepare(selectStatement("posts", "post_tags LIKE '%$search%' AND post_status_id = 4"));
+  $query = $conn->prepare("SELECT * FROM posts WHERE post_status_id = 4 AND post_title LIKE '%" . $search . "%' OR post_tags LIKE '%" . $search . "%'");
   $query->execute();
   
   $count = $query->rowCount();
@@ -203,9 +206,6 @@ function showPosts($query) {
    <h2>
    <a href=\"index.php?source=blog_post&blog_id=" . $row['post_id'] . "\">" . $row['post_title'] . "</a>
   </h2>
-  <p class=\"lead\">
-   by <a href=\"index.php?source=profile_page&page=" . $row['user_id'] . "\">" . $row['user_username'] . "</a>
-  </p>
   <p><span class=\"glyphicon glyphicon-time\"></span> Posted on " . dateTime($row['post_date'], "date") . " " . dateTime($row['post_date'], "time") . "</p>
   <hr>
   <img class=\"img-responsive\" src=\"includes/img/" . $row['post_image'] . "\" alt=\"\">
