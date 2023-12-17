@@ -1,7 +1,6 @@
 To Do
 
 Improve & Personalize CSS <br>
-  - Improve user display on blogs; <br>
   - Personalize navigation display; <br>
   - Establish logo; <br>
   - Correct display for smaller screens on admin, <br>
@@ -13,15 +12,7 @@ Improve comment count method <br>
  - Create function that updates the comment count each time a comment is created, edited or deleted.<br>
    - Minimizes amount of function occurences when using the site and reduces processing power.<br>
 <br>
-Refactor functions, utilize more higher functions.<br>
-  - DRY is well done for front-end aspects such as index.html, nav and sidebar. Most code is used once and rarely needed twice.<br>
-  - Back-end is very repeated. Function files show lots of repeated code where "lower-functions" could implement better OOP principles. <br>
-    - Statements can be recreated via functions where array is used to state off individual elements to be inserted/update/added in the database. <br>
-    - Prepended statements would reduce processing power and increase security of application. <br>
-<br>
 Improve features in project <br>
- - Correct search function to work when inside of posts. Currently search method displays posts. Redirect would be needed to main page. <br>
- - Profile page could be fuller. It's quite simplistic now but shows core user information. <br>
  - User create a comment (No more comment for for members) + User create a post. <br>
  - Visitors can create a post, requires approval from admin. <br>
  - Redirection to a preview of the need-to-be-approve post where the admin can approve it there. Facilitates judgment of post. <br>
