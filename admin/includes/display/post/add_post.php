@@ -2,7 +2,6 @@
   if(isset($_POST['create_post'])) {
     createPost();
   }
-
 ?>
 
 <form action="index.php?source=add_post" method="POST" enctype="multipart/form-data">

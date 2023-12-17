@@ -1,5 +1,17 @@
 <?php
 
+function displayUserImage($table, $image_column, $where_column) {
+  global $conn;
+  
+  $id = $_GET['edit'];
+  $query = $conn->prepare("SELECT $image_column FROM $table WHERE $where_column = $id");
+  $query->execute();
+  
+  $image = $query->fetchColumn();
+  
+  echo "<img width=\"100px\" src=\"includes/img/$image\" alt=\"\">";  
+}
+
 function showProfile() {
   global $conn;
 
@@ -23,11 +35,63 @@ function showProfile() {
   <h4>About me: </h4>
   <p>" . $row['user_about'] . "</p>
   </div>
-  <hr>
-    ";
+  <hr>";
+  }  
+  echo "<h4>Posts</h4>";
+  showProfilePosts();
+  echo "<h4>Comments</h4>";
+  showProfileComments();
+}
+
+function showProfilePosts() {
+  global $conn;
+
+  $query = $conn->prepare("SELECT * FROM posts WHERE posts.post_author_id = " . $_GET["page"]);
+  $query->execute();
+  
+  while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
+    extract( $row );
+
+    if($row["post_author_id"] == $_SESSION['user_id']) {
+      $edit = "<div>
+        <a href=\"index.php?source=edit_comment&edit=" . $row['post_id'] . "\">Edit</a>
+      </div> ";
+    } else { $edit = ""; }
+
+    echo "
+    <div style=\"display: flex; flex-direction: row; justify-content: space-between;\">
+      <div>
+      <a href=\"index.php?source=blog_post&blog_id=" . $row['post_id'] . "\">" . $row["post_title"] . "</a>
+      </div>" . $edit . 
+    "</div>
+  ";
 }
 }
 
+function showProfileComments() {
+  global $conn;
+
+  $query = $conn->prepare("SELECT * FROM posts, comments WHERE comments.comment_author_id = " . $_GET["page"] . " AND comments.comment_post_id = posts.post_id");
+  $query->execute();
+  
+  while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
+    extract( $row );
+
+    if($row["comment_author_id"] == $_SESSION['user_id']) {
+      $edit = "<div>
+        <a href=\"index.php?source=edit_comment&edit=" . $row['post_id'] . "\">Edit</a>
+      </div> ";
+    } else { $edit = ""; }
+
+    echo "
+    <div style=\"display: flex; flex-direction: row; justify-content: space-between;\">
+      <div>  
+        <a href=\"index.php?source=blog_post&blog_id=" . $row['comment_post_id'] . "\">" . $row["post_title"] . "</a>
+      </div>" . $edit .
+    "</div>
+  ";
+}
+}
 
 function createAccount() {
   global $conn;
@@ -54,6 +118,34 @@ function createAccount() {
 
       $query = $conn->prepare($stmt);
       $query->execute();
+  }
+}
+
+function createUserPost() {
+  global $conn;
+
+  if(verifyText($_POST['post_content']) && verifyText($_POST['post_title']) && verifyTags($_POST['post_tags'])) {
+    $author = $_SESSION['user_id'];
+    $category = $_POST['post_category_id'];
+
+    $title = trim_input($_POST['post_title']);
+    $content = trim_input($_POST['post_content']);
+    $tags = trim_input($_POST['post_tags']);    
+    
+    $img_name = $_FILES['post_image']['name'];
+    $img_location = $_FILES['post_image']['tmp_name'];
+
+    if(!empty($img_name) && !empty($img_location)) {
+      move_uploaded_file($img_location, "includes/img/$img_name");
+  
+      $stmt = postStatement("add", $category, $title, $author, $content, $tags, $img_name, "yes", $_SESSION['user_id']);
+  
+    } else {
+      $stmt = postStatement("add", $category, $title, $author, $content, $tags, $img_name, "no", $_SESSION['user_id']);
+    }
+
+    $query = $conn->prepare($stmt);
+    $query->execute();
   }
 }
 
@@ -209,8 +301,8 @@ function showPosts($query) {
   <p><span class=\"glyphicon glyphicon-time\"></span> Posted on " . dateTime($row['post_date'], "date") . " " . dateTime($row['post_date'], "time") . "</p>
   <hr>
   <img class=\"img-responsive\" src=\"includes/img/" . $row['post_image'] . "\" alt=\"\">
-  <hr>
-  <p>" . $row['post_content'] . "</p>
+  <hr><p>" 
+  . $row['post_content'] . "</p>
   <a class=\"btn btn-primary\" href=\"index.php?source=blog_post&blog_id=" . $row['post_id'] . "\">Read More <span class=\"glyphicon glyphicon-chevron-right\"></span></a>
 
   <hr>

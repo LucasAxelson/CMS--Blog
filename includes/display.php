@@ -19,6 +19,9 @@
     case "create_account";
       require("includes/display/create_account.php");
       break;
+    case "edit_post";
+      require("includes/display/edit_post.php");
+      break;
     case "create_post";
       require("includes/display/create_post.php");
       break;
