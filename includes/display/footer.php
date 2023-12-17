@@ -12,11 +12,20 @@
     </div>
     <!-- /.container -->
 
-    <!-- jQuery -->
-    <script src="js/jquery.js"></script>
 
+    <!-- Internal JS File -->
+    <script src="admin/js/script.js"></script>
+    
+    <!-- jQuery -->
+    <script src="admin/js/jquery.js"></script>
+    
     <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
+    <script src="admin/js/bootstrap.min.js"></script>
+
+    <!-- Summernote -->
+    <script src="admin/js/summernote.min.js"></script>
+    <script src="admin/js/summernote.js.map"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 
   </body>
 

@@ -38,8 +38,8 @@ if(isset($_POST['select_submit'])) {
   </div>
 
   <div class="form-group">
-    <label class="form-label" for="content">Post Content</label>
-    <textarea placeholder="Insert content" name="post_content" id="content" class="form-control" rows="3"><?php if(isset($_GET['edit'])) { echo $post['content']; } ?></textarea>
+    <label class="form-label" for="summernote">Post Content</label>
+    <textarea placeholder="Insert content" name="post_content" id="summernote" class="form-control" rows="3"><?php if(isset($_GET['edit'])) { echo $post['content']; } ?></textarea>
   </div>
 
   <div class="form-group">

@@ -168,7 +168,7 @@ while( $row = $query->fetch(PDO::FETCH_ASSOC) ) {
   echo "
    <h1>" . $row['post_title'] . "</h1>
     <p class=\"lead\">
-        by <a href=\"#\">" . $row['user_username'] . "</a>
+        by <a href=\"index.php?source=profile_page&page=" . $row['user_id'] . "\">" . $row['user_username'] . "</a>
     </p>  
     <hr>
    <p><span class=\"glyphicon glyphicon-time\"></span> Posted on " . dateTime($row['post_date'], "date") . " at " . dateTime($row['post_date'], "time") . "</p>
@@ -221,7 +221,7 @@ function showPosts($query) {
 function displayNavigation () {
   global $conn;
 
-  $query = $conn->prepare(selectStatement("categories", ""));
+  $query = $conn->prepare("SELECT * FROM categories LIMIT 8");
   $query->execute();
 
   while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {

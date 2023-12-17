@@ -16,12 +16,20 @@
 
     <title>CMS Admin - Bootstrap Admin</title>
 
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+    <!-- Summernote CSS/JS -->
+    <link rel="stylesheet" href="css/summernote.css">
+
+    
     <!-- Google Charts -->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    
+
     <!-- Custom CSS -->
     <link href="css/sb-admin.css" rel="stylesheet">
 

@@ -19,13 +19,25 @@
 
     <title>Home - Start Bootstrap</title>
 
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+    <!-- Summernote CSS/JS -->
+    <link rel="stylesheet" href="admin/css/summernote.css">
+
+    
+    <!-- Google Charts -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
+    <link href="css/sb-admin.css" rel="stylesheet">
     <link href="css/blog-home.css" rel="stylesheet">
 
-    <!-- Font Awesome -->
+    <!-- Custom Fonts -->
     <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

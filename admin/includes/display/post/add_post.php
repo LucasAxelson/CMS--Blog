@@ -21,8 +21,8 @@
   </div>
 
   <div class="form-group">
-    <label class="form-label" for="content">Post Content</label>
-    <textarea name="post_content" id="content" class="form-control" rows="3"></textarea>
+    <label class="form-label" for="summernote">Post Content</label>
+    <textarea name="post_content" id="summernote"></textarea>
   </div>
 
   <div class="form-group">
