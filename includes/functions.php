@@ -23,15 +23,15 @@ function showProfile() {
     extract( $row );
 
     echo "
-    <div style=\"display:flex; flex-direction: row;\">
-      <img style=\"border: 2.5px solid black; border-radius: 50%; height: 150px; width: 150px; margin: 2rem;\" class=\"img-responsive\" src=\"includes/img/user/" . $row['user_image'] . "\" alt=\"\">
+    <div class=\"flex-row\">
+      <img class=\"img-responsive user-image\" src=\"includes/img/user/" . $row['user_image'] . "\" alt=\"\">
       <h1 style=\"margin: auto;\">" .
           $row["user_username"] .
       "</h1>
     </div>
   <p style=\"text-align:center;\"><span class=\"glyphicon glyphicon-time\"></span> A Member since " . dateTime($row['user_created'], "date") . "</p>
   <hr>
-  <div style=\"margin: 1rem; padding: 1rem 2rem; border: 1px solid grey; border-radius: 15px; box-shadow: 2px 2px 5px grey inset;\">
+  <div class=\"about-me\">
   <h4>About me: </h4>
   <p>" . $row['user_about'] . "</p>
   </div>
@@ -54,12 +54,12 @@ function showProfilePosts() {
 
     if($row["post_author_id"] == $_SESSION['user_id']) {
       $edit = "<div>
-        <a href=\"index.php?source=edit_comment&edit=" . $row['post_id'] . "\">Edit</a>
+        <a href=\"index.php?source=edit_post&edit=" . $row['post_id'] . "\">Edit</a>
       </div> ";
     } else { $edit = ""; }
 
     echo "
-    <div style=\"display: flex; flex-direction: row; justify-content: space-between;\">
+    <div class=\"flex-row\" style=\"justify-content: space-between;\">
       <div>
       <a href=\"index.php?source=blog_post&blog_id=" . $row['post_id'] . "\">" . $row["post_title"] . "</a>
       </div>" . $edit . 
@@ -84,7 +84,7 @@ function showProfileComments() {
     } else { $edit = ""; }
 
     echo "
-    <div style=\"display: flex; flex-direction: row; justify-content: space-between;\">
+    <div class=\"flex-row\" style=\"justify-content: space-between;\">
       <div>  
         <a href=\"index.php?source=blog_post&blog_id=" . $row['comment_post_id'] . "\">" . $row["post_title"] . "</a>
       </div>" . $edit .
@@ -125,12 +125,13 @@ function createUserPost() {
   global $conn;
 
   if(verifyText($_POST['post_content']) && verifyText($_POST['post_title']) && verifyTags($_POST['post_tags'])) {
-    $author = $_SESSION['user_id'];
-    $category = $_POST['post_category_id'];
-
-    $title = trim_input($_POST['post_title']);
-    $content = trim_input($_POST['post_content']);
-    $tags = trim_input($_POST['post_tags']);    
+    $postData = tempArray();
+      
+    $postData['author'] = $_SESSION['user_id'];
+    $postData['category'] = $_POST['post_category_id'];
+    $postData['title'] = trim_input($_POST['post_title']);
+    $postData['content'] = $_POST['post_content'];
+    $postData['tags'] = trim_input($_POST['post_tags']);    
     
     $img_name = $_FILES['post_image']['name'];
     $img_location = $_FILES['post_image']['tmp_name'];
@@ -138,10 +139,10 @@ function createUserPost() {
     if(!empty($img_name) && !empty($img_location)) {
       move_uploaded_file($img_location, "includes/img/$img_name");
   
-      $stmt = postStatement("add", $category, $title, $author, $content, $tags, $img_name, "yes", $_SESSION['user_id']);
+      $stmt = postStatement("add", $postData['category'], $postData['title'], $postData['author'], $postData['content'], $postData['tags'], $img_name, "yes", $_SESSION['user_id']);
   
     } else {
-      $stmt = postStatement("add", $category, $title, $author, $content, $tags, $img_name, "no", $_SESSION['user_id']);
+      $stmt = postStatement("add", $postData['category'], $postData['title'], $postData['author'], $postData['content'], $postData['tags'], $img_name, "no", $_SESSION['user_id']);
     }
 
     $query = $conn->prepare($stmt);
@@ -157,13 +158,38 @@ function createUserComment() {
   if(verifyText($_POST['form_content']) && verifyEmail($_POST['form_email'])) {
     $author = trim_input($_POST['form_author']);
     $content = trim_input($_POST['form_content']);
-    $email = trim_input($_POST['form_email']);
     $reply_id = $_GET['reply']; 
 
     if(isset($_GET['reply'])) { 
-      $stmt = commentStatement("add", $post_id, $reply_id, $author, $email, $content, "yes");    
+      $stmt = commentStatement("add", $post_id, $reply_id, $author, $content, "yes");    
     } else {
-      $stmt = commentStatement("add", $post_id, $reply_id, $author, $email, $content, "no");    
+      $stmt = commentStatement("add", $post_id, $reply_id, $author, $content, "no");    
+    }
+
+    try {
+      $query = $conn->prepare($stmt);
+      $query->execute();
+      header("Location:index.php?source=blog_post&blog_id=" . $post_id . "");  
+    } catch(PDOException $e) {
+      echo "". $e->getMessage();
+    }
+  }
+}
+
+function createQuickComment() {
+  global $conn;
+
+  $post_id = $_GET['blog_id'];
+
+  if(verifyText($_POST['user_comment_content']) && isset($_SESSION['user_id'])) {
+    $author = $_SESSION['user_id'];
+    $content = trim_input($_POST['user_comment_content']);
+    $reply_id = $_GET['reply']; 
+
+    if(isset($_GET['reply'])) { 
+      $stmt = "INSERT INTO comments (comment_post_id, comment_reply_id, comment_author_id, comment_content, comment_status_id, comment_date) VALUES ('$post_id', '$reply_id', '$author', '$content', '4' , NOW())";    
+    } else {
+      $stmt = "INSERT INTO comments (comment_post_id, comment_author_id, comment_content, comment_status_id, comment_date) VALUES ('$post_id', '$author', '$content', '4' , NOW())";    
     }
 
     try {
@@ -196,14 +222,14 @@ function displayComments() {
    $openComment = 
    "<div class=\"media\">
       <a class=\"pull-left\" href=\"#\">
-        <img class=\"media-object\" src=\"http://placehold.it/64x64\" alt=\"\">
+        <img class=\"media-object comment-image\" src=\"includes/img/" . $row['user_image'] . "\" alt=\"\">
       </a>
       <div class=\"media-body\">
         <h4 class=\"media-heading\">" . $row['user_username'] . "
-          <small>" . dateTime($row['comment_date'], "date") . " at " . dateTime($row['comment_date'], "time") . "</small>
+          <small class=\"comment-date\">Created " . dateTime($row['comment_date'], "date") . " at " . dateTime($row['comment_date'], "time") . "</small>
         </h4> 
         <p>". $row['comment_content'] . "</p>
-        <p><a class=\"pull-left\" style=\"padding: 2px; font-size: 15px;\" href=\"index.php?source=blog_post&blog_id=" . $post_id . "&reply=" . $row['comment_id'] . "\">Reply</a></p>
+        <p><a class=\"pull-left reply-btn\" href=\"index.php?source=blog_post&blog_id=" . $post_id . "&reply=" . $row['comment_id'] . "\">Reply</a></p>
         <br>
       ";
     

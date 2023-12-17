@@ -5,7 +5,6 @@ $(document).ready(function () {
       ["style", ["bold", "italic", "underline", "clear"]],
       ["fontsize", ["fontsize"]],
       ["color", ["color"]],
-      ["insert", ["link"]],
     ],
     callbacks: {
       onChange: function (contents) {

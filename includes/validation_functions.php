@@ -183,16 +183,16 @@ function selectStatement($tables, $where) {
   }
 }
 
-function commentStatement($statement, $post_id, $reply_id, $author, $email, $content, $optional = "no", $comment_id = 0) {
+function commentStatement($statement, $post_id, $reply_id, $author, $content, $optional = "no", $comment_id = 0) {
   if ($statement == "edit") {
 
     if ($optional == "no") {
       
-      return "UPDATE comments SET comment_post_id = '$post_id', comment_email = '$email', comment_content = '$content', comment_author = '$author' WHERE comment_id = $comment_id";
+      return "UPDATE comments SET comment_post_id = '$post_id', comment_content = '$content', comment_author = '$author' WHERE comment_id = $comment_id";
 
     } else if ($optional == "yes") {
       
-      return "UPDATE comments SET comment_post_id = '$post_id', comment_reply_id = '$reply_id', comment_email = '$email', comment_content = '$content', comment_author = '$author' WHERE comment_id = $comment_id";
+      return "UPDATE comments SET comment_post_id = '$post_id', comment_reply_id = '$reply_id', comment_content = '$content', comment_author = '$author' WHERE comment_id = $comment_id";
 
     }
 
@@ -200,11 +200,11 @@ function commentStatement($statement, $post_id, $reply_id, $author, $email, $con
     
     if ($optional == "no") {
 
-      return "INSERT INTO comments (comment_post_id, comment_author_id, comment_email, comment_content, comment_status_id, comment_date) VALUES ('$post_id', '$author', '$email', '$content', '1' , NOW())";
+      return "INSERT INTO comments (comment_post_id, comment_author_id, comment_content, comment_status_id, comment_date) VALUES ('$post_id', '$author', '$content', '1' , NOW())";
 
     } else if($optional = "yes") {
       
-      return "INSERT INTO comments (comment_post_id, comment_reply_id, comment_author_id, comment_email, comment_content, comment_status_id, comment_date) VALUES ('$post_id', '$reply_id', '$author', '$email', '$content', '1' , NOW())";
+      return "INSERT INTO comments (comment_post_id, comment_reply_id, comment_author_id, comment_content, comment_status_id, comment_date) VALUES ('$post_id', '$reply_id', '$author', '$content', '1' , NOW())";
 
     }
 

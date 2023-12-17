@@ -22,7 +22,6 @@
 
     <!-- Summernote CSS/JS -->
     <link rel="stylesheet" href="css/summernote.css">
-
     
     <!-- Google Charts -->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -32,6 +31,7 @@
 
     <!-- Custom CSS -->
     <link href="css/sb-admin.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
     <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
