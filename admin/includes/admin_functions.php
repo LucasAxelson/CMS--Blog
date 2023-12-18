@@ -118,17 +118,17 @@ function declareUsers() {
   
     echo "          
      <tr>
-        <td>" . $row['user_id'] . "</td>
-        <td>" . $row['user_username'] . "</td>
-        <td>" . $row['user_legal_name'] . "</td>
-        <td>" . $row['user_email'] . "</td>
-        <td>" . $row['status_name'] . "</td>
-        <td>" . dateTime($row['user_created'], "date") . "</td>
-        <td><img width=\"100px\" src=\"../includes/img/user/" . $row['user_image'] . "\" alt=\"" . $row['user_image'] . "\"></td>
-        <td><a class=\"btn btn-success\" href='index.php?source=view_all_users&approve=" . $row['user_id'] . "'>Approve</a></td>
-        <td><a class=\"btn btn-danger\" href='index.php?source=view_all_users&reject=" . $row['user_id'] . "'>Reject</a></td>
-        <td><a class=\"btn btn-danger\" href='index.php?source=view_all_users&delete=" . $row['user_id'] . "'>Delete</a></td>
-        <td><a class=\"btn btn-info\" href='index.php?source=edit_user&edit=" . $row['user_id'] . "'>Edit</a></td>
+        <td class=\"td-style\">" . $row['user_id'] . "</td>
+        <td class=\"td-style td-title\">" . $row['user_username'] . "</td>
+        <td class=\"td-style\">" . $row['user_legal_name'] . "</td>
+        <td class=\"td-style\">" . $row['user_email'] . "</td>
+        <td class=\"td-style\">" . $row['status_name'] . "</td>
+        <td class=\"td-style\">" . dateTime($row['user_created'], "date") . "</td>
+        <td class=\"td-image-div\"><img class=\"td-image\" src=\"../includes/img/user/" . $row['user_image'] . "\" alt=\"" . $row['user_image'] . "\"></td>
+        <td class=\"td-div\"><a class=\"td-btn td-btn-success\" href='index.php?source=view_all_users&approve=" . $row['user_id'] . "'>Approve</a></td>
+        <td class=\"td-div\"><a class=\"td-btn td-btn-reject\" href='index.php?source=view_all_users&reject=" . $row['user_id'] . "'>Reject</a></td>
+        <td class=\"td-div\"><a class=\"td-btn td-btn-danger\" href='index.php?source=view_all_users&delete=" . $row['user_id'] . "'>Delete</a></td>
+        <td class=\"td-div\"><a class=\"td-btn td-btn-info\" href='index.php?source=edit_user&edit=" . $row['user_id'] . "'>Edit</a></td>
      </tr>";
   }
 }
@@ -155,7 +155,7 @@ function seeUser() {
         <td width=\"400px\">" . $row['user_legal_name'] . "</td>
         <td>" . $row['user_email'] . "</td>
         <td>" . $row['status_name'] . "</td>
-        <td><img width=\"100px\" src=\"../includes/img/user/" . $row['user_image'] . "\" alt=\"\"></td>
+        <td class=\"td-image-div\"><img width=\"100px\" src=\"../includes/img/user/" . $row['user_image'] . "\" alt=\"\"></td>
         <td>" . dateTime($row['user_created'], "date") . "</td>
         <td>" . $row['user_modified'] . "</td>
      </tr>";
@@ -194,9 +194,8 @@ function editComment($comment_id) {
   if(verifyText($_POST['comment_content']) && verifyEmail($_POST['comment_email'])) {
     $author = trim_input($_POST['comment_author']);
     $content = trim_input($_POST['comment_content']);
-    $email = trim_input($_POST['comment_email']);
 
-    $stmt = commentStatement("edit", $post_id, 0, $author, $email, $content, "no", $comment_id);
+    $stmt = commentStatement("edit", $post_id, 0, $author, $content, "no", $comment_id);
   }
 
   try {
@@ -215,13 +214,12 @@ function createComment() {
   if(verifyText($_POST['comment_content']) && verifyEmail($_POST['comment_email'])) {
     $author = trim_input($_POST['comment_author']);
     $content = trim_input($_POST['comment_content']);
-    $email = trim_input($_POST['comment_email']);
     $reply_id = $_GET['reply']; 
 
     if(isset($_GET['reply'])) { 
-      $stmt = commentStatement("add", $post_id, $reply_id, $author, $email, $content, 'no', 0);
+      $stmt = commentStatement("add", $post_id, $reply_id, $author, $content, 'no', 0);
     } else {
-      $stmt = commentStatement("add", $post_id, $reply_id, $author, $email, $content, 'yes', 0);
+      $stmt = commentStatement("add", $post_id, $reply_id, $author, $content, 'yes', 0);
     } 
   }
 
@@ -283,14 +281,14 @@ function declareComments() {
   
     echo "          
      <tr>
-     <td class=\"td-normal\">" . $row['comment_id'] . "</td>
-     <td class=\"td-normal td-title\">" . $row['post_title'] . "</td>
-     <td class=\"td-normal td-content\">" . $row['comment_content'] . "</td>
-     <td class=\"td-normal\">" . $row['user_username'] . "</td>
-     <td class=\"td-normal\">" . $row['user_email'] . "</td>
-     <td class=\"td-normal\">" . dateTime($row['comment_date'], "date") . "</td>
-     <td class=\"td-normal\">" . $row['comment_reply_id'] . "</td>
-     <td class=\"td-normal\">" . $row['status_name'] . "</td>
+     <td class=\"td-style\">" . $row['comment_id'] . "</td>
+     <td class=\"td-style td-title\">" . $row['post_title'] . "</td>
+     <td class=\"td-style td-content\">" . $row['comment_content'] . "</td>
+     <td class=\"td-style\">" . $row['user_username'] . "</td>
+     <td class=\"td-style\">" . $row['user_email'] . "</td>
+     <td class=\"td-style\">" . dateTime($row['comment_date'], "date") . "</td>
+     <td class=\"td-style\">" . $row['comment_reply_id'] . "</td>
+     <td class=\"td-style\">" . $row['status_name'] . "</td>
      <td class=\"td-div\"><a class=\"td-btn td-btn-success\" href='index.php?source=view_all_comments&approve=" . $row['comment_id'] . "'>Approve</a></td>
      <td class=\"td-div\"><a class=\"td-btn td-btn-reject\" href='index.php?source=view_all_comments&reject=" . $row['comment_id'] . "'>Reject</a></td>
      <td class=\"td-div\"><a class=\"td-btn td-btn-danger\" href='index.php?source=view_all_comments&delete=" . $row['comment_id'] . "'>Delete</a></td>
@@ -373,15 +371,15 @@ function declarePosts() {
   
     echo "          
      <tr>
-        <td>" . $row['post_id'] . "</td>
-        <td class=\"td-title\">" . $row['post_title'] . "</td>
-        <td>" . $row['user_username'] . "</td>
-        <td>" . dateTime($row['post_date'], "date") . "</td>
-        <td>" . $row['cat_title'] . "</td>
-        <td>" . $row['status_name'] . "</td>
-        <td><img width=\"100px\" src=\"../includes/img/" . $row['post_image'] . "\" alt=\"" . $row['post_image'] . "\"></td>
-        <td>" . $row['post_tags'] . "</td>
-        <td>" . $row['post_comment_count'] . "</td>
+        <td class=\"td-style\">" . $row['post_id'] . "</td>
+        <td class=\"td-style td-title\">" . $row['post_title'] . "</td>
+        <td class=\"td-style\">" . $row['user_username'] . "</td>
+        <td class=\"td-style\">" . dateTime($row['post_date'], "date") . "</td>
+        <td class=\"td-style\">" . $row['cat_title'] . "</td>
+        <td class=\"td-style\">" . $row['status_name'] . "</td>
+        <td class=\"td-image-div\"><img class=\"td-image\" src=\"../includes/img/" . $row['post_image'] . "\" alt=\"" . $row['post_image'] . "\"></td>
+        <td class=\"td-style\">" . $row['post_tags'] . "</td>
+        <td class=\"td-style\">" . $row['post_comment_count'] . "</td>
         <td class=\"td-div\"><a class=\"td-btn td-btn-success\" href='index.php?source=view_all_posts&approve=" . $row['post_id'] . "'>Approve</a></td>
         <td class=\"td-div\"><a class=\"td-btn td-btn-reject\" href='index.php?source=view_all_posts&reject=" . $row['post_id'] . "'>Reject</a></td>
         <td class=\"td-div\"><a class=\"td-btn td-btn-danger\" href='index.php?source=view_all_posts&delete=" . $row['post_id'] . "'>Delete</a></td>
@@ -401,10 +399,10 @@ function declareCategories () {
 
     echo "                            
       <tr>
-        <td>" . $row['cat_id'] . "</td>
-        <td>" . $row['cat_title'] . "</td>
-        <td><a href='index.php?source=categories&delete=" . $row['cat_id'] . "'>Delete</a></td>
-        <td><a href='index.php?source=categories&edit=" . $row['cat_id'] . "'>Edit</a></td>
+        <td class=\"td-cat\">" . $row['cat_id'] . "</td>
+        <td class=\"td-cat\">" . $row['cat_title'] . "</td>
+        <td class=\"td-cat td-div\"><a class=\"td-btn td-btn-danger\" href='index.php?source=categories&delete=" . $row['cat_id'] . "'>Delete</a></td>
+        <td class=\"td-cat td-div\"><a class=\"td-btn td-btn-info\" href='index.php?source=categories&edit=" . $row['cat_id'] . "'>Edit</a></td>
       </tr>
     ";
   }

@@ -8,7 +8,7 @@
   }
 ?>
 
-        <table>
+        <table class="table-style">
           <thead>
             <tr>
               <th>ID</th>

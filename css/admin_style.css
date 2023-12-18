@@ -16,7 +16,16 @@ th {
   padding: 5px;
 }
 
-td {
+.table-style {
+  width: 100%;
+}
+
+.td-cat {
+  width: 200px;
+  padding: 0 3rem;
+}
+
+.td-style {
   padding: 0 5px;
 }
 
@@ -29,6 +38,16 @@ td {
   font-size: 12px;
 }
 
+.td-image-div {
+  padding: 0;
+  height: 100px;
+}
+
+.td-image {
+  height: 135px;
+  width: 220px;
+}
+
 .td-div {
   border-width: 0;
   padding: 0;
@@ -37,9 +56,8 @@ td {
 }
 
 .td-btn {
-  border-radius: 5%;
   color: rgb(0, 0, 0);
-  padding: 8px 8px;
+  padding: 8px 20px;
 }
 
 .td-btn:hover {

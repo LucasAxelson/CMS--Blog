@@ -38,7 +38,7 @@
                 
                 <!-- Category table -->
                 <div class="col-xs-6">
-                    <table class="table table-bordered table-hover">
+                    <table>
                         <thead>
                             <tr>
                                 <th>ID</th>

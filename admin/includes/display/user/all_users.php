@@ -10,7 +10,7 @@
   }
 ?>
 
-<table>
+<table class="table-style">
           <thead>
             <tr>
             <th>ID</th>
@@ -19,7 +19,7 @@
               <th>Email</th>
               <th>Status</th>
               <th>Created</th>
-              <th>Modified</th>
+              <th>Profile Picture</th>
             </tr>
           </thead>
           <tbody>
