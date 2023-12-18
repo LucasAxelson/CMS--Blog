@@ -10,7 +10,7 @@
   }
 ?>
 
-<table class="table table-bordered table-hover">
+<table>
           <thead>
             <tr>
             <th>ID</th>

@@ -150,6 +150,36 @@ function createUserPost() {
   }
 }
 
+function editUserPost($id) {
+  global $conn;
+
+  if(verifyText($_POST['edit_content']) && verifyText($_POST['edit_title']) && verifyTags($_POST['edit_tags'])) {
+    $postData = tempArray();
+      
+    $postData['author'] = $_SESSION['user_id'];
+    $postData['category'] = $_POST['edit_category_id'];
+    $postData['title'] = trim_input($_POST['edit_title']);
+    $postData['content'] = $_POST['edit_content'];
+    $postData['tags'] = trim_input($_POST['edit_tags']);    
+    
+    $img_name = $_FILES['edit_image']['name'];
+    $img_location = $_FILES['edit_image']['tmp_name'];
+
+    if(!empty($img_name) && !empty($img_location)) {
+      move_uploaded_file($img_location, "includes/img/$img_name");
+  
+      $stmt = postStatement("edit", $postData['category'], $postData['title'], $postData['author'], $postData['content'], $postData['tags'], $img_name, "yes", $id);
+  
+    } else {
+      $stmt = postStatement("edit", $postData['category'], $postData['title'], $postData['author'], $postData['content'], $postData['tags'], $img_name, "no", $id);
+    }
+
+    $query = $conn->prepare($stmt);
+    $query->execute();
+  }
+}
+
+
 function createUserComment() {
   global $conn;
 
@@ -221,7 +251,7 @@ function displayComments() {
 
    $openComment = 
    "<div class=\"media\">
-      <a class=\"pull-left\" href=\"#\">
+      <a class=\"pull-left\" href=\"index.php?source=profile_page&page=" . $row['user_id'] . "\">
         <img class=\"media-object comment-image\" src=\"includes/img/" . $row['user_image'] . "\" alt=\"\">
       </a>
       <div class=\"media-body\">
@@ -258,8 +288,8 @@ function displayNestedComment($target_id) {
 
    $nestedComment = 
    "<div class=\"media\">
-      <a class=\"pull-left\" href=\"#\">
-        <img class=\"media-object\" src=\"http://placehold.it/64x64\" alt=\"\">
+      <a class=\"pull-left\" href=\"index.php?source=profile_page&page=" . $row['user_id'] . "\">
+        <img class=\"media-object comment-image\" src=\"includes/img/" . $row['user_image'] . "\" alt=\"\">
       </a>
       <div class=\"media-body\">
         <h4 class=\"media-heading\">" . $row['user_username'] . "
@@ -268,6 +298,7 @@ function displayNestedComment($target_id) {
         <p>". $row['comment_content'] . "</p>
         <p><a class=\"pull-left\" style=\"padding: 2px; font-size: 15px;\" href=\"index.php?source=blog_post&blog_id=" . $post_id . "&reply=" . $row['comment_id'] . "\">Reply</a></p>
       </div>
+    </div>
     ";
 
       return $nestedComment;
@@ -291,8 +322,10 @@ while( $row = $query->fetch(PDO::FETCH_ASSOC) ) {
     <hr>
    <p><span class=\"glyphicon glyphicon-time\"></span> Posted on " . dateTime($row['post_date'], "date") . " at " . dateTime($row['post_date'], "time") . "</p>
     <hr>
-    <img class=\"img-responsive\" src=\"includes/img/" . $row['post_image'] . "\" alt=\"\">
-   <hr>
+    <div style=\"display: flex; justify-content: center;\">
+    <img class=\"img-responsive\" style=\"width: 480px; height: 270px;\" src=\"includes/img/" . $row['post_image'] . "\" alt=\"\">
+    </div>
+    <hr>
     <p class=\"lead\">" . $row['post_content'] . "</p>
     ";
   }
@@ -326,7 +359,9 @@ function showPosts($query) {
   </h2>
   <p><span class=\"glyphicon glyphicon-time\"></span> Posted on " . dateTime($row['post_date'], "date") . " " . dateTime($row['post_date'], "time") . "</p>
   <hr>
-  <img class=\"img-responsive\" src=\"includes/img/" . $row['post_image'] . "\" alt=\"\">
+  <div style=\"display: flex; justify-content: center;\">
+  <img class=\"img-responsive\" style=\"width: 320px; height: 180px;\" src=\"includes/img/" . $row['post_image'] . "\" alt=\"\">
+  </div>
   <hr><p>" 
   . $row['post_content'] . "</p>
   <a class=\"btn btn-primary\" href=\"index.php?source=blog_post&blog_id=" . $row['post_id'] . "\">Read More <span class=\"glyphicon glyphicon-chevron-right\"></span></a>
@@ -335,7 +370,6 @@ function showPosts($query) {
     ";
 }
 }
-
 function displayNavigation () {
   global $conn;
 

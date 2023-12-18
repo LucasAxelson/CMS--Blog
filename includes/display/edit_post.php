@@ -1,6 +1,6 @@
 <?php
   if(isset($_POST['edit_post'])) {
-    // editUserPost();
+    editUserPost($_GET['edit']);
   }
 
   if(isset($_GET['edit'])) {  
@@ -17,7 +17,7 @@
       
       <div style="width:75%;">
 
-      <form action="index.php?source=edit_post" method="POST" enctype="multipart/form-data">
+      <form action="<?php echo $_SERVER['REQUEST_URI'] ?>" method="POST" enctype="multipart/form-data">
 
       <div class="form-group">
         <label class="form-label" for="title">Post Title</label>

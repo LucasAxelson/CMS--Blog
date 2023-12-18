@@ -283,18 +283,18 @@ function declareComments() {
   
     echo "          
      <tr>
-     <td>" . $row['comment_id'] . "</td>
-     <td>" . $row['post_title'] . "</td>
-     <td width=\"400px\">" . $row['comment_content'] . "</td>
-     <td>" . $row['user_username'] . "</td>
-     <td>" . $row['user_email'] . "</td>
-     <td>" . dateTime($row['comment_date'], "date") . "</td>
-     <td>" . $row['comment_reply_id'] . "</td>
-     <td>" . $row['status_name'] . "</td>
-     <td><a class=\"btn btn-success\" href='index.php?source=view_all_comments&approve=" . $row['comment_id'] . "'>Approve</a></td>
-     <td><a class=\"btn btn-danger\" href='index.php?source=view_all_comments&reject=" . $row['comment_id'] . "'>Reject</a></td>
-     <td><a class=\"btn btn-danger\" href='index.php?source=view_all_comments&delete=" . $row['comment_id'] . "'>Delete</a></td>
-     <td><a class=\"btn btn-info\" href='index.php?source=edit_comments&edit=" . $row['comment_id'] . "'>Edit</a></td>
+     <td class=\"td-normal\">" . $row['comment_id'] . "</td>
+     <td class=\"td-normal td-title\">" . $row['post_title'] . "</td>
+     <td class=\"td-normal td-content\">" . $row['comment_content'] . "</td>
+     <td class=\"td-normal\">" . $row['user_username'] . "</td>
+     <td class=\"td-normal\">" . $row['user_email'] . "</td>
+     <td class=\"td-normal\">" . dateTime($row['comment_date'], "date") . "</td>
+     <td class=\"td-normal\">" . $row['comment_reply_id'] . "</td>
+     <td class=\"td-normal\">" . $row['status_name'] . "</td>
+     <td class=\"td-div\"><a class=\"td-btn td-btn-success\" href='index.php?source=view_all_comments&approve=" . $row['comment_id'] . "'>Approve</a></td>
+     <td class=\"td-div\"><a class=\"td-btn td-btn-reject\" href='index.php?source=view_all_comments&reject=" . $row['comment_id'] . "'>Reject</a></td>
+     <td class=\"td-div\"><a class=\"td-btn td-btn-danger\" href='index.php?source=view_all_comments&delete=" . $row['comment_id'] . "'>Delete</a></td>
+     <td class=\"td-div\"><a class=\"td-btn td-btn-info\" href='index.php?source=edit_comments&edit=" . $row['comment_id'] . "'>Edit</a></td>
      </tr>";
   }
 }
@@ -374,7 +374,7 @@ function declarePosts() {
     echo "          
      <tr>
         <td>" . $row['post_id'] . "</td>
-        <td>" . $row['post_title'] . "</td>
+        <td class=\"td-title\">" . $row['post_title'] . "</td>
         <td>" . $row['user_username'] . "</td>
         <td>" . dateTime($row['post_date'], "date") . "</td>
         <td>" . $row['cat_title'] . "</td>
@@ -382,10 +382,10 @@ function declarePosts() {
         <td><img width=\"100px\" src=\"../includes/img/" . $row['post_image'] . "\" alt=\"" . $row['post_image'] . "\"></td>
         <td>" . $row['post_tags'] . "</td>
         <td>" . $row['post_comment_count'] . "</td>
-        <td><a class=\"btn btn-success\" href='index.php?source=view_all_posts&approve=" . $row['post_id'] . "'>Approve</a></td>
-        <td><a class=\"btn btn-danger\" href='index.php?source=view_all_posts&reject=" . $row['post_id'] . "'>Reject</a></td>
-        <td><a class=\"btn btn-danger\" href='index.php?source=view_all_posts&delete=" . $row['post_id'] . "'>Delete</a></td>
-        <td><a class=\"btn btn-info\" href='index.php?source=edit_post&edit=" . $row['post_id'] . "'>Edit</a></td>
+        <td class=\"td-div\"><a class=\"td-btn td-btn-success\" href='index.php?source=view_all_posts&approve=" . $row['post_id'] . "'>Approve</a></td>
+        <td class=\"td-div\"><a class=\"td-btn td-btn-reject\" href='index.php?source=view_all_posts&reject=" . $row['post_id'] . "'>Reject</a></td>
+        <td class=\"td-div\"><a class=\"td-btn td-btn-danger\" href='index.php?source=view_all_posts&delete=" . $row['post_id'] . "'>Delete</a></td>
+        <td class=\"td-div\"><a class=\"td-btn td-btn-info\" href='index.php?source=edit_post&edit=" . $row['post_id'] . "'>Edit</a></td>
      </tr>";
   }
 }
