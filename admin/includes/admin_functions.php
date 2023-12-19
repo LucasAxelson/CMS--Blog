@@ -113,7 +113,7 @@ function editUser($id) {
     }
   
     
-    $stmt = newUserStatement("edit", $user, $id);
+    $stmt = userStatement("edit", $user, $id);
 
   try {
     $query = $conn->prepare($stmt);

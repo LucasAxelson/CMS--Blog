@@ -71,7 +71,7 @@ function prepareImage($img_dir) {
 }
 
 
-function createAccount() {
+function createAccount($dir = "") {
   global $conn;
   global $user;
   
@@ -115,7 +115,7 @@ function createAccount() {
     // global $file_name, $array_img;
 
     // Establish path to directory
-    $img_dir = "includes/img/user/";
+    $img_dir = $dir . "includes/img/user/";
 
     // Include file in path to check for files with the same name
     $img_dir_new = $img_dir . basename($_FILES['account_image']['name']);
@@ -134,7 +134,7 @@ function createAccount() {
     
     $uploadOk = prepareImage($img_dir_new);
     if($uploadOk == 1 && !file_exists($img_dir_new)) {
-      if(move_uploaded_file($_FILES['account_image']['tmp_name'], $img_dir)) {
+      if(move_uploaded_file($_FILES['account_image']['tmp_name'], $img_dir_new)) {
         $user['user_image'] = $_FILES['account_image']['name']; 
       }
     } else if ($uploadOk == 1 && file_exists($img_dir_new))  { 
@@ -144,7 +144,7 @@ function createAccount() {
     }
   }
 
-  $stmt = newUserStatement("add", $user);
+  $stmt = userStatement("add", $user);
   
   try {
     $query = $conn->prepare($stmt);
@@ -367,7 +367,7 @@ function postStatement($statement, $category, $title, $author, $content, $tags, 
 
 };
 
-function newUserStatement($statement, $user_array, $id = NULL) {
+function userStatement($statement, $user_array, $id = NULL) {
   if ($statement == "edit") {
     global $stmt;
 
@@ -395,30 +395,6 @@ function newUserStatement($statement, $user_array, $id = NULL) {
     }
 
     return $insert . $insert_close . $value . $value_close;
-
-  }
-}
-
-function userStatement($statement, $username, $legal_name, $email, $password, $status, $access, $img_name, $id = "", $optional = "yes") {
-  if ($statement == "edit") {
-
-    if ($optional == "yes") {
-      return "UPDATE users
-      SET user_username = '$username', user_legal_name = '$legal_name', user_email = '$email', user_password = '$password', user_status_id = '$status', user_access_id = '$access', user_image = '$img_name', user_modified = NOW() 
-      WHERE user_id = $id";
-    } else if ($optional == "no") {
-      return "UPDATE users
-      SET user_username = '$username', user_legal_name = '$legal_name', user_email = '$email', user_password = '$password', user_status_id = '$status', user_access_id = '$access', user_modified = NOW() 
-      WHERE user_id = $id";
-    }
-
-  } else if ($statement == "add") {
-    
-    if ($optional == "yes") {
-        return "INSERT INTO users (user_username, user_legal_name, user_email, user_password, user_status_id, user_access_id, user_image, user_created) VALUES ('$username', '$legal_name', '$email', '$password', '$status', '$access', '$img_name',  NOW())";
-      } else if($optional = "no") {
-        return "INSERT INTO users (user_username, user_legal_name, user_email, user_password, user_status_id, user_access_id, user_created) VALUES ('$username', '$legal_name', '$email', '$password', '$status', '$access', NOW())";
-      }
 
   }
 }
