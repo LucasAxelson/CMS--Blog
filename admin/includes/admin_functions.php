@@ -53,7 +53,7 @@ function editUser($id) {
       $user['user_username'] = $username;
     }
 
-    if(isset($_POST['user_email']) && verifyText($_POST['user_legal_name'])) {
+    if(isset($_POST['user_legal_name']) && verifyText($_POST['user_legal_name'])) {
       $legal_name = trim_input($_POST['user_legal_name']);
       $user['user_legal_name'] = $legal_name;
     }
@@ -79,19 +79,41 @@ function editUser($id) {
       $user['user_password'] = $password;
     }
 
-    if(isset($_POST['account_image'])) {
-      $img_dir = "../includes/img/user/";
-      $img_dir .= basename($_FILES['account_image']['name']);
-      $uploadOk = prepareImage($img_dir);
-
-      if($uploadOk == 1) {
-        if(move_uploaded_file($_FILES['account_image']['tmp_name'], $img_dir )) {
-          $user['user_image'] = $_FILES['account_image']['name'];
+    if(isset($_FILES['account_image']['name'])) {
+      // global $file_name, $array_img;
+  
+      // Establish path to directory
+      $img_dir = "includes/img/user/";
+  
+      // Include file in path to check for files with the same name
+      $img_dir_new = $img_dir . basename($_FILES['account_image']['name']);
+      
+      // Check if file already exists
+      if (file_exists($img_dir_new)) {
+        // Pull image file type, create random file name and set to be inputted into db
+        $imageFileType = strtolower(pathinfo($img_dir_new, PATHINFO_EXTENSION));
+        // Create random file name
+        $random_string = generateRandomString(8);
+        // Set new file name for db and directory
+        $file_name = "$random_string.$imageFileType";
+        // Set path with new file name
+        $img_dir_rnd = $img_dir . basename($file_name);
+      }
+      
+      $uploadOk = prepareImage($img_dir_new);
+      if($uploadOk == 1 && !file_exists($img_dir_new)) {
+        if(move_uploaded_file($_FILES['account_image']['tmp_name'], $img_dir)) {
+          $user['user_image'] = $_FILES['account_image']['name']; 
+        }
+      } else if ($uploadOk == 1 && file_exists($img_dir_new))  { 
+        if(move_uploaded_file($_FILES['account_image']['tmp_name'], $img_dir_rnd)) {
+          $user['user_image'] = $file_name;
         }
       }
     }
+  
     
-    $stmt = newUserStatement("edit", $id, $user);
+    $stmt = newUserStatement("edit", $user, $id);
 
   try {
     $query = $conn->prepare($stmt);

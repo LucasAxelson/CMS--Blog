@@ -1,5 +1,16 @@
 <?php 
 
+function generateRandomString($length = 10) {
+  $characters = 'abcdefghijklmnopqrstuvwxyz';
+  $charactersLength = strlen($characters);
+
+  $randomString = '';
+  for ($i = 0; $i < $length; $i++) {
+      $randomString .= $characters[random_int(0, $charactersLength - 1)];
+  }
+  return $randomString;
+}
+
 function tempArray() {
   $array = array (
     "id"=> NULL,
@@ -43,11 +54,6 @@ function prepareImage($img_dir) {
     echo "File is not an image.";
     return 0;
 
-  } else if (file_exists($img_dir)) {
-    // Check if file already exists
-    echo "File already exists.";
-    return 0;
-
   } else if ($_FILES["account_image"]["size"] > 50000000) {
     // Check if file is larger than 50mb
     echo "Sorry, your file is too large.";
@@ -67,31 +73,74 @@ function prepareImage($img_dir) {
 
 function createAccount() {
   global $conn;
+  global $user;
+  
+  $user = array(); 
 
-  $img_dir = "includes/img/user/";
-  $img_dir .= basename($_FILES['account_image']['name']);
-
-  $uploadOk = prepareImage($img_dir);
-
-  if(verifyText($_POST['account_legal_name']) && verifyEmail($_POST['account_email'])) {
+  if(isset($_POST['account_username'])) {
     $username = trim_input($_POST['account_username']);
-    $legal_name = trim_input($_POST['account_legal_name']);
-    $email = prepareEmail($_POST['account_email']);
+    $user['user_username'] = $username;
+  }
 
+  if(isset($_POST['account_legal_name']) && verifyText($_POST['account_legal_name'])) {
+    $legal_name = trim_input($_POST['account_legal_name']);
+    $user['user_legal_name'] = $legal_name;
+  }
+  
+  if(isset($_POST['account_email']) && verifyEmail($_POST['account_email'])) {
+    $email = prepareEmail($_POST['account_email']);
+    $user['user_email'] = $email;
+  }
+
+  $user['user_access_id'] = 1;
+  $user['user_status_id'] = 1;
+
+  if(isset($_POST['account_password'])) {
     $password = trim_input($_POST['account_password']);
     $password = password_hash($password, PASSWORD_DEFAULT);
+    $user['user_password'] = $password;
+  }
 
+  if(isset($_FILES['account_image']['name'])) {
+    // global $file_name, $array_img;
 
-    if($uploadOk == 1) {
-      if(move_uploaded_file($_FILES['account_image']['tmp_name'], $img_dir )) {
-        $stmt = userStatement("add", $username, $legal_name, $email, $password, 1, 1, $_FILES['account_image']['name'], "", "yes");
-      } else {
-        $stmt = userStatement("add", $username, $legal_name, $email, $password, 1, 1, "default.jfif", "", "no");
+    // Establish path to directory
+    $img_dir = "includes/img/user/";
+
+    // Include file in path to check for files with the same name
+    $img_dir_new = $img_dir . basename($_FILES['account_image']['name']);
+    
+    // Check if file already exists
+    if (file_exists($img_dir_new)) {
+      // Pull image file type, create random file name and set to be inputted into db
+      $imageFileType = strtolower(pathinfo($img_dir_new, PATHINFO_EXTENSION));
+      // Create random file name
+      $random_string = generateRandomString(8);
+      // Set new file name for db and directory
+      $file_name = "$random_string.$imageFileType";
+      // Set path with new file name
+      $img_dir_rnd = $img_dir . basename($file_name);
+    }
+    
+    $uploadOk = prepareImage($img_dir_new);
+    if($uploadOk == 1 && !file_exists($img_dir_new)) {
+      if(move_uploaded_file($_FILES['account_image']['tmp_name'], $img_dir)) {
+        $user['user_image'] = $_FILES['account_image']['name']; 
+      }
+    } else if ($uploadOk == 1 && file_exists($img_dir_new))  { 
+      if(move_uploaded_file($_FILES['account_image']['tmp_name'], $img_dir_rnd)) {
+        $user['user_image'] = $file_name;
       }
     }
+  }
 
-      $query = $conn->prepare($stmt);
-      $query->execute();
+  $stmt = newUserStatement("add", $user);
+  
+  try {
+    $query = $conn->prepare($stmt);
+    $query->execute();
+  } catch (PDOException $e) {
+    echo "". $e->getMessage();
   }
 }
 
@@ -308,7 +357,7 @@ function postStatement($statement, $category, $title, $author, $content, $tags, 
 
 };
 
-function newUserStatement($statement, $id, $user_array) {
+function newUserStatement($statement, $user_array, $id = NULL) {
   if ($statement == "edit") {
     global $stmt;
 
@@ -321,6 +370,22 @@ function newUserStatement($statement, $id, $user_array) {
     }
 
     return $stmt . $where; 
+
+  } else if ($statement == "add") {
+    global $insert, $value;
+
+    $insert =  "INSERT INTO users (";
+    $insert_close = "user_created)";
+    $value = " VALUES (";
+    $value_close = "NOW())";
+
+    foreach( $user_array as $key => $content ) {
+      $insert .= "$key, ";
+      $value .= "'$content', ";
+    }
+
+    return $insert . $insert_close . $value . $value_close;
+
   }
 }
 
