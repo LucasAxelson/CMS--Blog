@@ -31,7 +31,73 @@
   box-shadow: 2px 2px 5px grey inset;
 }
 
+.inner-divs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .reply-btn {
   padding: 2px;
   font-size: 15px;
+}
+
+.inner-login {
+  margin: 2rem;
+  padding: 2rem;
+}
+
+.inner-create {
+  margin: 1rem;
+  padding: 0.5rem;
+}
+
+.login-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-title {
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.login-labels {
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.login-inputs {
+  border-radius: 5px;
+  border: 2px solid black;
+
+  padding: 5px;
+  font-size: 16px;
+
+  box-sizing: border-box;
+  width: 500px;
+}
+
+.login-btn:hover {
+  box-shadow: inset 2px 2px 2px rgb(92, 92, 92);
+  background-color: rgb(191, 220, 255);
+}
+
+.login-btn {
+  color: black;
+  font-size: 16px;
+  font-weight: 700;
+
+  background-color: rgb(255, 255, 255);
+  border: 2px solid black;
+
+  padding: 10px;
+  width: 500px;
+}
+
+.file-input:first-child {
+  background-color: black;
 }

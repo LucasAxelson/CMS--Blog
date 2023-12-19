@@ -29,15 +29,81 @@ function countTotal($item, $where = "") {
   return $num;
 }
 
+function prepareImage($img_dir) {
+
+  $imageFileType = strtolower(pathinfo($img_dir, PATHINFO_EXTENSION));
+  $check = getimagesize($_FILES["account_image"]["tmp_name"]);
+
+  if(empty($_FILES['account_image']['name'])) {
+    // Check if file is empty 
+    return 0;
+
+  } else if($check == false) {
+    // Check if image file is a actual image or fake image
+    echo "File is not an image.";
+    return 0;
+
+  } else if (file_exists($img_dir)) {
+    // Check if file already exists
+    echo "File already exists.";
+    return 0;
+
+  } else if ($_FILES["account_image"]["size"] > 50000000) {
+    // Check if file is larger than 50mb
+    echo "Sorry, your file is too large.";
+    return 0;
+
+  } else if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" &&  $imageFileType != "jfif") {
+    // Allow only certain file formats
+    echo "Sorry, only JPG, JPEG, & PNG files are allowed.";
+    return 0;
+
+  } else {
+    // If all checks are passed, submit file
+    return 1;
+  }
+}
+
+
+function createAccount() {
+  global $conn;
+
+  $img_dir = "includes/img/user/";
+  $img_dir .= basename($_FILES['account_image']['name']);
+
+  $uploadOk = prepareImage($img_dir);
+
+  if(verifyText($_POST['account_legal_name']) && verifyEmail($_POST['account_email'])) {
+    $username = trim_input($_POST['account_username']);
+    $legal_name = trim_input($_POST['account_legal_name']);
+    $email = prepareEmail($_POST['account_email']);
+
+    $password = trim_input($_POST['account_password']);
+    $password = password_hash($password, PASSWORD_DEFAULT);
+
+
+    if($uploadOk == 1) {
+      if(move_uploaded_file($_FILES['account_image']['tmp_name'], $img_dir )) {
+        $stmt = userStatement("add", $username, $legal_name, $email, $password, 1, 1, $_FILES['account_image']['name'], "", "yes");
+      } else {
+        $stmt = userStatement("add", $username, $legal_name, $email, $password, 1, 1, "default.jfif", "", "no");
+      }
+    }
+
+      $query = $conn->prepare($stmt);
+      $query->execute();
+  }
+}
+
 function loginUser() {
   global $conn;
 
   if(verifyEmail($_POST['login_email'])) { 
     try {
-      $email = $_POST["login_email"];
+      $email = strtolower($_POST['login_email']);
       $password = $_POST["login_password"];
 
-      $query = $conn->prepare("SELECT * FROM users WHERE user_email =  '$email'");
+      $query = $conn->prepare("SELECT user_email, user_password, user_id, user_username, user_access_id FROM users WHERE user_email =  '$email'");
       $query->execute();
 
       while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
@@ -286,6 +352,14 @@ function trim_input($input) {
   $input = stripslashes($input);
   $input = htmlspecialchars($input, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
   return $input;
+}
+
+// Cleans email before input
+function prepareEmail($email) {
+  $email = filter_var($email, FILTER_SANITIZE_EMAIL);
+  $email = trim_input($email);
+  $email = strtolower($email);
+  return $email;
 }
 
 // Boolean function designed to check password strength

@@ -93,34 +93,6 @@ function showProfileComments() {
 }
 }
 
-function createAccount() {
-  global $conn;
-
-  $img_name = $_FILES['account_image']['name'];
-  $img_location = $_FILES['account_image']['tmp_name'];
-
-  if(verifyText($_POST['account_legal_name']) && verifyEmail($_POST['account_email'])) {
-    $username = trim_input($_POST['account_username']);
-    $legal_name = trim_input($_POST['account_legal_name']);
-    $email = trim_input($_POST['account_email']);
-
-    $password = trim_input($_POST['account_password']);
-    $password = password_hash($password, PASSWORD_DEFAULT);
-
-
-    if(!empty($img_name) && !empty($img_location)) {
-      move_uploaded_file($img_location, "../includes/img/user/$img_name");
-      $stmt = userStatement("add", $username, $legal_name, $email, $password, 1, 1, $img_name, "", "yes");
-  
-    } else {
-      $stmt = userStatement("add", $username, $legal_name, $email, $password, 1, 1, $img_name, "", "no");
-    }
-
-      $query = $conn->prepare($stmt);
-      $query->execute();
-  }
-}
-
 function createUserPost() {
   global $conn;
 
@@ -185,7 +157,7 @@ function createUserComment() {
 
   $post_id = $_GET['blog_id'];
 
-  if(verifyText($_POST['form_content']) && verifyEmail($_POST['form_email'])) {
+  if(verifyText($_POST['form_content'])) {
     $author = trim_input($_POST['form_author']);
     $content = trim_input($_POST['form_content']);
     $reply_id = $_GET['reply']; 
