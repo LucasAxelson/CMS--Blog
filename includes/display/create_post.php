@@ -27,7 +27,7 @@
 
       <div class="form-group">
         <label for="image">Post Image</label>
-        <input type="file" id="image" name="post_image">
+        <input type="file" id="image" name="account_image">
       </div>
 
       <div class="form-group">

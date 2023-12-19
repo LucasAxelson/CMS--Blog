@@ -80,7 +80,7 @@
   <div class="form-group">
     <label class="form-label" for="userImage">Profile Picture</label>
     <?php if(isset($_GET['edit'])) { displayImage("users", "user_image", "user_id"); } ?>
-    <input type="file" name="user_image" id="userImage">
+    <input type="file" name="account_image" id="userImage">
   </div>
 
   <input type="submit" value="Edit User" name="edit_user" class="btn btn-primary">

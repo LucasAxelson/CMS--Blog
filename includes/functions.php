@@ -105,16 +105,18 @@ function createUserPost() {
     $postData['content'] = $_POST['post_content'];
     $postData['tags'] = trim_input($_POST['post_tags']);    
     
-    $img_name = $_FILES['post_image']['name'];
-    $img_location = $_FILES['post_image']['tmp_name'];
+    $img_dir = "includes/img/";
+    $img_dir .= basename($_FILES['account_image']['name']);
+  
+    $uploadOk = prepareImage($img_dir);
 
-    if(!empty($img_name) && !empty($img_location)) {
-      move_uploaded_file($img_location, "includes/img/$img_name");
+    if($uploadOk == 1) {
+      if(move_uploaded_file($_FILES['account_image']['tmp_name'], $img_dir )) {
   
-      $stmt = postStatement("add", $postData['category'], $postData['title'], $postData['author'], $postData['content'], $postData['tags'], $img_name, "yes", $_SESSION['user_id']);
+      $stmt = postStatement("add", $postData['category'], $postData['title'], $postData['author'], $postData['content'], $postData['tags'], $_FILES['account_image']['name'], "yes", $_SESSION['user_id']);
   
-    } else {
-      $stmt = postStatement("add", $postData['category'], $postData['title'], $postData['author'], $postData['content'], $postData['tags'], $img_name, "no", $_SESSION['user_id']);
+    }} else {
+      $stmt = postStatement("add", $postData['category'], $postData['title'], $postData['author'], $postData['content'], $postData['tags'], $_FILES['account_image']['name'], "no", $_SESSION['user_id']);
     }
 
     $query = $conn->prepare($stmt);

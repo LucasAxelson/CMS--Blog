@@ -18,6 +18,7 @@
               <th>Legal Name</th>
               <th>Email</th>
               <th>Status</th>
+              <th>Access</th>
               <th>Created</th>
               <th>Profile Picture</th>
             </tr>

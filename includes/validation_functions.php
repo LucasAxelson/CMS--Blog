@@ -308,6 +308,21 @@ function postStatement($statement, $category, $title, $author, $content, $tags, 
 
 };
 
+function newUserStatement($statement, $id, $user_array) {
+  if ($statement == "edit") {
+    global $stmt;
+
+    $stmt =  "UPDATE users
+      SET user_modified = NOW()";
+    $where = " WHERE user_id = $id";
+
+    foreach( $user_array as $key => $content ) {
+      $stmt.= ", $key = '$content'";
+    }
+
+    return $stmt . $where; 
+  }
+}
 
 function userStatement($statement, $username, $legal_name, $email, $password, $status, $access, $img_name, $id = "", $optional = "yes") {
   if ($statement == "edit") {

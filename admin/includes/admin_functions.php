@@ -44,29 +44,54 @@ function seeSelectedItem($item) {
 
 function editUser($id) {
   global $conn;
+  global $user;
   
-  if(verifyText($_POST['user_legal_name']) && verifyEmail($_POST['user_email'])) {
-    $username = trim_input($_POST['user_username']);
-    $legal_name = trim_input($_POST['user_legal_name']);
-    $email = trim_input($_POST['user_email']);
-    $status = trim_input($_POST['user_status']);
-    $access = trim_input($_POST['user_access']);
-    
-    $password = trim_input($_POST['user_password']);
-    $password = password_hash($password, PASSWORD_DEFAULT);
-    
-    $img_name = $_FILES['user_image']['name'];
-    $img_location = $_FILES['user_image']['tmp_name'];
+  $user = array();  
 
-    if(!empty($img_name) && !empty($img_location)) {
-      move_uploaded_file($img_location, "../includes/img/user/$img_name");
-    
-      $stmt = userStatement("edit", $username, $legal_name, $email, $password, $status, $access, $img_name, $id, "yes");
-    } else {
-      $stmt = userStatement("edit", $username, $legal_name, $email, $password, $status, $access, "", $id, "no");
+    if(isset($_POST['user_username'])) {
+      $username = trim_input($_POST['user_username']);
+      $user['user_username'] = $username;
     }
 
-  }
+    if(isset($_POST['user_email']) && verifyText($_POST['user_legal_name'])) {
+      $legal_name = trim_input($_POST['user_legal_name']);
+      $user['user_legal_name'] = $legal_name;
+    }
+    
+    if(isset($_POST['user_email']) && verifyEmail($_POST['user_email'])) {
+      $email = prepareEmail($_POST['user_email']);
+      $user['user_email'] = $email;
+    }
+
+    if(isset($_POST['user_access'])) {
+      $access = trim_input($_POST['user_access']);
+      $user['user_access_id'] = $access;
+    }
+
+    if(isset($_POST['user_status'])) {
+      $status = trim_input($_POST['user_status']);
+      $user['user_status_id'] = $status;
+    }
+
+    if(isset($_POST['user_password'])) {
+      $password = trim_input($_POST['user_password']);
+      $password = password_hash($password, PASSWORD_DEFAULT);
+      $user['user_password'] = $password;
+    }
+
+    if(isset($_POST['account_image'])) {
+      $img_dir = "../includes/img/user/";
+      $img_dir .= basename($_FILES['account_image']['name']);
+      $uploadOk = prepareImage($img_dir);
+
+      if($uploadOk == 1) {
+        if(move_uploaded_file($_FILES['account_image']['tmp_name'], $img_dir )) {
+          $user['user_image'] = $_FILES['account_image']['name'];
+        }
+      }
+    }
+    
+    $stmt = newUserStatement("edit", $id, $user);
 
   try {
     $query = $conn->prepare($stmt);
@@ -110,7 +135,7 @@ function createUser() {
 function declareUsers() {
   global $conn;
 
-  $query = $conn->prepare(selectStatement("users, status", "status.status_id = users.user_status_id"));
+  $query = $conn->prepare(selectStatement("users, status, access", "status.status_id = users.user_status_id AND access.access_id = users.user_access_id"));
   $query->execute();
 
   while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
@@ -123,6 +148,7 @@ function declareUsers() {
         <td class=\"td-style\">" . $row['user_legal_name'] . "</td>
         <td class=\"td-style\">" . $row['user_email'] . "</td>
         <td class=\"td-style\">" . $row['status_name'] . "</td>
+        <td class=\"td-style\">" . $row['access_title'] . "</td>
         <td class=\"td-style\">" . dateTime($row['user_created'], "date") . "</td>
         <td class=\"td-image-div\"><img class=\"td-image\" src=\"../includes/img/user/" . $row['user_image'] . "\" alt=\"" . $row['user_image'] . "\"></td>
         <td class=\"td-div\"><a class=\"td-btn td-btn-success\" href='index.php?source=view_all_users&approve=" . $row['user_id'] . "'>Approve</a></td>
