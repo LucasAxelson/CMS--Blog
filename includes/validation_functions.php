@@ -92,8 +92,18 @@ function createAccount() {
     $user['user_email'] = $email;
   }
 
+  if(isset($_POST['account_access'])) {
+    $user['user_access_id'] = $_POST['account_access'];
+  } else {
   $user['user_access_id'] = 1;
-  $user['user_status_id'] = 1;
+  }
+
+  if(isset($_POST['account_status'])) {
+    $user['user_status_id'] = $_POST['account_status'];
+  } else {
+    $user['user_status_id'] = 1;
+  }
+
 
   if(isset($_POST['account_password'])) {
     $password = trim_input($_POST['account_password']);
