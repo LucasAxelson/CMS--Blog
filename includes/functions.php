@@ -249,7 +249,7 @@ function displayComments() {
 
   while( $row = $query->fetch(PDO::FETCH_ASSOC) ) {
 
-   $openComment = 
+   echo 
    "<div class=\"media\">
       <a class=\"pull-left\" href=\"index.php?source=profile_page&page=" . $row['user_id'] . "\">
         <img class=\"media-object comment-image\" src=\"includes/img/" . $row['user_image'] . "\" alt=\"\">
@@ -263,12 +263,8 @@ function displayComments() {
         <br>
       ";
     
-      $nestedComment = displayNestedComment($row['comment_id']);
-      $closeComment = "</div></div>"; 
-
-      
-
-    echo $openComment, $nestedComment, $closeComment;
+      echo displayNestedComment($row['comment_id']);
+      echo "</div></div>";
   }
 }
 
@@ -286,7 +282,7 @@ function displayNestedComment($target_id) {
 
   while( $row = $query->fetch(PDO::FETCH_ASSOC) ) {
 
-   $nestedComment = 
+   echo 
    "<div class=\"media\">
       <a class=\"pull-left\" href=\"index.php?source=profile_page&page=" . $row['user_id'] . "\">
         <img class=\"media-object comment-image\" src=\"includes/img/" . $row['user_image'] . "\" alt=\"\">
@@ -296,12 +292,9 @@ function displayNestedComment($target_id) {
           <small>" . dateTime($row['comment_date'], "date") . " at " . dateTime($row['comment_date'], "time") . "</small>
         </h4> 
         <p>". $row['comment_content'] . "</p>
-        <p><a class=\"pull-left\" style=\"padding: 2px; font-size: 15px;\" href=\"index.php?source=blog_post&blog_id=" . $post_id . "&reply=" . $row['comment_id'] . "\">Reply</a></p>
       </div>
     </div>
     ";
-
-      return $nestedComment;
   }
 }
 
