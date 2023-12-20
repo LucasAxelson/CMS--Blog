@@ -4,6 +4,8 @@
   }
 ?>
 
+<div class="user">
+
 <form action="index.php?source=add_user" method="POST" enctype="multipart/form-data">
 
 <div class="div-form">
@@ -45,3 +47,5 @@
   </div>
 
 </form>
+
+</div>

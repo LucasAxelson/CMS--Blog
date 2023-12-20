@@ -13,7 +13,7 @@
   }; 
 ?>
 
-<table class="table table-bordered table-hover">
+<table class="table-style">
           <thead>
             <tr>
               <th>ID</th>
@@ -32,57 +32,65 @@
         </table>
 
     <form action="index.php?source=edit_user<?php if(isset($_POST['select_submit'])) { echo "&edit=" . $_POST['selected_id']; } ?>" method="POST">
-    <div>
-      <label for="selectUser">Select a User:</label>
-      <select style="border-radius: 5px; outline: black solid 1px" name="selected_id" id="selectUser">
+    <div class="div-form select">
+      <label class="form-labels" for="selectUser">Select a User:</label>
+      <select class="form-inputs" name="selected_id" id="selectUser">
         <?php listItems("users", ""); ?>
       </select>
-      <button class="btn btn-info" style="font-size: 12px; padding: 1px 3px; outline: grey solid 1px;" name="select_submit" type="submit">Select</button>
+      <button class="select-btn" name="select_submit" type="submit">Select</button>
       </div>
     </form>
 
+    <hr>
+
+    <div class="user">
+
 <form action="index.php?source=edit_user<?php if(isset($_GET['edit'])) { echo "&edit=" . $_GET['edit'] . ""; } ?>" method="POST" enctype="multipart/form-data">
   
-  <div class="form-group">
-    <label class="form-label" for="userName">Username</label>
-    <input type="text" placeholder="Insert new username" value="<?php if(isset($_GET['edit'])) { echo $user['username']; } ?>"  name="user_username" id="userName" class="form-control">
+  <div class="div-form">
+    <label class="form-labels" for="userName">Username</label>
+    <input type="text" placeholder="Insert new username" value="<?php if(isset($_GET['edit'])) { echo $user['username']; } ?>"  name="user_username" id="userName" class="form-inputs">
   </div>
   
-  <div class="form-group">
-    <label class="form-label" for="legalName">Legal Name</label>
-    <input type="text" placeholder="Insert new name" value="<?php if(isset($_GET['edit'])) { echo $user['legal_name']; } ?>"  name="user_legal_name" id="legalName" class="form-control">
+  <div class="div-form">
+    <label class="form-labels" for="legalName">Legal Name</label>
+    <input type="text" placeholder="Insert new name" value="<?php if(isset($_GET['edit'])) { echo $user['legal_name']; } ?>"  name="user_legal_name" id="legalName" class="form-inputs">
   </div>
 
-  <div class="form-group">
-    <label class="form-label" for="email">Email</label>
-    <input type="email" placeholder="Insert new email" value="<?php if(isset($_GET['edit'])) { echo $user['email']; } ?>"  name="user_email" id="email" class="form-control">
+  <div class="div-form">
+    <label class="form-labels" for="email">Email</label>
+    <input type="email" placeholder="Insert new email" value="<?php if(isset($_GET['edit'])) { echo $user['email']; } ?>"  name="user_email" id="email" class="form-inputs">
   </div>
 
-  <div class="form-group">
-    <label class="form-label" for="password">Password</label>
-    <input type="password" placeholder="Insert new password" name="user_password" id="password" class="form-control">
+  <div class="div-form">
+    <label class="form-labels" for="password">Password</label>
+    <input type="password" placeholder="Insert new password" name="user_password" id="password" class="form-inputs">
   </div>
 
-  <div class="form-group">
-    <label class="form-label" for="authorStatus">Status</label>
-    <select name="user_status" id="authorStatus">
+  <div class="div-form">
+    <label class="form-labels" for="authorStatus">Status</label>
+    <select class="form-inputs" name="user_status" id="authorStatus">
       <?php listItems("status", "" ); ?>
     </select>
   </div>
 
-  <div class="form-group">
-    <label class="form-label" for="authorAccess">Access</label>
-    <select name="user_access" id="authorAccess">
+  <div class="div-form">
+    <label class="form-labels" for="authorAccess">Access</label>
+    <select class="form-inputs" name="user_access" id="authorAccess">
       <?php listItems("access", ""); ?>
     </select>
   </div>
 
-  <div class="form-group">
-    <label class="form-label" for="userImage">Profile Picture</label>
+  <div class="div-form">
+    <label class="form-labels" for="userImage">Profile Picture</label>
     <?php if(isset($_GET['edit'])) { displayImage("users", "user_image", "user_id"); } ?>
     <input type="file" name="account_image" id="userImage">
   </div>
 
-  <input type="submit" value="Edit User" name="edit_user" class="btn btn-primary">
+  <div class="div-btn">
+    <input type="submit" value="Edit User" name="edit_user" class="form-btn">
+  </div>
 
 </form>
+
+</div>

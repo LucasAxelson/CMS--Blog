@@ -4,43 +4,49 @@
   }
 ?>
 
+<div class="post">
+
 <form action="index.php?source=add_post" method="POST" enctype="multipart/form-data">
 
-  <div class="form-group">
-    <label class="form-label" for="title">Post Title</label>
-    <input type="text" id="title" name="post_title" class="form-control">
+  <div class="div-form">
+    <p class="form-labels" for="title">Post Title</p>
+    <input type="text" placeholder="Insert post title " id="title" name="post_title" class="form-inputs">
   </div>
 
   
-  <div class="form-group">
-    <label class="form-label" for="title">Post Author</label>
-    <select name="post_author" id="authorComment">
+  <div class="div-form">
+    <p class="form-labels" for="title">Post Author</p>
+    <select name="post_author" id="authorComment" class="form-inputs">
       <?php listItems("users", ""); ?>
     </select>
   </div>
 
-  <div class="form-group">
-    <label class="form-label" for="summernote">Post Content</label>
+  <div>
+    <p class="form-labels" for="summernote">Post Content</p>    
     <textarea name="post_content" id="summernote"></textarea>
   </div>
 
-  <div class="form-group">
-    <label for="image">Post Image</label>
+  <div class="div-form">
+    <p class="form-labels" for="image">Post Image</p>
     <input type="file" id="image" name="uploaded_image">
   </div>
   
-  <div class="form-group">
-    <label for="tags">Post Tags</label>
-    <input type="text" name="post_tags" id="tags" class="form-control">
+  <div class="div-form">
+    <p class="form-labels" for="tags">Post Tags</p>
+    <input type="text" placeholder="Insert post tags" name="post_tags" id="tags" class="form-inputs">
   </div>
 
-  <div class="form-group">
-    <label class="form-label" for="category">Post Category</label>
-    <select name="post_category_id" id="category">
+  <div class="div-form">
+    <p class="form-labels" for="category">Post Category</p>
+    <select name="post_category_id" id="category" class="form-inputs">
       <?php listItems("categories", ""); ?>
     </select>
   </div>
 
-  <input type="submit" value="Create Post" name="create_post" class="btn btn-primary">
+  <div class="div-btn">
+    <input type="submit" value="Create Post" name="create_post" class="form-btn">
+  </div>
 
 </form>
+
+</div>

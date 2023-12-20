@@ -277,14 +277,14 @@ function seeUser() {
   
     echo "          
      <tr>
-        <td>" . $row['user_id'] . "</td>
-        <td>" . $row['user_username'] . "</td>
-        <td width=\"400px\">" . $row['user_legal_name'] . "</td>
-        <td>" . $row['user_email'] . "</td>
-        <td>" . $row['status_name'] . "</td>
+        <td class=\"td-style\">" . $row['user_id'] . "</td>
+        <td class=\"td-style td-title\">" . $row['user_username'] . "</td>
+        <td class=\"td-style\" width=\"400px\">" . $row['user_legal_name'] . "</td>
+        <td class=\"td-style\">" . $row['user_email'] . "</td>
+        <td class=\"td-style\">" . $row['status_name'] . "</td>
         <td class=\"td-image-div\"><img width=\"100px\" src=\"../includes/img/user/" . $row['user_image'] . "\" alt=\"\"></td>
-        <td>" . dateTime($row['user_created'], "date") . "</td>
-        <td>" . $row['user_modified'] . "</td>
+        <td class=\"td-style\">" . dateTime($row['user_created'], "date") . "</td>
+        <td class=\"td-style\">" . $row['user_modified'] . "</td>
      </tr>";
   }
 }

@@ -47,3 +47,14 @@
     <![endif]-->
 
 </head>
+
+<body>
+
+    <div id="wrapper">
+
+    <!-- Navigation -->
+    <?php require("includes/nav/navigation.php") ?>
+     
+      <div id="page-wrapper">
+
+        <div class="container-fluid">

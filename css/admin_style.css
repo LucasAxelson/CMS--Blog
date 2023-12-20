@@ -83,27 +83,50 @@ th {
   background-color: dodgerblue;
 }
 
-/* Forms */
+/* User forms */
+
+.user {
+  width: 50%;
+}
+
+/* Post forms */
+
+.post {
+  width: 60%;
+}
+
+/* Select forms */
+
+.select {
+  width: 60%;
+}
+
+.select-btn {
+  color: rgb(0, 0, 0);
+  padding: 4px 25px;
+}
+
+/* Forms Divs */
 
 .div-btn {
-  width: 50%;
+  margin-top: 1rem;
   display: flex;
   justify-content: center;
 }
 
 .div-form {
-  width: 50%;
-
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
 }
 
+/* Form inputs, labels and btns */
+
 .form-labels {
   font-weight: 700;
   font-size: 16px;
-  margin: 2rem 2rem 2rem 0;
+  margin: 2rem 1rem 2rem 0;
 }
 
 .form-inputs {
@@ -111,6 +134,7 @@ th {
   border: 1px solid black;
 
   padding: 5px;
+  margin-right: 1rem;
   font-size: 16px;
 
   box-sizing: border-box;
