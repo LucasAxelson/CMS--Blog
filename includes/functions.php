@@ -125,8 +125,8 @@ function createPost($dir = "") {
   }
   
   if(isset($_POST['post_tags']) && verifyText($_POST['post_tags'])) {
-    $email = trim_input($_POST['post_tags']);
-    $post['post_tags'] = $email;
+    $tags = trim_input($_POST['post_tags']);
+    $post['post_tags'] = $tags;
   }
 
   if(isset($_FILES['uploaded_image']['name'])) {
@@ -160,42 +160,11 @@ function createPost($dir = "") {
     }
   }
 
-  $stmt = NewpostStatement("add", $post);
+  $stmt = postStatement("add", $post);
   
   $query = $conn->prepare($stmt);
   $query->execute();
 }
-
-
-function editUserPost($id) {
-  global $conn;
-
-  if(verifyText($_POST['edit_content']) && verifyText($_POST['edit_title']) && verifyTags($_POST['edit_tags'])) {
-    $postData = tempArray();
-      
-    $postData['author'] = $_SESSION['user_id'];
-    $postData['category'] = $_POST['edit_category_id'];
-    $postData['title'] = trim_input($_POST['edit_title']);
-    $postData['content'] = $_POST['edit_content'];
-    $postData['tags'] = trim_input($_POST['edit_tags']);    
-    
-    $img_name = $_FILES['edit_image']['name'];
-    $img_location = $_FILES['edit_image']['tmp_name'];
-
-    if(!empty($img_name) && !empty($img_location)) {
-      move_uploaded_file($img_location, "includes/img/$img_name");
-  
-      $stmt = postStatement("edit", $postData['category'], $postData['title'], $postData['author'], $postData['content'], $postData['tags'], $img_name, "yes", $id);
-  
-    } else {
-      $stmt = postStatement("edit", $postData['category'], $postData['title'], $postData['author'], $postData['content'], $postData['tags'], $img_name, "no", $id);
-    }
-
-    $query = $conn->prepare($stmt);
-    $query->execute();
-  }
-}
-
 
 function createUserComment() {
   global $conn;

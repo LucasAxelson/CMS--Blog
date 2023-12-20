@@ -1,6 +1,6 @@
 <?php 
 if(isset($_POST["edit_post"])) {
-    editPost($_GET['edit']);
+    editPost("", $_GET['edit']);
 }
 
 if(isset($_GET['edit'])) {  

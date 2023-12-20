@@ -61,7 +61,7 @@ function prepareImage($img_dir) {
 
   } else if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" &&  $imageFileType != "jfif") {
     // Allow only certain file formats
-    echo "Sorry, only JPG, JPEG, & PNG files are allowed.";
+    echo "Sorry, only JPG, JPEG, JFIF & PNG files are allowed.";
     return 0;
 
   } else {
@@ -95,7 +95,7 @@ function createAccount($dir = "") {
   if(isset($_POST['account_access'])) {
     $user['user_access_id'] = $_POST['account_access'];
   } else {
-  $user['user_access_id'] = 1;
+    $user['user_access_id'] = 2;
   }
 
   if(isset($_POST['account_status'])) {
@@ -335,7 +335,7 @@ function commentStatement($statement, $post_id, $reply_id, $author, $content, $o
 
 };
 
-function NewpostStatement($statement, $post_array, $id = NULL) {
+function postStatement($statement, $post_array, $id = NULL) {
   if ($statement == "edit") {
     global $stmt;
 
@@ -366,36 +366,6 @@ function NewpostStatement($statement, $post_array, $id = NULL) {
 
   }
 }
-
-function postStatement($statement, $category, $title, $author, $content, $tags, $img_name, $optional = "no", $id = 0) {
-  if ($statement == "add") {
- 
-    if ($optional == "yes") {
- 
-      return "INSERT INTO posts (post_category_id, post_title, post_created, post_image, post_status_id, post_author_id, post_content, post_tags) VALUES ('$category', '$title', NOW(), '$img_name', 1 , '$author', '$content', '$tags')";
-      
-    } else if ($optional == "no") {
- 
-      return "INSERT INTO posts (post_category_id, post_title, post_created, post_status_id, post_author_id, post_content, post_tags) VALUES ('$category', '$title', NOW(), 1 , '$author', '$content', '$tags')";
-    }
-
-  } else if($statement == "edit")
-
-    if ($optional == "yes") {
- 
-      return "UPDATE posts 
-      SET post_category_id = '$category', post_title = '$title', post_image = '$img_name', post_author_id = '$author', post_content = '$content', post_tags = '$tags' 
-      WHERE post_id = $id";
- 
-    } else if ($optional == "no") {
- 
-      return "UPDATE posts 
-      SET post_category_id = '$category', post_title = '$title', post_author_id = '$author', post_content = '$content', post_tags = '$tags' 
-      WHERE post_id = $id";
-
-    }
-
-};
 
 function userStatement($statement, $user_array, $id = NULL) {
   if ($statement == "edit") {

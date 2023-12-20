@@ -1,6 +1,6 @@
 <?php
   if(isset($_POST['edit_post'])) {
-    editUserPost($_GET['edit']);
+    editPost("", $_GET['edit']);
   }
 
   if(isset($_GET['edit'])) {  
@@ -21,28 +21,28 @@
 
       <div class="form-group">
         <label class="form-label" for="title">Post Title</label>
-        <input type="text" id="title" name="edit_title" class="form-control" value="<?php if(isset($_GET['edit'])) { echo $post['title']; } ?>">
+        <input type="text" id="title" name="post_title" class="form-control" value="<?php if(isset($_GET['edit'])) { echo $post['title']; } ?>">
       </div>
 
       <div class="form-group">
         <label class="form-label" for="summernote">Post Content</label>
-        <textarea name="edit_content" id="summernote"><?php if(isset($_GET['edit'])) { echo $post['content']; } ?></textarea>
+        <textarea name="post_content" id="summernote"><?php if(isset($_GET['edit'])) { echo $post['content']; } ?></textarea>
       </div>
 
       <div class="form-group">
         <label for="image">Post Image</label>
         <?php if(isset($_GET['edit'])) { displayUserImage("posts", "post_image", "post_id"); } ?>
-        <input type="file" id="image" name="edit_image">
+        <input type="file" id="image" name="uploaded_image">
       </div>
 
       <div class="form-group">
         <label for="tags">Post Tags</label>
-        <input type="text" name="edit_tags" id="tags" class="form-control" value="<?php if(isset($_GET['edit'])) { echo $post['tags']; } ?>">
+        <input type="text" name="post_tags" id="tags" class="form-control" value="<?php if(isset($_GET['edit'])) { echo $post['tags']; } ?>">
       </div>
 
       <div class="form-group">
         <label class="form-label" for="category">Post Category</label>
-        <select name="edit_category_id" id="category">
+        <select name="post_category_id" id="category">
           <?php listItems("categories", ""); ?>
         </select>
       </div>

@@ -316,29 +316,75 @@ function declareComments() {
   }
 }
 
-function editPost($id) {
-  global $conn;
-
+function editPost($dir, $id) {
+  global $conn, $post;
   
-  $category = $_POST['post_category_id'];
-  $img_name = $_FILES['post_image']['name'];
-  $img_location = $_FILES['post_image']['tmp_name'];
+    $post = array();
   
-  if(verifyText($_POST['post_content']) && verifyText($_POST['post_title']) && verifyTags($_POST['post_tags'])) {
-    $title = trim_input($_POST['post_title']);
-    $author = trim_input($_POST['post_author']);
-    $content = trim_input($_POST['post_content']);
-    $tags = trim_input($_POST['post_tags']);    
-  
-    if(!empty($img_name) && !empty($img_location)) {
-      move_uploaded_file($img_location, "../includes/img/$img_name");
-      $stmt = postStatement("edit", $category, $title, $author, $content, $tags, $img_name, "yes", $id);
-    } else {
-      $stmt = postStatement("edit", $category, $title, $author, $content, $tags, $img_name, "no", $id);
+    if(isset($_POST['post_category_id'])) {
+      $post['post_category_id'] = $_POST['post_category_id'];
     }
-
-  }
-
+  
+    if(isset($_POST['post_status_id'])) {
+      $post['post_status_id'] = $_POST['post_status_id'];
+    } else {
+      $post['post_status_id'] = 1;
+    }
+  
+    if(isset($_POST['post_author'])) {
+      $post['post_author_id'] = $_POST['post_author'];
+    } else {
+      $post['post_author_id'] = $_SESSION['user_id'];
+    }
+  
+    if(isset($_POST['post_title'])  && verifyText($_POST['post_title'])) {
+      $title = trim_input($_POST['post_title']);
+      $post['post_title'] = $title;
+    }
+  
+    if(isset($_POST['post_content']) && verifyText($_POST['post_content'])) {
+      $content = trim_input($_POST['post_content']);
+      $post['post_content'] = $content;
+    }
+    
+    if(isset($_POST['post_tags']) && verifyText($_POST['post_tags'])) {
+      $tags = trim_input($_POST['post_tags']);
+      $post['post_tags'] = $tags;
+    }
+  
+    if(isset($_FILES['uploaded_image']['name'])) {
+      // Establish path to directory
+      $img_dir = $dir . "includes/img/";
+  
+      // Include file in path to check for files with the same name
+      $img_dir_new = $img_dir . basename($_FILES['uploaded_image']['name']);
+      
+      // Check if file already exists
+      if (file_exists($img_dir_new)) {
+        // Pull image file type, create random file name and set to be inputted into db
+        $imageFileType = strtolower(pathinfo($img_dir_new, PATHINFO_EXTENSION));
+        // Create random file name
+        $random_string = generateRandomString(8);
+        // Set new file name for db and directory
+        $file_name = "$random_string.$imageFileType";
+        // Set path with new file name
+        $img_dir_rnd = $img_dir . basename($file_name);
+      }
+      
+      $uploadOk = prepareImage($img_dir_new);
+      if($uploadOk == 1 && !file_exists($img_dir_new)) {
+        if(move_uploaded_file($_FILES['uploaded_image']['tmp_name'], $img_dir_new)) {
+          $post['post_image'] = $_FILES['uploaded_image']['name']; 
+        }
+      } else if ($uploadOk == 1 && file_exists($img_dir_new))  { 
+        if(move_uploaded_file($_FILES['uploaded_image']['tmp_name'], $img_dir_rnd)) {
+          $post['post_image'] = $file_name;
+        }
+      }
+    }   
+  
+    $stmt = postStatement("edit", $post, $id);
+  
   try {
     $query = $conn->prepare($stmt);
     $query->execute();
