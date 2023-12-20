@@ -38,7 +38,7 @@
 
   <div class="form-group">
     <label class="form-label" for="access">Profile Picture</label>
-    <input type="file" id="image" name="account_image">
+    <input type="file" id="image" name="uploaded_image">
   </div>
 
   <input type="submit" value="Add User" name="create_user" class="btn btn-primary">

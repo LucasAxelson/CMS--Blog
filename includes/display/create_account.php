@@ -35,7 +35,7 @@
 
           <div class="inner-create inner-divs">
             <label class="login-labels" for="accountimage">Profile Picture</label>
-            <input class="file-input" type="file" id="accountimage" name="account_image">
+            <input class="file-input" type="file" id="accountimage" name="uploaded_image">
           </div>
 
           <div class="inner-create inner-divs">

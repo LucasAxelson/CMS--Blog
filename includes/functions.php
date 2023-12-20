@@ -93,36 +93,79 @@ function showProfileComments() {
 }
 }
 
-function createUserPost() {
-  global $conn;
+function createPost($dir = "") {
+  global $conn, $post;
 
-  if(verifyText($_POST['post_content']) && verifyText($_POST['post_title']) && verifyTags($_POST['post_tags'])) {
-    $postData = tempArray();
-      
-    $postData['author'] = $_SESSION['user_id'];
-    $postData['category'] = $_POST['post_category_id'];
-    $postData['title'] = trim_input($_POST['post_title']);
-    $postData['content'] = $_POST['post_content'];
-    $postData['tags'] = trim_input($_POST['post_tags']);    
-    
-    $img_dir = "includes/img/";
-    $img_dir .= basename($_FILES['account_image']['name']);
-  
-    $uploadOk = prepareImage($img_dir);
+  $post = array();
 
-    if($uploadOk == 1) {
-      if(move_uploaded_file($_FILES['account_image']['tmp_name'], $img_dir )) {
-  
-      $stmt = postStatement("add", $postData['category'], $postData['title'], $postData['author'], $postData['content'], $postData['tags'], $_FILES['account_image']['name'], "yes", $_SESSION['user_id']);
-  
-    }} else {
-      $stmt = postStatement("add", $postData['category'], $postData['title'], $postData['author'], $postData['content'], $postData['tags'], $_FILES['account_image']['name'], "no", $_SESSION['user_id']);
-    }
-
-    $query = $conn->prepare($stmt);
-    $query->execute();
+  if(isset($_POST['post_category_id'])) {
+    $post['post_category_id'] = $_POST['post_category_id'];
   }
+
+  if(isset($_POST['post_status_id'])) {
+    $post['post_status_id'] = $_POST['post_status_id'];
+  } else {
+    $post['post_status_id'] = 1;
+  }
+
+  if(isset($_POST['post_author'])) {
+    $post['post_author_id'] = $_POST['post_author'];
+  } else {
+    $post['post_author_id'] = $_SESSION['user_id'];
+  }
+
+  if(isset($_POST['post_title'])  && verifyText($_POST['post_title'])) {
+    $title = trim_input($_POST['post_title']);
+    $post['post_title'] = $title;
+  }
+
+  if(isset($_POST['post_content']) && verifyText($_POST['post_content'])) {
+    $content = trim_input($_POST['post_content']);
+    $post['post_content'] = $content;
+  }
+  
+  if(isset($_POST['post_tags']) && verifyText($_POST['post_tags'])) {
+    $email = trim_input($_POST['post_tags']);
+    $post['post_tags'] = $email;
+  }
+
+  if(isset($_FILES['uploaded_image']['name'])) {
+    // Establish path to directory
+    $img_dir = $dir . "includes/img/";
+
+    // Include file in path to check for files with the same name
+    $img_dir_new = $img_dir . basename($_FILES['uploaded_image']['name']);
+    
+    // Check if file already exists
+    if (file_exists($img_dir_new)) {
+      // Pull image file type, create random file name and set to be inputted into db
+      $imageFileType = strtolower(pathinfo($img_dir_new, PATHINFO_EXTENSION));
+      // Create random file name
+      $random_string = generateRandomString(8);
+      // Set new file name for db and directory
+      $file_name = "$random_string.$imageFileType";
+      // Set path with new file name
+      $img_dir_rnd = $img_dir . basename($file_name);
+    }
+    
+    $uploadOk = prepareImage($img_dir_new);
+    if($uploadOk == 1 && !file_exists($img_dir_new)) {
+      if(move_uploaded_file($_FILES['uploaded_image']['tmp_name'], $img_dir_new)) {
+        $post['post_image'] = $_FILES['uploaded_image']['name']; 
+      }
+    } else if ($uploadOk == 1 && file_exists($img_dir_new))  { 
+      if(move_uploaded_file($_FILES['uploaded_image']['tmp_name'], $img_dir_rnd)) {
+        $post['post_image'] = $file_name;
+      }
+    }
+  }
+
+  $stmt = NewpostStatement("add", $post);
+  
+  $query = $conn->prepare($stmt);
+  $query->execute();
 }
+
 
 function editUserPost($id) {
   global $conn;
@@ -259,7 +302,7 @@ function displayNestedComment($target_id) {
    echo 
    "<div class=\"media\">
       <a class=\"pull-left\" href=\"index.php?source=profile_page&page=" . $row['user_id'] . "\">
-        <img class=\"media-object comment-image\" src=\"includes/img/" . $row['user_image'] . "\" alt=\"\">
+        <img class=\"comment-image\" src=\"includes/img/user/" . $row['user_image'] . "\" alt=\"\">
       </a>
       <div class=\"media-body\">
         <h4 class=\"media-heading\">" . $row['user_username'] . "
@@ -287,7 +330,7 @@ while( $row = $query->fetch(PDO::FETCH_ASSOC) ) {
         by <a href=\"index.php?source=profile_page&page=" . $row['user_id'] . "\">" . $row['user_username'] . "</a>
     </p>  
     <hr>
-   <p><span class=\"glyphicon glyphicon-time\"></span> Posted on " . dateTime($row['post_date'], "date") . " at " . dateTime($row['post_date'], "time") . "</p>
+   <p><span class=\"glyphicon glyphicon-time\"></span> Posted on " . dateTime($row['post_created'], "date") . " at " . dateTime($row['post_created'], "time") . "</p>
     <hr>
     <div style=\"display: flex; justify-content: center;\">
     <img class=\"img-responsive\" style=\"width: 480px; height: 270px;\" src=\"includes/img/" . $row['post_image'] . "\" alt=\"\">
@@ -324,7 +367,7 @@ function showPosts($query) {
    <h2>
    <a href=\"index.php?source=blog_post&blog_id=" . $row['post_id'] . "\">" . $row['post_title'] . "</a>
   </h2>
-  <p><span class=\"glyphicon glyphicon-time\"></span> Posted on " . dateTime($row['post_date'], "date") . " " . dateTime($row['post_date'], "time") . "</p>
+  <p><span class=\"glyphicon glyphicon-time\"></span> Posted on " . dateTime($row['post_created'], "date") . " " . dateTime($row['post_created'], "time") . "</p>
   <hr>
   <div style=\"display: flex; justify-content: center;\">
   <img class=\"img-responsive\" style=\"width: 320px; height: 180px;\" src=\"includes/img/" . $row['post_image'] . "\" alt=\"\">
@@ -367,7 +410,7 @@ function displayCategoryPosts() {
 function displayPosts () {
   global $conn;
 
-  $query = $conn->prepare(selectStatement("posts, users", "posts.post_status_id = 4 AND users.user_id = posts.post_author_id ORDER BY posts.post_date DESC LIMIT 5"));
+  $query = $conn->prepare(selectStatement("posts, users", "posts.post_status_id = 4 AND users.user_id = posts.post_author_id ORDER BY posts.post_created DESC LIMIT 5"));
   $query->execute();
   
   showPosts($query);

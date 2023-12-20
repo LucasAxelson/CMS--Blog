@@ -43,9 +43,9 @@ function countTotal($item, $where = "") {
 function prepareImage($img_dir) {
 
   $imageFileType = strtolower(pathinfo($img_dir, PATHINFO_EXTENSION));
-  $check = getimagesize($_FILES["account_image"]["tmp_name"]);
+  $check = getimagesize($_FILES["uploaded_image"]["tmp_name"]);
 
-  if(empty($_FILES['account_image']['name'])) {
+  if(empty($_FILES['uploaded_image']['name'])) {
     // Check if file is empty 
     return 0;
 
@@ -54,7 +54,7 @@ function prepareImage($img_dir) {
     echo "File is not an image.";
     return 0;
 
-  } else if ($_FILES["account_image"]["size"] > 50000000) {
+  } else if ($_FILES["uploaded_image"]["size"] > 50000000) {
     // Check if file is larger than 50mb
     echo "Sorry, your file is too large.";
     return 0;
@@ -111,14 +111,12 @@ function createAccount($dir = "") {
     $user['user_password'] = $password;
   }
 
-  if(isset($_FILES['account_image']['name'])) {
-    // global $file_name, $array_img;
-
+  if(isset($_FILES['uploaded_image']['name'])) {
     // Establish path to directory
     $img_dir = $dir . "includes/img/user/";
 
     // Include file in path to check for files with the same name
-    $img_dir_new = $img_dir . basename($_FILES['account_image']['name']);
+    $img_dir_new = $img_dir . basename($_FILES['uploaded_image']['name']);
     
     // Check if file already exists
     if (file_exists($img_dir_new)) {
@@ -134,11 +132,11 @@ function createAccount($dir = "") {
     
     $uploadOk = prepareImage($img_dir_new);
     if($uploadOk == 1 && !file_exists($img_dir_new)) {
-      if(move_uploaded_file($_FILES['account_image']['tmp_name'], $img_dir_new)) {
-        $user['user_image'] = $_FILES['account_image']['name']; 
+      if(move_uploaded_file($_FILES['uploaded_image']['tmp_name'], $img_dir_new)) {
+        $user['user_image'] = $_FILES['uploaded_image']['name']; 
       }
     } else if ($uploadOk == 1 && file_exists($img_dir_new))  { 
-      if(move_uploaded_file($_FILES['account_image']['tmp_name'], $img_dir_rnd)) {
+      if(move_uploaded_file($_FILES['uploaded_image']['tmp_name'], $img_dir_rnd)) {
         $user['user_image'] = $file_name;
       }
     }
@@ -337,16 +335,48 @@ function commentStatement($statement, $post_id, $reply_id, $author, $content, $o
 
 };
 
+function NewpostStatement($statement, $post_array, $id = NULL) {
+  if ($statement == "edit") {
+    global $stmt;
+
+    $stmt =  "UPDATE posts
+      SET post_modified = NOW()";
+    $where = " WHERE post_id = $id";
+
+    foreach( $post_array as $key => $content ) {
+      $stmt.= ", $key = '$content'";
+    }
+
+    return $stmt . $where; 
+
+  } else if ($statement == "add") {
+    global $insert, $value;
+
+    $insert =  "INSERT INTO posts (";
+    $insert_close = "post_created)";
+    $value = " VALUES (";
+    $value_close = "NOW())";
+
+    foreach( $post_array as $key => $content ) {
+      $insert .= "$key, ";
+      $value .= "'$content', ";
+    }
+
+    return $insert . $insert_close . $value . $value_close;
+
+  }
+}
+
 function postStatement($statement, $category, $title, $author, $content, $tags, $img_name, $optional = "no", $id = 0) {
   if ($statement == "add") {
  
     if ($optional == "yes") {
  
-      return "INSERT INTO posts (post_category_id, post_title, post_date, post_image, post_status_id, post_author_id, post_content, post_tags) VALUES ('$category', '$title', NOW(), '$img_name', 1 , '$author', '$content', '$tags')";
+      return "INSERT INTO posts (post_category_id, post_title, post_created, post_image, post_status_id, post_author_id, post_content, post_tags) VALUES ('$category', '$title', NOW(), '$img_name', 1 , '$author', '$content', '$tags')";
       
     } else if ($optional == "no") {
  
-      return "INSERT INTO posts (post_category_id, post_title, post_date, post_status_id, post_author_id, post_content, post_tags) VALUES ('$category', '$title', NOW(), 1 , '$author', '$content', '$tags')";
+      return "INSERT INTO posts (post_category_id, post_title, post_created, post_status_id, post_author_id, post_content, post_tags) VALUES ('$category', '$title', NOW(), 1 , '$author', '$content', '$tags')";
     }
 
   } else if($statement == "edit")

@@ -1,6 +1,6 @@
 <?php
   if(isset($_POST['create_post'])) {
-    createUserPost();
+    createPost();
   }
 ?>
 
@@ -27,7 +27,7 @@
 
       <div class="form-group">
         <label for="image">Post Image</label>
-        <input type="file" id="image" name="account_image">
+        <input type="file" id="image" name="uploaded_image">
       </div>
 
       <div class="form-group">

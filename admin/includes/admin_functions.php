@@ -79,14 +79,14 @@ function editUser($id) {
       $user['user_password'] = $password;
     }
 
-    if(isset($_FILES['account_image']['name'])) {
+    if(isset($_FILES['uploaded_image']['name'])) {
       // global $file_name, $array_img;
   
       // Establish path to directory
       $img_dir = "includes/img/user/";
   
       // Include file in path to check for files with the same name
-      $img_dir_new = $img_dir . basename($_FILES['account_image']['name']);
+      $img_dir_new = $img_dir . basename($_FILES['uploaded_image']['name']);
       
       // Check if file already exists
       if (file_exists($img_dir_new)) {
@@ -102,11 +102,11 @@ function editUser($id) {
       
       $uploadOk = prepareImage($img_dir_new);
       if($uploadOk == 1 && !file_exists($img_dir_new)) {
-        if(move_uploaded_file($_FILES['account_image']['tmp_name'], $img_dir)) {
-          $user['user_image'] = $_FILES['account_image']['name']; 
+        if(move_uploaded_file($_FILES['uploaded_image']['tmp_name'], $img_dir)) {
+          $user['user_image'] = $_FILES['uploaded_image']['name']; 
         }
       } else if ($uploadOk == 1 && file_exists($img_dir_new))  { 
-        if(move_uploaded_file($_FILES['account_image']['tmp_name'], $img_dir_rnd)) {
+        if(move_uploaded_file($_FILES['uploaded_image']['tmp_name'], $img_dir_rnd)) {
           $user['user_image'] = $file_name;
         }
       }
@@ -349,33 +349,6 @@ function editPost($id) {
   
 }
 
-function createPost() {
-  global $conn;
-
-  $category = $_POST['post_category_id'];
-  $img_name = $_FILES['post_image']['name'];
-  $img_location = $_FILES['post_image']['tmp_name'];
-
-  if(verifyText($_POST['post_content']) && verifyText($_POST['post_title']) && verifyTags($_POST['post_tags'])) {
-    $title = trim_input($_POST['post_title']);
-    $author = trim_input($_POST['post_author']);
-    $content = trim_input($_POST['post_content']);
-    $tags = trim_input($_POST['post_tags']);    
-  
-    if(!empty($img_name) && !empty($img_location)) {
-      move_uploaded_file($img_location, "../includes/img/$img_name");
-  
-      $stmt = postStatement("add", $category, $title, $author, $content, $tags, $img_name, "yes");
-  
-    } else {
-      $stmt = postStatement("add", $category, $title, $author, $content, $tags, $img_name, "no");
-    }
-
-      $query = $conn->prepare($stmt);
-      $query->execute();
-  }
-}
-
 function declarePosts() {
   global $conn;
 
@@ -393,7 +366,7 @@ function declarePosts() {
         <td class=\"td-style\">" . $row['post_id'] . "</td>
         <td class=\"td-style td-title\">" . $row['post_title'] . "</td>
         <td class=\"td-style\">" . $row['user_username'] . "</td>
-        <td class=\"td-style\">" . dateTime($row['post_date'], "date") . "</td>
+        <td class=\"td-style\">" . dateTime($row['post_created'], "date") . "</td>
         <td class=\"td-style\">" . $row['cat_title'] . "</td>
         <td class=\"td-style\">" . $row['status_name'] . "</td>
         <td class=\"td-image-div\"><img class=\"td-image\" src=\"../includes/img/" . $row['post_image'] . "\" alt=\"" . $row['post_image'] . "\"></td>
