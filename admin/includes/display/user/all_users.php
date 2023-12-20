@@ -9,7 +9,7 @@
     ApproveRejectOrDelete("user", "reject");
   }
 ?>
-
+ 
 <table class="table-style">
           <thead>
             <tr>
