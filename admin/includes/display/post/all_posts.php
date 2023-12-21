@@ -10,6 +10,11 @@
   if(isset($_POST['checkboxArray']) && isset($_POST['menu_apply'])) {
     applyOption("posts", "post_status_id", "post_id");
   }
+
+  if(isset($_POST['update_all']) && isset($_POST['menu_apply'])) {
+    applyOptionAll("posts", "post_status_id");
+  }
+
 ?>
 
 <div class="menu-div">
@@ -30,7 +35,7 @@
         <table class="table-style">
           <thead>
             <tr>
-              <th>Select</th>
+              <th><input type="checkbox" name="update_all"></th>
               <th>ID</th>
               <th>Title</th>
               <th>Author</th>
@@ -40,6 +45,7 @@
               <th>Image</th>
               <th>Tags</th>
               <th>Comments</th>
+              <th>Admin</th>
             </tr>
           </thead>
           <tbody>

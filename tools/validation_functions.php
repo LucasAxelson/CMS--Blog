@@ -1,38 +1,5 @@
 <?php 
 
-function applyOption($table, $set, $where) {
-  global $conn;
-  $option = $_POST['bulkOptions'];
-
-  foreach ($_POST['checkboxArray'] as $checkboxValue) {
-      // Draft All
-    if($option == "draft_all") {
-      $stmt = "UPDATE $table 
-               SET $set = '1' 
-               WHERE $where = {$checkboxValue}";
-    }
-    // Approve All
-    if($option == "approve_all") {
-      $stmt = "UPDATE $table                                
-               SET $set = '4' 
-               WHERE $where = {$checkboxValue}";
-    }
-    // Reject All
-    if($option == "reject_all") {
-      $stmt = "UPDATE $table 
-               SET $set = '3' 
-               WHERE $where = {$checkboxValue}";
-    }
-    // Delete All
-    if($option == "delete_all") {
-      $stmt = "DELETE FROM $table WHERE $where = {$checkboxValue}";
-    }
-
-    $query = $conn->prepare($stmt);
-    $query->execute();
-  }
-}
-
 function generateRandomString($length = 10) {
   $characters = 'abcdefghijklmnopqrstuvwxyz';
   $charactersLength = strlen($characters);

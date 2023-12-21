@@ -11,6 +11,9 @@
   if(isset($_POST['checkboxArray']) && isset($_POST['menu_apply'])) {
     applyOption("users", "user_status_id", "user_id");
   }
+  if(isset($_POST['update_all']) && isset($_POST['menu_apply'])) {
+    applyOptionAll("users", "user_status_id");
+  }
 ?>
 
 <div class="menu-div">
@@ -32,7 +35,7 @@
 <table class="table-style">
           <thead>
             <tr>
-              <th>Select</th>
+            <th><input type="checkbox" name="update_all"></th>
               <th>ID</th>
               <th>Username</th>
               <th>Legal Name</th>
@@ -41,6 +44,7 @@
               <th>Access</th>
               <th>Created</th>
               <th>Profile Picture</th>
+              <th>Admin</th>
             </tr>
           </thead>
           <tbody>

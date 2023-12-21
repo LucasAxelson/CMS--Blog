@@ -1,5 +1,88 @@
 <?php 
 
+function applyOptionAll($table, $set) {
+  global $conn;
+  $option = $_POST['bulkOptions'];
+
+      // Draft All
+    if($option == "draft_all") {
+        $stmt = "UPDATE $table SET $set = '1'";
+      }
+    
+
+    // Approve All
+    if($option == "approve_all") {
+        $stmt = "UPDATE $table SET $set = '4'";
+      }
+
+    // Reject All
+    if($option == "reject_all") {
+        $stmt = "UPDATE $table SET $set = '3'";
+    }
+
+    // Delete All
+    if($option == "delete_all") {
+        $stmt = "DELETE * FROM $table";
+    }
+
+  $query = $conn->prepare($stmt);
+  $query->execute();
+}  
+
+
+function applyOption($table, $set, $where) {
+  global $conn;
+  $option = $_POST['bulkOptions'];
+
+  foreach ($_POST['checkboxArray'] as $checkboxValue) {
+    
+      // Draft All
+    if($option == "draft_all") {
+      if(isset($_POST['update_all'])) {
+        $stmt = "UPDATE $table SET $set = '1'";
+      } else {
+        $stmt = "UPDATE $table 
+                 SET $set = '1' 
+                 WHERE $where = {$checkboxValue}";
+      }
+    }
+
+    // Approve All
+    if($option == "approve_all") {
+      if(isset($_POST['update_all'])) {
+        $stmt = "UPDATE $table SET $set = '4'";
+      } else {
+        $stmt = "UPDATE $table                                
+                 SET $set = '4' 
+                 WHERE $where = {$checkboxValue}";
+      }
+    }
+
+    // Reject All
+    if($option == "reject_all") {
+      if(isset($_POST['update_all'])) {
+        $stmt = "UPDATE $table SET $set = '3'";
+      } else {
+        $stmt = "UPDATE $table 
+                 SET $set = '3' 
+                 WHERE $where = {$checkboxValue}";
+      }
+    }
+
+    // Delete All
+    if($option == "delete_all") {
+      if(isset($_POST['update_all'])) {
+        $stmt = "DELETE * FROM $table";
+      } else {
+        $stmt = "DELETE FROM $table WHERE $where = {$checkboxValue}";
+      }
+    }
+
+    $query = $conn->prepare($stmt);
+    $query->execute();
+  }
+}
+
 function pullItem($item, $where = "") {
   global $conn;
 

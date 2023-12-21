@@ -236,7 +236,7 @@ function editUser($id) {
 function declareUsers() {
   global $conn;
 
-  $query = $conn->prepare(selectStatement("users, status, access", "status.status_id = users.user_status_id AND access.access_id = users.user_access_id"));
+  $query = $conn->prepare(selectStatement("users, status, access", "status.status_id = users.user_status_id AND access.access_id = users.user_access_id ORDER BY users.user_created DESC"));
   $query->execute();
 
   while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
@@ -253,6 +253,7 @@ function declareUsers() {
         <td class=\"td-style\">" . $row['access_title'] . "</td>
         <td class=\"td-style\">" . dateTime($row['user_created'], "date") . "</td>
         <td class=\"td-image-div\"><img class=\"td-image\" src=\"../includes/img/user/" . $row['user_image'] . "\" alt=\"" . $row['user_image'] . "\"></td>
+        <td class=\"td-div\"><a class=\"td-btn td-btn-view\" href='../index.php?source=profile_page&page=" . $row['user_id'] . "'>View</a></td>
         <td class=\"td-div\"><a class=\"td-btn td-btn-success\" href='index.php?source=view_all_users&approve=" . $row['user_id'] . "'>Approve</a></td>
         <td class=\"td-div\"><a class=\"td-btn td-btn-reject\" href='index.php?source=view_all_users&reject=" . $row['user_id'] . "'>Reject</a></td>
         <td class=\"td-div\"><a class=\"td-btn td-btn-danger\" href='index.php?source=view_all_users&delete=" . $row['user_id'] . "'>Delete</a></td>

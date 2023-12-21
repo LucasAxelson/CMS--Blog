@@ -18,6 +18,8 @@ th {
   padding: 5px;
 }
 
+/* Table elements */
+
 .table-style {
   width: 100%;
 }
@@ -64,6 +66,7 @@ th {
 .td-btn {
   color: rgb(0, 0, 0);
   padding: 8px 20px;
+  font-weight: 900;
 }
 
 .td-btn:hover {
@@ -85,6 +88,10 @@ th {
 
 .td-btn-info {
   background-color: dodgerblue;
+}
+
+.td-btn-view {
+  background-color: rgb(185, 187, 190);
 }
 
 /* User forms */

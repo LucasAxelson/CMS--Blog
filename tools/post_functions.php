@@ -135,6 +135,7 @@ function declarePosts() {
         <td class=\"td-image-div\"><img class=\"td-image\" src=\"../includes/img/" . $row['post_image'] . "\" alt=\"" . $row['post_image'] . "\"></td>
         <td class=\"td-style\">" . $row['post_tags'] . "</td>
         <td class=\"td-style\">" . $row['post_comment_count'] . "</td>
+        <td class=\"td-div\"><a class=\"td-btn td-btn-view\" href='../index.php?source=blog_post&blog_id=" . $row['post_id'] . "'>View</a></td>
         <td class=\"td-div\"><a class=\"td-btn td-btn-success\" href='index.php?source=view_all_posts&approve=" . $row['post_id'] . "'>Approve</a></td>
         <td class=\"td-div\"><a class=\"td-btn td-btn-reject\" href='index.php?source=view_all_posts&reject=" . $row['post_id'] . "'>Reject</a></td>
         <td class=\"td-div\"><a class=\"td-btn td-btn-danger\" href='index.php?source=view_all_posts&delete=" . $row['post_id'] . "'>Delete</a></td>

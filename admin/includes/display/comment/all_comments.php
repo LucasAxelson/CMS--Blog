@@ -10,6 +10,10 @@
   if(isset($_POST['checkboxArray']) && isset($_POST['menu_apply'])) {
     applyOption("comments", "comment_status_id", "comment_id");
   }
+
+  if(isset($_POST['update_all']) && isset($_POST['menu_apply'])) {
+    applyOptionAll("comments", "comment_status_id");
+  }
 ?>
 
 <div class="menu-div">
@@ -30,7 +34,7 @@
 <table class="table-style">
           <thead>
             <tr>
-              <th>Select</th>
+            <th><input type="checkbox" name="update_all"></th>
               <th>ID</th>
               <th>Post Title</th>
               <th>Comment</th>
@@ -39,6 +43,7 @@
               <th>Date</th>
               <th>Reply ID</th>
               <th>Status</th>
+              <th>Admin</th>
             </tr>
           </thead>
           <tbody>

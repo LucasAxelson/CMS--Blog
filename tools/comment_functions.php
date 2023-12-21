@@ -104,6 +104,7 @@ function declareComments() {
      <td class=\"td-style\">" . dateTime($row['comment_date'], "date") . "</td>
      <td class=\"td-style\">" . $row['comment_reply_id'] . "</td>
      <td class=\"td-style\">" . $row['status_name'] . "</td>
+     <td class=\"td-div\"><a class=\"td-btn td-btn-view\" href='../index.php?source=blog_post&blog_id=" . $row['comment_post_id'] . "'>View</a></td>
      <td class=\"td-div\"><a class=\"td-btn td-btn-success\" href='index.php?source=view_all_comments&approve=" . $row['comment_id'] . "'>Approve</a></td>
      <td class=\"td-div\"><a class=\"td-btn td-btn-reject\" href='index.php?source=view_all_comments&reject=" . $row['comment_id'] . "'>Reject</a></td>
      <td class=\"td-div\"><a class=\"td-btn td-btn-danger\" href='index.php?source=view_all_comments&delete=" . $row['comment_id'] . "'>Delete</a></td>
