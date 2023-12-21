@@ -244,6 +244,7 @@ function declareUsers() {
   
     echo "          
      <tr>
+        <td class=\"td-check\"><input type=\"checkbox\" name=\"checkboxArray[]\" value=\"" . $row['user_id'] . "\"></td>
         <td class=\"td-style\">" . $row['user_id'] . "</td>
         <td class=\"td-style td-title\">" . $row['user_username'] . "</td>
         <td class=\"td-style\">" . $row['user_legal_name'] . "</td>

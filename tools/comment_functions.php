@@ -95,6 +95,7 @@ function declareComments() {
   
     echo "          
      <tr>
+     <td><input class=\"td-check\" type=\"checkbox\" name=\"checkboxArray[]\" value=\"" . $row['comment_id'] . "\"></td>
      <td class=\"td-style\">" . $row['comment_id'] . "</td>
      <td class=\"td-style td-title\">" . $row['post_title'] . "</td>
      <td class=\"td-style td-content\">" . $row['comment_content'] . "</td>

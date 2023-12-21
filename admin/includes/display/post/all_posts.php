@@ -8,7 +8,7 @@
   }
 
   if(isset($_POST['checkboxArray']) && isset($_POST['menu_apply'])) {
-    applyOption();
+    applyOption("posts", "post_status_id", "post_id");
   }
 ?>
 
@@ -46,5 +46,6 @@
             <?php declarePosts() ?>
           </tbody>
         </table>
+
   </form>
 </div>

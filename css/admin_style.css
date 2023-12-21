@@ -22,6 +22,10 @@ th {
   width: 100%;
 }
 
+.td-check {
+  padding: 1rem;
+}
+
 .td-cat {
   width: 200px;
   padding: 0 3rem;

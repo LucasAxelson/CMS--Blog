@@ -1,31 +1,31 @@
 <?php 
 
-function applyOption() {
+function applyOption($table, $set, $where) {
   global $conn;
   $option = $_POST['bulkOptions'];
 
   foreach ($_POST['checkboxArray'] as $checkboxValue) {
       // Draft All
     if($option == "draft_all") {
-      $stmt = "UPDATE posts 
-               SET post_status_id = '1' 
-               WHERE post_id = {$checkboxValue}";
+      $stmt = "UPDATE $table 
+               SET $set = '1' 
+               WHERE $where = {$checkboxValue}";
     }
     // Approve All
     if($option == "approve_all") {
-      $stmt = "UPDATE posts 
-               SET post_status_id = '4' 
-               WHERE post_id = {$checkboxValue}";
+      $stmt = "UPDATE $table                                
+               SET $set = '4' 
+               WHERE $where = {$checkboxValue}";
     }
     // Reject All
     if($option == "reject_all") {
-      $stmt = "UPDATE posts 
-               SET post_status_id = '3' 
-               WHERE post_id = {$checkboxValue}";
+      $stmt = "UPDATE $table 
+               SET $set = '3' 
+               WHERE $where = {$checkboxValue}";
     }
     // Delete All
     if($option == "delete_all") {
-      $stmt = "DELETE FROM posts WHERE post_id = {$checkboxValue}";
+      $stmt = "DELETE FROM $table WHERE $where = {$checkboxValue}";
     }
 
     $query = $conn->prepare($stmt);
