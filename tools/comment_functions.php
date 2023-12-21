@@ -66,14 +66,14 @@ function seeComment() {
   
     echo "          
      <tr>
-        <td>" . $row['comment_id'] . "</td>
-        <td>" . $row['post_title'] . "</td>
-        <td width=\"400px\">" . $row['comment_content'] . "</td>
-        <td>" . $row['user_username'] . "</td>
-        <td>" . $row['user_email'] . "</td>
-        <td>" . dateTime($row['comment_date'], "date") . "</td>
-        <td>" . $row['status_name'] . "</td>
-        <td> Post </td>
+        <td class=\"td-style\">" . $row['comment_id'] . "</td>
+        <td class=\"td-style td-title\">" . $row['post_title'] . "</td>
+        <td class=\"td-style\" width=\"400px\">" . $row['comment_content'] . "</td>
+        <td class=\"td-style\">" . $row['user_username'] . "</td>
+        <td class=\"td-style\">" . $row['user_email'] . "</td>
+        <td class=\"td-style\">" . dateTime($row['comment_date'], "date") . "</td>
+        <td class=\"td-style\">" . $row['status_name'] . "</td>
+        <td class=\"td-style\"> Post </td>
      </tr>";
   }
 }

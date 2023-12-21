@@ -3,7 +3,7 @@
 } ?>
 
 <!-- Page Content -->
-  <div class="col-lg-8">
+  <div class="col-xl-8">
 
       <div class="login-div">
         <h1 class="login-title">Log In</h1>

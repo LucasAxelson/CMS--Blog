@@ -12,6 +12,9 @@ if(isset($_POST['select_submit'])) {
 }; 
 ?>
 
+<h2>Edit Post</h2>
+<br>
+
 <form action="index.php?source=edit_post<?php if(isset($_POST['select_submit'])) { echo "&edit=" . $_POST['selected_id']; } ?>" method="POST">
     <div class="div-form select">
     

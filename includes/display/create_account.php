@@ -5,7 +5,7 @@
 <!-- Page Content -->
 <div class="col-xl">
 
-  <div class="col-lg-8">
+  <div class="col-xl-8">
   
     <div class="login-div">
 

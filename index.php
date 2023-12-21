@@ -18,7 +18,8 @@
             <?php require("includes/display.php") ?>
 
             <!-- Sidebar Widgets Column -->
-            <?php require("includes/nav/sidebar.php") ?>
+            <?php if(isset($_GET['source']) && ($_GET['source'] == "login_page" OR $_GET['source'] == "create_account")) {
+            } else { require("includes/nav/sidebar.php"); } ?>
             
         <!-- Footer -->
         <?php require("includes/display/footer.php") ?>

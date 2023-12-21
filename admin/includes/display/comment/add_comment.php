@@ -4,32 +4,39 @@
   }
 ?>
 
-<form action="index.php?source=add_comments" method="POST" enctype="multipart/form-data">
-  
-  <div class="form-group">
-    <label class="form-label" for="category">Select a Post:</label>
-    <select name="post_id" id="category">
+<h2>Add Comment</h2>
+<br>
+
+<div class="post">
+<form action="index.php?source=add_comments" method="POST" enctype="multipart/form-data">  
+
+  <div class="div-form">
+    <label class="form-labels" for="category">Select a Post:</label>
+    <select class="form-inputs" name="post_id" id="category">
       <?php listItems("posts", ""); ?>
     </select>
   </div>
 
-  <div class="form-group">
-    <label class="form-label" for="title">Comment Email</label>
-    <input type="text" name="comment_email" class="form-control">
+  <div class="div-form">
+    <label class="form-labels" for="title">Comment Email</label>
+    <input type="text" name="comment_email" class="form-inputs">
   </div>
   
-  <div class="form-group">
-    <label class="form-label" for="title">Comment Author</label>
-    <select name="comment_author" id="authorComment">
+  <div class="div-form">
+    <label class="form-labels" for="title">Comment Author</label>
+    <select class="form-inputs" name="comment_author" id="authorComment">
       <?php listItems("users", ""); ?>
     </select>
   </div>
 
-  <div class="form-group">
-    <label class="form-label" for="content">Comment Content</label>
-    <textarea name="comment_content" id="content" class="form-control" rows="3"></textarea>
+  <div class="div-form">
+    <label class="form-labels" for="content">Comment Content</label>
+    <textarea name="comment_content" id="content" class="form-inputs" rows="3"></textarea>
   </div>
 
-  <input type="submit" value="Create a comment" name="create_comment" class="btn btn-primary">
+  <div class="div-btn">
+    <input type="submit" value="Create a comment" name="create_comment" class="form-btn">
+  </div>
 
 </form>
+</div>

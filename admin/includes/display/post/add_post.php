@@ -4,8 +4,10 @@
   }
 ?>
 
-<div class="post">
+<h2>Add Post</h2>
+<br>
 
+<div class="post">
 <form action="index.php?source=add_post" method="POST" enctype="multipart/form-data">
 
   <div class="div-form">

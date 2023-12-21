@@ -142,6 +142,7 @@ th {
 }
 
 .form-btn {
+  margin-top: 1rem;
   color: rgb(0, 0, 0);
   padding: 8px 20px;
 }
