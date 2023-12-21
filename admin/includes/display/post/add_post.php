@@ -1,6 +1,6 @@
 <?php
   if(isset($_POST['create_post'])) {
-    createPost();
+    createPost("../");
   }
 ?>
 

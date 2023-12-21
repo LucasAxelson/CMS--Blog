@@ -1,5 +1,183 @@
 <?php 
 
+function displayCategoryPosts() {
+  global $conn;
+  $category_id = $_GET["category"];
+
+  $query = $conn->prepare(selectStatement("posts, users", "post_category_id = $category_id AND post_status_id = 4 AND users.user_id = posts.post_author_id"));
+  $query->execute();
+  
+  showPosts($query);
+}
+
+
+
+function displayCategories($position) {
+  global $conn;
+
+  $stmt = selectStatement("categories $position", "");
+  $query = $conn->prepare($stmt);
+  $query->execute();
+
+  showCategory($query);  
+}
+
+function showCategory($query) {
+  while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
+    extract( $row );
+
+    echo "<li><a href=\"index.php?source=main_page&category=" . $row['cat_id'] . "\">" . $row['cat_title'] . "</a></li>";
+}
+}
+
+function displayPosts () {
+  global $conn;
+
+  $query = $conn->prepare(selectStatement("posts, users", "posts.post_status_id = 4 AND users.user_id = posts.post_author_id ORDER BY posts.post_created DESC LIMIT 5"));
+  $query->execute();
+  
+  showPosts($query);
+}
+
+function displayPost() {
+  global $conn;
+  $post_id = $_GET["blog_id"];
+  
+  $query = $conn->prepare(selectStatement("posts, users", "posts.post_id = $post_id AND posts.post_status_id = 4 AND users.user_id = posts.post_author_id"));
+  $query->execute();
+  
+  while( $row = $query->fetch(PDO::FETCH_ASSOC) ) {
+  
+    echo "
+     <h1>" . $row['post_title'] . "</h1>
+      <p class=\"lead\">
+          by <a href=\"index.php?source=profile_page&page=" . $row['user_id'] . "\">" . $row['user_username'] . "</a>
+      </p>  
+      <hr>
+     <p><span class=\"glyphicon glyphicon-time\"></span> Posted on " . dateTime($row['post_created'], "date") . " at " . dateTime($row['post_created'], "time") . "</p>
+      <hr>
+      <div style=\"display: flex; justify-content: center;\">
+      <img class=\"img-responsive\" style=\"width: 480px; height: 270px;\" src=\"includes/img/" . $row['post_image'] . "\" alt=\"\">
+      </div>
+      <hr>
+      <p class=\"lead\">" . $row['post_content'] . "</p>
+      ";
+    }
+  }
+  
+  function searchPosts() {
+    global $conn;
+  
+    $search = $_POST["search"];
+  
+    $query = $conn->prepare("SELECT * FROM posts WHERE post_status_id = 4 AND post_title LIKE '%" . $search . "%' OR post_tags LIKE '%" . $search . "%'");
+    $query->execute();
+    
+    $count = $query->rowCount();
+  
+    if($count == 0) {
+      echo "<h1>No Results!</h1>";
+    } else {
+      showPosts($query);
+    }
+  }
+  
+  
+  function showPosts($query) {
+    while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
+      extract( $row );
+  
+      echo "                    
+     <h2>
+     <a href=\"index.php?source=blog_post&blog_id=" . $row['post_id'] . "\">" . $row['post_title'] . "</a>
+    </h2>
+    <p><span class=\"glyphicon glyphicon-time\"></span> Posted on " . dateTime($row['post_created'], "date") . " " . dateTime($row['post_created'], "time") . "</p>
+    <hr>
+    <div style=\"display: flex; justify-content: center;\">
+    <img class=\"img-responsive\" style=\"width: 320px; height: 180px;\" src=\"includes/img/" . $row['post_image'] . "\" alt=\"\">
+    </div>
+    <hr><p>" 
+    . $row['post_content'] . "</p>
+    <a class=\"btn btn-primary\" href=\"index.php?source=blog_post&blog_id=" . $row['post_id'] . "\">Read More <span class=\"glyphicon glyphicon-chevron-right\"></span></a>
+  
+    <hr>
+      ";
+  }
+}
+
+function createPost($dir = "") {
+  global $conn, $post;
+
+  $post = array();
+
+  if(isset($_POST['post_category_id'])) {
+    $post['post_category_id'] = $_POST['post_category_id'];
+  }
+
+  if(isset($_POST['post_status_id'])) {
+    $post['post_status_id'] = $_POST['post_status_id'];
+  } else {
+    $post['post_status_id'] = 1;
+  }
+
+  if(isset($_POST['post_author'])) {
+    $post['post_author_id'] = $_POST['post_author'];
+  } else {
+    $post['post_author_id'] = $_SESSION['user_id'];
+  }
+
+  if(isset($_POST['post_title'])  && verifyText($_POST['post_title'])) {
+    $title = trim_input($_POST['post_title']);
+    $post['post_title'] = $title;
+  }
+
+  if(isset($_POST['post_content']) && verifyText($_POST['post_content'])) {
+    $content = trim_input($_POST['post_content']);
+    $post['post_content'] = $content;
+  }
+  
+  if(isset($_POST['post_tags']) && verifyText($_POST['post_tags'])) {
+    $tags = trim_input($_POST['post_tags']);
+    $post['post_tags'] = $tags;
+  }
+
+  if(isset($_FILES['uploaded_image']['name'])) {
+    // Establish path to directory
+    $img_dir = $dir . "includes/img/";
+
+    // Include file in path to check for files with the same name
+    $img_dir_new = $img_dir . basename($_FILES['uploaded_image']['name']);
+    
+    // Check if file already exists
+    if (file_exists($img_dir_new)) {
+      // Pull image file type, create random file name and set to be inputted into db
+      $imageFileType = strtolower(pathinfo($img_dir_new, PATHINFO_EXTENSION));
+      // Create random file name
+      $random_string = generateRandomString(8);
+      // Set new file name for db and directory
+      $file_name = "$random_string.$imageFileType";
+      // Set path with new file name
+      $img_dir_rnd = $img_dir . basename($file_name);
+    }
+    
+    $uploadOk = prepareImage($img_dir_new);
+    if($uploadOk == 1 && !file_exists($img_dir_new)) {
+      if(move_uploaded_file($_FILES['uploaded_image']['tmp_name'], $img_dir_new)) {
+        $post['post_image'] = $_FILES['uploaded_image']['name']; 
+      }
+    } else if ($uploadOk == 1 && file_exists($img_dir_new))  { 
+      if(move_uploaded_file($_FILES['uploaded_image']['tmp_name'], $img_dir_rnd)) {
+        $post['post_image'] = $file_name;
+      }
+    }
+  }
+
+  $stmt = postStatement("add", $post);
+  
+  $query = $conn->prepare($stmt);
+  $query->execute();
+}
+
 function postStatement($statement, $post_array, $id = NULL) {
   if ($statement == "edit") {
     global $stmt;

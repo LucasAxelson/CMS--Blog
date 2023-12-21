@@ -1,5 +1,121 @@
 <?php
+function createUserComment() {
+  global $conn;
 
+  $post_id = $_GET['blog_id'];
+
+  if(verifyText($_POST['form_content'])) {
+    $author = trim_input($_POST['form_author']);
+    $content = trim_input($_POST['form_content']);
+    $reply_id = $_GET['reply']; 
+
+    if(isset($_GET['reply'])) { 
+      $stmt = commentStatement("add", $post_id, $reply_id, $author, $content, "yes");    
+    } else {
+      $stmt = commentStatement("add", $post_id, $reply_id, $author, $content, "no");    
+    }
+
+    try {
+      $query = $conn->prepare($stmt);
+      $query->execute();
+      header("Location:index.php?source=blog_post&blog_id=" . $post_id . "");  
+    } catch(PDOException $e) {
+      echo "". $e->getMessage();
+    }
+  }
+}
+
+function createQuickComment() {
+  global $conn;
+
+  $post_id = $_GET['blog_id'];
+
+  if(verifyText($_POST['user_comment_content']) && isset($_SESSION['user_id'])) {
+    $author = $_SESSION['user_id'];
+    $content = trim_input($_POST['user_comment_content']);
+    $reply_id = $_GET['reply']; 
+
+    if(isset($_GET['reply'])) { 
+      $stmt = "INSERT INTO comments (comment_post_id, comment_reply_id, comment_author_id, comment_content, comment_status_id, comment_date) VALUES ('$post_id', '$reply_id', '$author', '$content', '4' , NOW())";    
+    } else {
+      $stmt = "INSERT INTO comments (comment_post_id, comment_author_id, comment_content, comment_status_id, comment_date) VALUES ('$post_id', '$author', '$content', '4' , NOW())";    
+    }
+
+    try {
+      $query = $conn->prepare($stmt);
+      $query->execute();
+      header("Location:index.php?source=blog_post&blog_id=" . $post_id . "");  
+    } catch(PDOException $e) {
+      echo "". $e->getMessage();
+    }
+  }
+}
+
+function displayComments() {
+  global $conn;
+  $post_id = $_GET["blog_id"];
+
+  try {
+    $query = $conn->prepare(
+      selectStatement(
+        "comments, users", "comment_post_id = $post_id AND comment_status_id = 4 AND comment_reply_id IS NULL AND users.user_id = comments.comment_author_id"
+      )
+    );
+    $query->execute();
+  } catch (PDOException $e) {
+    echo $e->getMessage();
+  }
+
+  while( $row = $query->fetch(PDO::FETCH_ASSOC) ) {
+
+   echo 
+   "<div class=\"media\">
+      <a class=\"pull-left\" href=\"index.php?source=profile_page&page=" . $row['user_id'] . "\">
+        <img class=\"media-object comment-image\" src=\"includes/img/" . $row['user_image'] . "\" alt=\"\">
+      </a>
+      <div class=\"media-body\">
+        <h4 class=\"media-heading\">" . $row['user_username'] . "
+          <small class=\"comment-date\">Created " . dateTime($row['comment_date'], "date") . " at " . dateTime($row['comment_date'], "time") . "</small>
+        </h4> 
+        <p>". $row['comment_content'] . "</p>
+        <p><a class=\"pull-left reply-btn\" href=\"index.php?source=blog_post&blog_id=" . $post_id . "&reply=" . $row['comment_id'] . "\">Reply</a></p>
+        <br>
+      ";
+    
+      echo displayNestedComment($row['comment_id']);
+      echo "</div></div>";
+  }
+}
+
+function displayNestedComment($target_id) {
+  global $conn;
+  $post_id = $_GET["blog_id"];
+
+  
+  try {
+    $query = $conn->prepare(selectStatement("comments, users", "comment_post_id = $post_id AND comment_status_id = 4 AND comment_reply_id = $target_id AND users.user_id = comments.comment_author_id"));
+    $query->execute();
+  } catch (PDOException $e) {
+    echo $e->getMessage();
+  }
+
+  while( $row = $query->fetch(PDO::FETCH_ASSOC) ) {
+
+   echo 
+   "<div class=\"media\">
+      <a class=\"pull-left\" href=\"index.php?source=profile_page&page=" . $row['user_id'] . "\">
+        <img class=\"comment-image\" src=\"includes/img/user/" . $row['user_image'] . "\" alt=\"\">
+      </a>
+      <div class=\"media-body\">
+        <h4 class=\"media-heading\">" . $row['user_username'] . "
+          <small>" . dateTime($row['comment_date'], "date") . " at " . dateTime($row['comment_date'], "time") . "</small>
+        </h4> 
+        <p>". $row['comment_content'] . "</p>
+      </div>
+    </div>
+    ";
+  }
+}
 function editComment($comment_id) {
   global $conn;
 

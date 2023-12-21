@@ -1,5 +1,114 @@
 <?php
 
+function displayNavigation () {
+  global $conn;
+
+  $query = $conn->prepare("SELECT * FROM categories LIMIT 8");
+  $query->execute();
+
+  while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
+    extract( $row );
+    
+    echo "                    
+    <li>
+      <a href=\"index.php?source=main_page&category=" . $row['cat_id'] . "\">" . $row['cat_title'] . "</a>
+    </li>
+    ";
+  }
+}
+
+function displayUserImage($table, $image_column, $where_column) {
+  global $conn;
+  
+  $id = $_GET['edit'];
+  $query = $conn->prepare("SELECT $image_column FROM $table WHERE $where_column = $id");
+  $query->execute();
+  
+  $image = $query->fetchColumn();
+  
+  echo "<img width=\"100px\" src=\"includes/img/$image\" alt=\"\">";  
+}
+
+function showProfile() {
+  global $conn;
+
+  $page = $_GET["page"];
+  $query = $conn->prepare(selectStatement("users", "user_id = $page"));
+  $query->execute();
+  
+  while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
+    extract( $row );
+
+    echo "
+    <div class=\"flex-row\">
+      <img class=\"img-responsive user-image\" src=\"includes/img/user/" . $row['user_image'] . "\" alt=\"\">
+      <h1 style=\"margin: auto;\">" .
+          $row["user_username"] .
+      "</h1>
+    </div>
+  <p style=\"text-align:center;\"><span class=\"glyphicon glyphicon-time\"></span> A Member since " . dateTime($row['user_created'], "date") . "</p>
+  <hr>
+  <div class=\"about-me\">
+  <h4>About me: </h4>
+  <p>" . $row['user_about'] . "</p>
+  </div>
+  <hr>";
+  }  
+  echo "<h4>Posts</h4>";
+  showProfilePosts();
+  echo "<h4>Comments</h4>";
+  showProfileComments();
+}
+
+function showProfilePosts() {
+  global $conn;
+
+  $query = $conn->prepare("SELECT * FROM posts WHERE posts.post_author_id = " . $_GET["page"]);
+  $query->execute();
+  
+  while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
+    extract( $row );
+
+    if($row["post_author_id"] == $_SESSION['user_id']) {
+      $edit = "<div>
+        <a href=\"index.php?source=edit_post&edit=" . $row['post_id'] . "\">Edit</a>
+      </div> ";
+    } else { $edit = ""; }
+
+    echo "
+    <div class=\"flex-row\" style=\"justify-content: space-between;\">
+      <div>
+      <a href=\"index.php?source=blog_post&blog_id=" . $row['post_id'] . "\">" . $row["post_title"] . "</a>
+      </div>" . $edit . 
+    "</div>
+  ";
+}
+}
+
+function showProfileComments() {
+  global $conn;
+
+  $query = $conn->prepare("SELECT * FROM posts, comments WHERE comments.comment_author_id = " . $_GET["page"] . " AND comments.comment_post_id = posts.post_id");
+  $query->execute();
+  
+  while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
+    extract( $row );
+
+    if($row["comment_author_id"] == $_SESSION['user_id']) {
+      $edit = "<div>
+        <a href=\"index.php?source=edit_comment&edit=" . $row['post_id'] . "\">Edit</a>
+      </div> ";
+    } else { $edit = ""; }
+
+    echo "
+    <div class=\"flex-row\" style=\"justify-content: space-between;\">
+      <div>  
+        <a href=\"index.php?source=blog_post&blog_id=" . $row['comment_post_id'] . "\">" . $row["post_title"] . "</a>
+      </div>" . $edit .
+    "</div>
+  ";
+}
+}
 function userStatement($statement, $user_array, $id = NULL) {
   if ($statement == "edit") {
     global $stmt;
