@@ -1,5 +1,38 @@
 <?php 
 
+function applyOption() {
+  global $conn;
+  $option = $_POST['bulkOptions'];
+
+  foreach ($_POST['checkboxArray'] as $checkboxValue) {
+      // Draft All
+    if($option == "draft_all") {
+      $stmt = "UPDATE posts 
+               SET post_status_id = '1' 
+               WHERE post_id = {$checkboxValue}";
+    }
+    // Approve All
+    if($option == "approve_all") {
+      $stmt = "UPDATE posts 
+               SET post_status_id = '4' 
+               WHERE post_id = {$checkboxValue}";
+    }
+    // Reject All
+    if($option == "reject_all") {
+      $stmt = "UPDATE posts 
+               SET post_status_id = '3' 
+               WHERE post_id = {$checkboxValue}";
+    }
+    // Delete All
+    if($option == "delete_all") {
+      $stmt = "DELETE FROM posts WHERE post_id = {$checkboxValue}";
+    }
+
+    $query = $conn->prepare($stmt);
+    $query->execute();
+  }
+}
+
 function generateRandomString($length = 10) {
   $characters = 'abcdefghijklmnopqrstuvwxyz';
   $charactersLength = strlen($characters);

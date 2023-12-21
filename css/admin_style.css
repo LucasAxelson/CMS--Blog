@@ -152,3 +152,15 @@ th {
   color: rgb(12, 52, 10);
   border-width: 1px;
 }
+
+/* Menu div */
+
+.menu-div {
+  display: flex;
+  flex-direction: row;
+}
+
+.menu-btn {
+  color: rgb(0, 0, 0);
+  padding: 8px 20px;
+}

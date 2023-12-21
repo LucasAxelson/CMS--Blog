@@ -125,6 +125,7 @@ function declarePosts() {
   
     echo "          
      <tr>
+        <td><input class=\"checkBoxes\" type=\"checkbox\" name=\"checkboxArray[]\" value=\"" . $row['post_id'] . "\"></td>
         <td class=\"td-style\">" . $row['post_id'] . "</td>
         <td class=\"td-style td-title\">" . $row['post_title'] . "</td>
         <td class=\"td-style\">" . $row['user_username'] . "</td>
