@@ -1,6 +1,6 @@
 <?php 
 if(isset($_POST["edit_post"])) {
-    editPost("", $_GET['edit']);
+    editPost("../", $_GET['edit']);
 }
 
 if(isset($_GET['edit'])) {  
@@ -20,6 +20,7 @@ if(isset($_POST['select_submit'])) {
     
       <p class="form-labels" for="selectUser">Select a Post:</p>
       <select class="form-inputs" name="selected_id" id="selectUser">
+        <option value="blank">Select an option</option>
         <?php listItems("posts", ""); ?>
       </select>
     
@@ -42,6 +43,7 @@ if(isset($_POST['select_submit'])) {
   <div class="div-form">
     <p class="form-labels" for="title">Post Author</p>
     <select class="form-inputs" name="post_author" id="authorComment">
+      <option value="blank">Select an option</option>
       <?php listItems("users", ""); ?>
     </select>
   </div>
@@ -65,6 +67,7 @@ if(isset($_POST['select_submit'])) {
   <div class="div-form">
     <p class="form-labels" for="category">Post Category</p>
     <select class="form-inputs" name="post_category_id" id="category">
+      <option option value="blank">Select an option</option>
       <?php listItems("categories", "") ?>
     </select>
   </div>

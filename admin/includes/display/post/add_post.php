@@ -19,6 +19,7 @@
   <div class="div-form">
     <p class="form-labels" for="title">Post Author</p>
     <select name="post_author" id="authorComment" class="form-inputs">
+      <option value="blank">Select an option</option>
       <?php listItems("users", ""); ?>
     </select>
   </div>
@@ -41,6 +42,7 @@
   <div class="div-form">
     <p class="form-labels" for="category">Post Category</p>
     <select name="post_category_id" id="category" class="form-inputs">
+      <option value="blank">Select an option</option>
       <?php listItems("categories", ""); ?>
     </select>
   </div>

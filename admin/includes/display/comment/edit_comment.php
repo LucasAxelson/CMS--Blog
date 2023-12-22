@@ -39,6 +39,7 @@ if(isset($_POST['select_submit'])) {
 
       <p class="form-labels" for="selectComment">Select a Comment:</p>
       <select class="form-inputs" name="selected_id" id="selectComment">
+        <option value="blank">Select an option</option>
         <?php listItems("comments", ""); ?>
       </select>
       <button class="select-btn" style="font-size: 12px; padding: 1px 3px; outline: grey solid 1px;" name="select_submit" type="submit">Select</button>
@@ -54,7 +55,8 @@ if(isset($_POST['select_submit'])) {
   <div class="div-form">
     <p class="form-labels" for="category">Select a Post:</p>
     <select class="form-inputs" name="post_id" id="category">
-    <?php listItems("posts", ""); ?>
+      <option value="blank">Select an option</option>
+      <?php listItems("posts", ""); ?>
     </select>
   </div>
 
@@ -66,7 +68,8 @@ if(isset($_POST['select_submit'])) {
   <div class="div-form">
     <label class="form-labels" for="title">Comment Author</label>
     <select name="comment_author" id="authorComment" class="form-inputs">
-    <?php listItems("users", ""); ?>
+      <option value="blank">Select an option</option>
+      <?php listItems("users", ""); ?>
     </select>
   </div>
 

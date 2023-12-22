@@ -132,7 +132,7 @@ function createPost($dir = "") {
   }
 
   if(isset($_POST['post_content']) && verifyText($_POST['post_content'])) {
-    $content = trim_input($_POST['post_content']);
+    $content = $_POST['post_content'];
     $post['post_content'] = $content;
   }
   
@@ -215,18 +215,18 @@ function editPost($dir, $id) {
   
     $post = array();
   
-    if(isset($_POST['post_category_id'])) {
+    if(isset($_POST['post_category_id']) && $_POST['post_category_id'] != "blank") {
       $post['post_category_id'] = $_POST['post_category_id'];
     }
   
-    if(isset($_POST['post_status_id'])) {
+    if(isset($_POST['post_status_id']) && $_POST['post_status_id'] != "blank") {
       $post['post_status_id'] = $_POST['post_status_id'];
-    } else {
-      $post['post_status_id'] = 1;
     }
   
-    if(isset($_POST['post_author'])) {
+    if(isset($_POST['post_author']) && $_POST['post_author'] != "blank") {
       $post['post_author_id'] = $_POST['post_author'];
+    } else if( $_POST['post_author'] == "blank") {
+      
     } else {
       $post['post_author_id'] = $_SESSION['user_id'];
     }
@@ -237,7 +237,7 @@ function editPost($dir, $id) {
     }
   
     if(isset($_POST['post_content']) && verifyText($_POST['post_content'])) {
-      $content = trim_input($_POST['post_content']);
+      $content = $_POST['post_content'];
       $post['post_content'] = $content;
     }
     
@@ -246,7 +246,7 @@ function editPost($dir, $id) {
       $post['post_tags'] = $tags;
     }
   
-    if(isset($_FILES['uploaded_image']['name'])) {
+    if(!empty($_FILES['uploaded_image']['tmp_name'])) {
       // Establish path to directory
       $img_dir = $dir . "includes/img/";
   

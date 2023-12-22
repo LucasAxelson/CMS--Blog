@@ -13,6 +13,7 @@
   <div class="div-form">
     <label class="form-labels" for="category">Select a Post:</label>
     <select class="form-inputs" name="post_id" id="category">
+      <option value="blank">Select an option</option>
       <?php listItems("posts", ""); ?>
     </select>
   </div>
@@ -25,6 +26,7 @@
   <div class="div-form">
     <label class="form-labels" for="title">Comment Author</label>
     <select class="form-inputs" name="comment_author" id="authorComment">
+      <option value="blank">Select an option</option>
       <?php listItems("users", ""); ?>
     </select>
   </div>

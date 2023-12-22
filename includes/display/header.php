@@ -1,7 +1,6 @@
 <?php ob_start() ?>
 <?php session_start() ?>
 <?php require("includes/server.php"); ?>
-<?php require("tools/functions.php"); ?>
 <?php require("tools/user_functions.php"); ?>
 <?php require("tools/post_functions.php"); ?>
 <?php require("tools/comment_functions.php"); ?>

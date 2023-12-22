@@ -38,6 +38,7 @@
     <div class="div-form select">
       <label class="form-labels" for="selectUser">Select a User:</label>
       <select class="form-inputs" name="selected_id" id="selectUser">
+        <option value="blank">Select an option</option>
         <?php listItems("users", ""); ?>
       </select>
       <button class="select-btn" name="select_submit" type="submit">Select</button>
@@ -73,6 +74,7 @@
   <div class="div-form">
     <label class="form-labels" for="authorStatus">Status</label>
     <select class="form-inputs" name="user_status" id="authorStatus">
+      <option value="blank">Select an option</option>
       <?php listItems("status", "" ); ?>
     </select>
   </div>
@@ -80,6 +82,7 @@
   <div class="div-form">
     <label class="form-labels" for="authorAccess">Access</label>
     <select class="form-inputs" name="user_access" id="authorAccess">
+      <option value="blank">Select an option</option>
       <?php listItems("access", ""); ?>
     </select>
   </div>

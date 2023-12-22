@@ -28,6 +28,7 @@
   <div class="div-form">
     <p class="form-labels" for="authorStatus">Status</p>
     <select class="form-inputs" name="account_status" id="authorStatus">
+      <option value="blank">Select an option</option>
       <?php listItems("status", ""); ?>
     </select>
   </div>
@@ -35,6 +36,7 @@
   <div class="div-form">
     <p class="form-labels" for="authorAccess">Access</p>
     <select class="form-inputs" name="account_access" id="authorAccess">
+      <option value="blank">Select an option</option>
       <?php listItems("access", ""); ?>
     </select>
   </div>

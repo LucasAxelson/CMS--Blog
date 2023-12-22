@@ -181,7 +181,7 @@ function createAccount($dir = "") {
     $user['user_password'] = $password;
   }
 
-  if(isset($_FILES['uploaded_image']['name'])) {
+  if(!empty($_FILES['uploaded_image']['tmp_name'])) {
     // Establish path to directory
     $img_dir = $dir . "includes/img/user/";
 
@@ -296,7 +296,7 @@ function editUser($id) {
       $user['user_password'] = $password;
     }
 
-    if(isset($_FILES['uploaded_image']['name'])) {
+    if(!empty($_FILES['uploaded_image']['tmp_name'])) {
       // global $file_name, $array_img;
   
       // Establish path to directory
