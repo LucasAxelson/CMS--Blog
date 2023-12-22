@@ -24,7 +24,7 @@
                 <hr>
   
                 <!-- Posted Comments -->
-                <?php if(isset($_GET['blog_id'])) { displayComments(); displayVisitorComments(); } ?>
+                <?php if(isset($_GET['blog_id'])) { displayComments(); } ?>
 
                         <hr>
 
