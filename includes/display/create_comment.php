@@ -3,22 +3,19 @@
                       <!-- Comments Form -->
                       <div class="well">
                           <h4>Leave a Comment:</h4>
-                          <form role="form" method="POST" enctype="multipart/form-data">
+                          <form action="<?php $_SERVER['REQUEST_URI'] ?>" method="POST" enctype="multipart/form-data">
 
                             <div class="row">
                               <label class="col-sm-2 col-form-label" for="authorComment">Author</label>
                               <div class="col-sm-10">
-                                <select name="form_author" id="authorComment">
-                                  <option value="blank">Select an option</option>
-                                  <?php listItems("users", ""); ?>
-                                </select>
+                                <input type="text" class="form-control" name="visitor_username" id="authorComment">
                               </div>
                             </div>
                             
                             <div class="row">
                               <label class="col-sm-2 col-form-label" for="emailComment">Email</label>
                               <div class="col-sm-10">
-                                <input type="email" class="form-control" name="form_email" id="emailComment">
+                                <input type="email" class="form-control" name="visitor_email" id="emailComment">
                               </div>
                             </div>
 

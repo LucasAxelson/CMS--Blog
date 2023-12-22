@@ -29,10 +29,10 @@
     </select>
     <input class="menu-btn" name="menu_apply" type="submit" value="Apply">
     <button class="menu-btn"><a href="index.php?source=add_user">Add New</a></button>
-    </div>
-
-  <!-- View All Posts -->
-<table class="table-style">
+    
+  </div>
+    <!-- View All Posts -->
+    <table class="table-style">
           <thead>
             <tr>
             <th><input type="checkbox" name="update_all"></th>
