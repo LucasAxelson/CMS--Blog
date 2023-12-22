@@ -180,7 +180,6 @@ function createPost($dir = "") {
 
 function postStatement($statement, $post_array, $id = NULL) {
   if ($statement == "edit") {
-    global $stmt;
 
     $stmt =  "UPDATE posts
       SET post_modified = NOW()";
@@ -193,7 +192,6 @@ function postStatement($statement, $post_array, $id = NULL) {
     return $stmt . $where; 
 
   } else if ($statement == "add") {
-    global $insert, $value;
 
     $insert =  "INSERT INTO posts (";
     $insert_close = "post_created)";

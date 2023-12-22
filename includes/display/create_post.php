@@ -38,6 +38,7 @@
       <div class="form-group">
         <label class="form-label" for="category">Post Category</label>
         <select name="post_category_id" id="category">
+          <option value="blank">Select an option</option>
           <?php listItems("categories", ""); ?>
         </select>
       </div>

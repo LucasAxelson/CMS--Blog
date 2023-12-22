@@ -1,5 +1,5 @@
 <?php if(isset($_POST['create_account'])) {
-    createAccount();
+    createUser();
 } ?>
 
 <!-- Page Content -->

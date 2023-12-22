@@ -1,53 +1,32 @@
 <?php
-function createUserComment() {
-  global $conn;
 
-  $post_id = $_GET['blog_id'];
+function commentStatement($statement, $comment_array, $id = NULL) {
+  if ($statement == "edit") {
 
-  if(verifyText($_POST['form_content'])) {
-    $author = trim_input($_POST['form_author']);
-    $content = trim_input($_POST['form_content']);
-    $reply_id = $_GET['reply']; 
+    $stmt =  "UPDATE comments
+      SET comment_modified = NOW()";
+    $where = " WHERE comment_id = $id";
 
-    if(isset($_GET['reply'])) { 
-      $stmt = commentStatement("add", $post_id, $reply_id, $author, $content, "yes");    
-    } else {
-      $stmt = commentStatement("add", $post_id, $reply_id, $author, $content, "no");    
+    foreach( $comment_array as $key => $content ) {
+      $stmt.= ", $key = '$content'";
     }
 
-    try {
-      $query = $conn->prepare($stmt);
-      $query->execute();
-      header("Location:index.php?source=blog_post&blog_id=" . $post_id . "");  
-    } catch(PDOException $e) {
-      echo "". $e->getMessage();
-    }
-  }
-}
+    return $stmt . $where; 
 
-function createQuickComment() {
-  global $conn;
+  } else if ($statement == "add") {
 
-  $post_id = $_GET['blog_id'];
+    $insert =  "INSERT INTO comments (";
+    $insert_close = "comment_created)";
+    $value = " VALUES (";
+    $value_close = "NOW())";
 
-  if(verifyText($_POST['user_comment_content']) && isset($_SESSION['user_id'])) {
-    $author = $_SESSION['user_id'];
-    $content = trim_input($_POST['user_comment_content']);
-    $reply_id = $_GET['reply']; 
-
-    if(isset($_GET['reply'])) { 
-      $stmt = "INSERT INTO comments (comment_post_id, comment_reply_id, comment_author_id, comment_content, comment_status_id, comment_date) VALUES ('$post_id', '$reply_id', '$author', '$content', '4' , NOW())";    
-    } else {
-      $stmt = "INSERT INTO comments (comment_post_id, comment_author_id, comment_content, comment_status_id, comment_date) VALUES ('$post_id', '$author', '$content', '4' , NOW())";    
+    foreach( $comment_array as $key => $content ) {
+      $insert .= "$key, ";
+      $value .= "'$content', ";
     }
 
-    try {
-      $query = $conn->prepare($stmt);
-      $query->execute();
-      header("Location:index.php?source=blog_post&blog_id=" . $post_id . "");  
-    } catch(PDOException $e) {
-      echo "". $e->getMessage();
-    }
+    return $insert . $insert_close . $value . $value_close;
+
   }
 }
 
@@ -71,11 +50,11 @@ function displayComments() {
    echo 
    "<div class=\"media\">
       <a class=\"pull-left\" href=\"index.php?source=profile_page&page=" . $row['user_id'] . "\">
-        <img class=\"media-object comment-image\" src=\"includes/img/" . $row['user_image'] . "\" alt=\"\">
+        <img class=\"media-object comment-image\" src=\"includes/img/user/" . $row['user_image'] . "\" alt=\"\">
       </a>
       <div class=\"media-body\">
         <h4 class=\"media-heading\">" . $row['user_username'] . "
-          <small class=\"comment-date\">Created " . dateTime($row['comment_date'], "date") . " at " . dateTime($row['comment_date'], "time") . "</small>
+          <small class=\"comment-date\">Created: " . dateTime($row['comment_created'], "date") . " at " . dateTime($row['comment_created'], "time") . "</small>
         </h4> 
         <p>". $row['comment_content'] . "</p>
         <p><a class=\"pull-left reply-btn\" href=\"index.php?source=blog_post&blog_id=" . $post_id . "&reply=" . $row['comment_id'] . "\">Reply</a></p>
@@ -108,7 +87,7 @@ function displayNestedComment($target_id) {
       </a>
       <div class=\"media-body\">
         <h4 class=\"media-heading\">" . $row['user_username'] . "
-          <small>" . dateTime($row['comment_date'], "date") . " at " . dateTime($row['comment_date'], "time") . "</small>
+          <small class=\"comment-date\">Created: " . dateTime($row['comment_created'], "date") . " at " . dateTime($row['comment_created'], "time") . "</small>
         </h4> 
         <p>". $row['comment_content'] . "</p>
       </div>
@@ -116,50 +95,88 @@ function displayNestedComment($target_id) {
     ";
   }
 }
-function editComment($comment_id) {
-  global $conn;
+function editComment($id) {
+  global $conn, $comment;
+  
+  $comment = array();  
 
-  $post_id = $_POST['post_id'];
+    if(isset($_SESSION['user_id']) && !isset($_POST['visitor_submit'])) {
+      $author_id = trim_input($_SESSION['user_id']);
+      $comment['comment_author_id'] = $author_id;
+    }
 
-  if(verifyText($_POST['comment_content']) && verifyEmail($_POST['comment_email'])) {
-    $author = trim_input($_POST['comment_author']);
-    $content = trim_input($_POST['comment_content']);
+    if(isset($_POST['visitor_username']) && verifyText($_POST['visitor_username'])) {
+      $visitor_name = trim_input($_POST['visitor_username']);
+      $comment['comment_author'] = $visitor_name;
+    }
+    
+    if(isset($_POST['visitor_email']) && verifyEmail($_POST['visitor_email'])) {
+      $email = prepareEmail($_POST['visitor_email']);
+      $comment['comment_email'] = $email;
+    }
 
-    $stmt = commentStatement("edit", $post_id, 0, $author, $content, "no", $comment_id);
-  }
+    if(isset($_POST['visitor_submit'])) {
+      $comment['comment_status_id'] = 2;
+    }
+    
+    $stmt = commentStatement("edit", $comment, $id);
 
   try {
     $query = $conn->prepare($stmt);
     $query->execute();
-    header("Location:index.php?source=view_all_comments");  
   } catch (PDOException $e) {
     echo "". $e->getMessage() ."";
   } 
 }
 
 function createComment() {
-  global $conn;
-  $post_id = $_POST['post_id'];
+  global $conn, $comment;
+  
+  $comment = array();  
 
-  if(verifyText($_POST['comment_content']) && verifyEmail($_POST['comment_email'])) {
-    $author = trim_input($_POST['comment_author']);
-    $content = trim_input($_POST['comment_content']);
-    $reply_id = $_GET['reply']; 
+    if(isset($_GET['blog_id'])) {
+      $comment['comment_post_id'] = $_GET['blog_id'];
+    }
 
-    if(isset($_GET['reply'])) { 
-      $stmt = commentStatement("add", $post_id, $reply_id, $author, $content, 'no', 0);
+    if(isset($_GET['reply'])) {
+      $comment['comment_reply_id'] = $_GET['reply'];
+    }
+
+    if(isset($_SESSION['user_id']) && !isset($_POST['visitor_submit'])) {
+      $author_id = trim_input($_SESSION['user_id']);
+      $comment['comment_author_id'] = $author_id;
+    }
+    
+    if(isset($_POST['visitor_email']) && isset($_POST['visitor_submit']) && verifyEmail($_POST['visitor_email'])) {
+      $email = prepareEmail($_POST['visitor_email']);
+      $comment['comment_email'] = $email;
+    }
+
+    if(isset($_POST['comment_content'])) {
+      $content = trim_input($_POST['comment_content']);
+      $comment['comment_content'] = $content;
+    }
+
+    if(isset($_POST['visitor_username']) && isset($_POST['visitor_submit']) && verifyText($_POST['visitor_username'])) {
+      $visitor_name = trim_input($_POST['visitor_username']);
+      $comment['comment_author'] = $visitor_name;
+    }
+    
+
+    if(isset($_POST['visitor_submit'])) {
+      $comment['comment_status_id'] = 2;
     } else {
-      $stmt = commentStatement("add", $post_id, $reply_id, $author, $content, 'yes', 0);
-    } 
-  }
+      $comment['comment_status_id'] = 4;
+    }
+    
+    $stmt = commentStatement("add", $comment);
 
   try {
     $query = $conn->prepare($stmt);
     $query->execute();
-    header("Location:index.php?source=view_all_comments");  
-  } catch(PDOException $e) {
-    echo "". $e->getMessage();
-  }
+  } catch (PDOException $e) {
+    echo "". $e->getMessage() ."";
+  } 
 }
 
 
@@ -217,7 +234,7 @@ function declareComments() {
      <td class=\"td-style td-content\">" . $row['comment_content'] . "</td>
      <td class=\"td-style\">" . $row['user_username'] . "</td>
      <td class=\"td-style\">" . $row['user_email'] . "</td>
-     <td class=\"td-style\">" . dateTime($row['comment_date'], "date") . "</td>
+     <td class=\"td-style\">" . dateTime($row['comment_created'], "date") . "</td>
      <td class=\"td-style\">" . $row['comment_reply_id'] . "</td>
      <td class=\"td-style\">" . $row['status_name'] . "</td>
      <td class=\"td-div\"><a class=\"td-btn td-btn-view\" href='../index.php?source=blog_post&blog_id=" . $row['comment_post_id'] . "'>View</a></td>

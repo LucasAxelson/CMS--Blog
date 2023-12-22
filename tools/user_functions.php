@@ -111,7 +111,6 @@ function showProfileComments() {
 }
 function userStatement($statement, $user_array, $id = NULL) {
   if ($statement == "edit") {
-    global $stmt;
 
     $stmt =  "UPDATE users
       SET user_modified = NOW()";
@@ -124,7 +123,6 @@ function userStatement($statement, $user_array, $id = NULL) {
     return $stmt . $where; 
 
   } else if ($statement == "add") {
-    global $insert, $value;
 
     $insert =  "INSERT INTO users (";
     $insert_close = "user_created)";
@@ -141,9 +139,8 @@ function userStatement($statement, $user_array, $id = NULL) {
   }
 }
 
-function createAccount($dir = "") {
-  global $conn;
-  global $user;
+function createUser($dir = "") {
+  global $conn, $user;
   
   $user = array(); 
 

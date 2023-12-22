@@ -29,7 +29,8 @@
     </select>
     <input class="menu-btn" name="menu_apply" type="submit" value="Apply">
     <button class="menu-btn"><a href="index.php?source=add_comments">Add New</a></button>
-    
+
+  </div>    
     <!-- View All Posts -->
 <table class="table-style">
           <thead>
@@ -52,4 +53,3 @@
         </table>
 
   </form>
-</div>

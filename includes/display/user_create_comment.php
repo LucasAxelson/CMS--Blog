@@ -1,4 +1,4 @@
-<?php if(isset($_POST['user_comment_submit'])) { createQuickComment(); } ?>
+<?php if(isset($_POST['user_comment_submit'])) { createComment(); } ?>
 
 <div class="well">
   
@@ -7,7 +7,7 @@
   <form action="" method="POST">
   
     <div class="form-group">
-      <textarea name="user_comment_content" class="form-control" rows="3"></textarea>
+      <textarea name="comment_content" class="form-control" rows="3"></textarea>
     </div>
     
     <button type="submit" name="user_comment_submit" class="btn btn-primary">Submit</button>
