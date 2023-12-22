@@ -32,7 +32,7 @@ function commentStatement($statement, $comment_array, $id = NULL) {
 
 function displayVisitorComments() {
   global $conn;
-  $post_id = $_GET["blog_id"];
+  $post_id = $_GET["page"];
 
   try {
     $query = $conn->prepare(
@@ -55,7 +55,7 @@ function displayVisitorComments() {
           <small class=\"comment-date\">Created: " . dateTime($row['comment_created'], "date") . " at " . dateTime($row['comment_created'], "time") . "</small>
          </h4> 
         <p>". $row['comment_content'] . "</p>
-        <p><a class=\"pull-left reply-btn\" href=\"index.php?source=blog_post&blog_id=" . $post_id . "&reply=" . $row['comment_id'] . "\">Reply</a></p>
+        <p><a class=\"pull-left reply-btn\" href=\"index.php?source=blog_post&page=" . $post_id . "&reply=" . $row['comment_id'] . "\">Reply</a></p>
         <br>
       ";
     
@@ -67,7 +67,7 @@ function displayVisitorComments() {
 
 function displayComments() {
   global $conn;
-  $post_id = $_GET["blog_id"];
+  $post_id = $_GET["page"];
 
   try {
     $query = $conn->prepare(
@@ -90,7 +90,7 @@ function displayComments() {
           <small class=\"comment-date\">Created: " . dateTime($row['comment_created'], "date") . " at " . dateTime($row['comment_created'], "time") . "</small>
         </h4> 
         <p>". $row['comment_content'] . "</p>
-        <p><a class=\"pull-left reply-btn\" href=\"index.php?source=blog_post&blog_id=" . $post_id . "&reply=" . $row['comment_id'] . "\">Reply</a></p>
+        <p><a class=\"pull-left reply-btn\" href=\"index.php?source=blog_post&page=" . $post_id . "&reply=" . $row['comment_id'] . "\">Reply</a></p>
         <br>
       ";
     
@@ -103,7 +103,7 @@ function displayComments() {
 
 function displayNestedComment($target_id) {
   global $conn;
-  $post_id = $_GET["blog_id"];
+  $post_id = $_GET["page"];
 
   
   try {
@@ -134,7 +134,7 @@ function displayNestedComment($target_id) {
 
 function displayVisitorNestedComment($target_id) {
   global $conn;
-  $post_id = $_GET["blog_id"];
+  $post_id = $_GET["page"];
 
   
   try {
@@ -202,8 +202,8 @@ function createComment() {
   
   $comment = array();  
 
-    if(isset($_GET['blog_id'])) {
-      $comment['comment_post_id'] = $_GET['blog_id'];
+    if(isset($_GET['page'])) {
+      $comment['comment_post_id'] = $_GET['page'];
     }
 
     if(isset($_GET['reply'])) {
@@ -304,7 +304,7 @@ function declareComments() {
      <td class=\"td-style\">" . dateTime($row['comment_created'], "date") . "</td>
      <td class=\"td-style\">" . $row['comment_reply_id'] . "</td>
      <td class=\"td-style\">" . $row['status_name'] . "</td>
-     <td class=\"td-div\"><a class=\"td-btn td-btn-view\" href='../index.php?source=blog_post&blog_id=" . $row['comment_post_id'] . "'>View</a></td>
+     <td class=\"td-div\"><a class=\"td-btn td-btn-view\" href='../index.php?source=blog_post&page=" . $row['comment_post_id'] . "'>View</a></td>
      <td class=\"td-div\"><a class=\"td-btn td-btn-success\" href='index.php?source=view_all_comments&approve=" . $row['comment_id'] . "'>Approve</a></td>
      <td class=\"td-div\"><a class=\"td-btn td-btn-reject\" href='index.php?source=view_all_comments&reject=" . $row['comment_id'] . "'>Reject</a></td>
      <td class=\"td-div\"><a onClick=\" javascript: return confirm('Are you sure that you wish to delete this item?')\" class=\"td-btn td-btn-danger\" href='index.php?source=view_all_comments&delete=" . $row['comment_id'] . "'>Delete</a></td>
@@ -340,7 +340,7 @@ function declareVisitorComments() {
      <td class=\"td-style\">" . dateTime($row['comment_created'], "date") . "</td>
      <td class=\"td-style\">" . $row['comment_reply_id'] . "</td>
      <td class=\"td-style\">" . $row['status_name'] . "</td>
-     <td class=\"td-div\"><a class=\"td-btn td-btn-view\" href='../index.php?source=blog_post&blog_id=" . $row['comment_post_id'] . "'>View</a></td>
+     <td class=\"td-div\"><a class=\"td-btn td-btn-view\" href='../index.php?source=blog_post&page=" . $row['comment_post_id'] . "'>View</a></td>
      <td class=\"td-div\"><a class=\"td-btn td-btn-success\" href='index.php?source=view_all_comments&approve=" . $row['comment_id'] . "'>Approve</a></td>
      <td class=\"td-div\"><a class=\"td-btn td-btn-reject\" href='index.php?source=view_all_comments&reject=" . $row['comment_id'] . "'>Reject</a></td>
      <td class=\"td-div\"><a class=\"td-btn td-btn-danger\" href='index.php?source=view_all_comments&delete=" . $row['comment_id'] . "'>Delete</a></td>

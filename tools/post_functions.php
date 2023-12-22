@@ -41,7 +41,7 @@ function displayPosts () {
 
 function displayPost() {
   global $conn;
-  $post_id = $_GET["blog_id"];
+  $post_id = $_GET["page"];
   
   $query = $conn->prepare(selectStatement("posts, users", "posts.post_id = $post_id AND posts.post_status_id = 4 AND users.user_id = posts.post_author_id"));
   $query->execute();
@@ -51,7 +51,7 @@ function displayPost() {
     echo "
      <h1>" . $row['post_title'] . "</h1>
       <p class=\"lead\">
-          by <a href=\"index.php?source=profile_page&page=" . $row['user_id'] . "\">" . $row['user_username'] . "</a>
+          by <a href=\"index.php?source=profile_page" . "&page=" . $row['user_id'] . "\">" . $row['user_username'] . "</a>
       </p>  
       <hr>
      <p><span class=\"glyphicon glyphicon-time\"></span> Posted on " . dateTime($row['post_created'], "date") . " at " . dateTime($row['post_created'], "time") . "</p>
@@ -89,7 +89,7 @@ function displayPost() {
   
       echo "                    
      <h2>
-     <a href=\"index.php?source=blog_post&blog_id=" . $row['post_id'] . "\">" . $row['post_title'] . "</a>
+     <a href=\"index.php?source=blog_post" . "&page=" . $row['post_id'] . "&author=" . $row['user_username'] . "\">" . $row['post_title'] . "</a>
     </h2>
     <p><span class=\"glyphicon glyphicon-time\"></span> Posted on " . dateTime($row['post_created'], "date") . " " . dateTime($row['post_created'], "time") . "</p>
     <hr>
@@ -98,7 +98,7 @@ function displayPost() {
     </div>
     <hr><p>" 
     . $row['post_content'] . "</p>
-    <a class=\"btn btn-primary\" href=\"index.php?source=blog_post&blog_id=" . $row['post_id'] . "\">Read More <span class=\"glyphicon glyphicon-chevron-right\"></span></a>
+    <a class=\"btn btn-primary\" href=\"index.php?source=blog_post&page=" . $row['post_id'] . "\">Read More <span class=\"glyphicon glyphicon-chevron-right\"></span></a>
   
     <hr>
       ";
@@ -311,7 +311,7 @@ function declarePosts() {
         <td class=\"td-image-div\"><img class=\"td-image\" src=\"../includes/img/" . $row['post_image'] . "\" alt=\"" . $row['post_image'] . "\"></td>
         <td class=\"td-style\">" . $row['post_tags'] . "</td>
         <td class=\"td-style\">" . $row['post_comment_count'] . "</td>
-        <td class=\"td-div\"><a class=\"td-btn td-btn-view\" href='../index.php?source=blog_post&blog_id=" . $row['post_id'] . "'>View</a></td>
+        <td class=\"td-div\"><a class=\"td-btn td-btn-view\" href='../index.php?source=blog_post&page=" . $row['post_id'] . "'>View</a></td>
         <td class=\"td-div\"><a class=\"td-btn td-btn-success\" href='index.php?source=view_all_posts&approve=" . $row['post_id'] . "'>Approve</a></td>
         <td class=\"td-div\"><a class=\"td-btn td-btn-reject\" href='index.php?source=view_all_posts&reject=" . $row['post_id'] . "'>Reject</a></td>
         <td class=\"td-div\"><a onClick=\" javascript: return confirm('Are you sure that you wish to delete this item?')\" class=\"td-btn td-btn-danger\" href='index.php?source=view_all_posts&delete=" . $row['post_id'] . "'>Delete</a></td>

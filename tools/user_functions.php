@@ -78,7 +78,7 @@ function showProfilePosts() {
     echo "
     <div class=\"flex-row\" style=\"justify-content: space-between;\">
       <div>
-      <a href=\"index.php?source=blog_post&blog_id=" . $row['post_id'] . "\">" . $row["post_title"] . "</a>
+      <a href=\"index.php?source=blog_post&page=" . $row['post_id'] . "\">" . $row["post_title"] . "</a>
       </div>" . $edit . 
     "</div>
   ";
@@ -88,7 +88,7 @@ function showProfilePosts() {
 function showProfileComments() {
   global $conn;
 
-  $query = $conn->prepare("SELECT * FROM posts, comments WHERE comments.comment_author_id = " . $_GET["page"] . " AND comments.comment_post_id = posts.post_id");
+  $query = $conn->prepare("SELECT * FROM posts, comments, users WHERE comments.comment_author_id = users.user_id AND comments.comment_author_id = " . $_GET['page'] . " AND comments.comment_post_id = posts.post_id");
   $query->execute();
   
   while( $row = $query->fetch(PDO::FETCH_ASSOC ) ) {
@@ -103,7 +103,7 @@ function showProfileComments() {
     echo "
     <div class=\"flex-row\" style=\"justify-content: space-between;\">
       <div>  
-        <a href=\"index.php?source=blog_post&blog_id=" . $row['comment_post_id'] . "\">" . $row["post_title"] . "</a>
+        <a href=\"index.php?source=blog_post&page=" . $row['comment_post_id'] . "&author=" . $row['user_username'] . "\">" . $row["post_title"] . "</a>
       </div>" . $edit .
     "</div>
   ";
