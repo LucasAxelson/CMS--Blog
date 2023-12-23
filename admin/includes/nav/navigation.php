@@ -11,8 +11,6 @@
             </div>
             <!-- Top Menu Items -->
             <ul class="nav navbar-right top-nav">
-                <!-- User Messages -->
-                <?php require("includes/nav/userMessages.php"); ?>
                 <!-- User Notifications -->
                 <?php require("includes/nav/userNotifications.php"); ?>
                 <!-- User Dropwdown Menu -->
