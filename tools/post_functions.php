@@ -47,7 +47,6 @@ function displayPost() {
   $query->execute();
   
   while( $row = $query->fetch(PDO::FETCH_ASSOC) ) {
-  
     echo "
      <h1>" . $row['post_title'] . "</h1>
       <p class=\"lead\">

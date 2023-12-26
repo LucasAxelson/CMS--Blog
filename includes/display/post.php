@@ -1,6 +1,4 @@
-<?php
-// Search function
-?>
+
 <!-- Page Content -->
     <div class="container">
 
